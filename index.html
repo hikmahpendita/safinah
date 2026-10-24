@@ -137,7 +137,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['laporan','Laporan'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.3';
+const APP_VERSI='1.3.1';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod']];
 const SHORT = {utama:'Utama',tunai:'Tunai',rekod:'Rekod',imp:'Import',agihan:'Agihan',katalog:'Katalog',laporan:'Laporan',lagi:'Lagi',gaji:'Gaji',pekerja:'Pekerja',kalendar:'Kalendar',invois:'Invois',surat:'Surat'};
 
@@ -1175,7 +1175,7 @@ const ACT_SR = {
 /* ---------- LAGI (menu telefon) ---------- */
 function lagiHtml(){
   const items=[['kalendar','Kalendar Program','Pameran, kuliah, target & kitab terjual'],['invois','Invois & Hutang','Pusat Zakat, Majlis Agama, sekolah & pondok'],['surat','Surat Rasmi','Permohonan booth, lantikan & lain-lain'],['gaji','Gaji & Slip Gaji','Kira gaji, bayar & slip PDF'],['pekerja','Data Pekerja','Profil, bank, caruman & dokumen'],['imp','Import Wasepme','Muat naik SalesReport'],['agihan','Agihan Profit First','Rentak 10hb & 25hb'],['katalog','Katalog Kitab','Kos, berat & harga jual']];
-  return '<h1>Lagi</h1><div class="tiles" style="grid-template-columns:1fr">'+items.map(x=>'<button class="tile" style="flex-direction:row;align-items:center;gap:14px;min-height:72px" data-act="go" data-p="'+x[0]+'">'+ico(x[0],26)+'<span style="display:flex;flex-direction:column"><b>'+x[1]+'</b><small>'+x[2]+'</small></span></button>').join('')+'</div>'
+  return '<h1>Lagi</h1><div class="tiles" style="grid-template-columns:1fr">'+items.map(x=>'<button class="tile" style="flex-direction:row;justify-content:flex-start;align-items:center;text-align:left;gap:14px;min-height:72px" data-act="go" data-p="'+x[0]+'">'+ico(x[0],26)+'<span style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;min-width:0"><b>'+x[1]+'</b><small>'+x[2]+'</small></span></button>').join('')+'</div>'
    +'<button class="btn" data-act="logout">Log keluar</button><div class="sub" style="text-align:center;font-size:12px">SAFINAH v'+APP_VERSI+' · by Hikmah Pendita Resources · 2026</div>';
 }
 
@@ -1293,4 +1293,3 @@ if(S.pin) login();
 </script>
 </body>
 </html>
-
