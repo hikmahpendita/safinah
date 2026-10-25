@@ -196,7 +196,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.6.1';
+const APP_VERSI='1.6.2';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -758,6 +758,7 @@ function bonusHtml(d){
 }
 
 /* ---------- KATALOG ---------- */
+async function katReload(msg){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); toast(msg); repaint(); }
 const BERAT_CEPAT=[250,500,800,1000,1500,2000,3000,5000,10000,15000,20000];
 function kgVal(g){ g=Number(g); return g?String(Math.round(g)/1000):''; }
 function beratTxt(g){ g=Number(g); if(!g) return ''; return g>=1000?(Math.round(g/10)/100)+' kg':Math.round(g)+' g'; }
@@ -780,20 +781,30 @@ function katalogHtml(){
   const missing=d.rows.filter(r=>!(r.kos>0)).length;
   h+=kadarBox(d);
   h+='<div class="row"><input class="inp" style="flex:1 1 220px" type="search" placeholder="Cari judul…" data-in="kq" value="'+esc(K.q)+'" aria-label="Cari judul"><button class="btn p" data-act="katNew">+ Kitab baru</button></div>'
-   +(missing?'<div class="note n-y">'+missing+' judul belum ada kos. Jualan kitab ini guna anggaran sahaja.</div>':'<div class="note n-g">Semua judul ada kos ✓</div>');
+   +(missing?'<div class="note n-y">'+missing+' judul belum ada kos. Jualan kitab ini guna anggaran sahaja.</div>':'<div class="note n-g">Semua judul ada kos ✓</div>')
+   +((d.mungkinSama||[]).length?'<section class="box" style="border-color:#FDBA74"><div class="hd"><div><h2>Mungkin kitab yang sama</h2><div class="sub">Nama hampir serupa — mungkin ejaan berbeza di Wasep.me. Pilih nama yang nak dikekalkan; nama satu lagi diingat supaya import akan datang terus padan.</div></div></div>'
+     +d.mungkinSama.map(x=>{ const k1=x[0]+'|'+x[1], k2=x[1]+'|'+x[0]; return '<div class="li" style="flex-direction:column;align-items:stretch;gap:8px"><div><b style="font-size:14px">'+esc(x[0])+'</b> <span class="sub">dan</span> <b style="font-size:14px">'+esc(x[1])+'</b></div><div class="row" style="gap:6px">'
+       +'<button class="btn sm" data-act="katGabungPair" data-a="'+esc(x[0])+'" data-b="'+esc(x[1])+'">'+(K.gc===k1?'Tekan lagi untuk sahkan':'Kekal: '+esc(x[0]))+'</button>'
+       +'<button class="btn sm" data-act="katGabungPair" data-a="'+esc(x[1])+'" data-b="'+esc(x[0])+'">'+(K.gc===k2?'Tekan lagi untuk sahkan':'Kekal: '+esc(x[1]))+'</button>'
+       +'<button class="btn sm" data-act="katBukan" data-a="'+esc(x[0])+'" data-b="'+esc(x[1])+'">Bukan sama</button></div></div>'; }).join('')+'</section>':'');
   if(K.edit){
     const e=K.edit, c=kosCalc(e,d), mentah=c.kos*(1+d.markup/100), cad=hargaBundar(c.kos,d.markup);
-    h+='<section class="card" style="border:2px solid var(--b);gap:14px"><h2>'+(e.baru?'Kitab baru':esc(e.judul))+'</h2>'
-     +(e.baru?'<label class="f">Judul<input class="inp" data-in="ke" data-k="judul" value="'+esc(e.judul)+'"></label>':'')
+    h+='<section class="card" style="border:2px solid var(--b);gap:14px"><h2>'+(e.baru?'Kitab baru':esc(e.judulLama))+'</h2>'
+     +'<label class="f">'+(e.baru?'Judul':'Nama kitab (boleh diubah)')+'<input class="inp" data-in="ke" data-k="judul" value="'+esc(e.judul)+'"></label>'
+     +(!e.baru&&e.lain&&e.lain.length?'<div class="sub" style="margin-top:-6px">Nama lain yang dipadankan: '+e.lain.map(esc).join(', ')+'</div>':'')
      +'<label class="f">Harga di Mesir (LE)<input class="inp" type="number" inputmode="decimal" data-in="ke" data-k="le" value="'+esc(e.le)+'" style="font-size:20px;font-weight:700"></label>'
      +'<label class="f">Berat kitab (kg) — hingga 20 kg<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" max="20" data-in="ke" data-k="beratKg" value="'+esc(e.beratKg!=null?e.beratKg:kgVal(e.berat))+'" placeholder="Contoh: 0.8 atau 3.5" style="font-size:20px;font-weight:700"></label>'
      +'<div class="row" role="group" aria-label="Pilih berat cepat">'+BERAT_CEPAT.map(g=>'<button class="chip '+(Number(e.berat)===g?'on':'')+'" data-act="katBerat" data-g="'+g+'">'+beratTxt(g)+'</button>').join('')+'</div>'
      +(c.pos?'<div class="sub">Kos pos: <b>RM'+c.pos.kos.toFixed(2)+'</b> ('+c.pos.kg+' kg × RM'+d.pos.perKg+' sekilo)</div>':'')
      +(c.err?'<div class="note n-r">'+esc(c.err)+'</div>':(!(c.kos>0)?'<div class="note n-n">Isi harga LE dan berat — kalkulator kira kos dan harga jual sendiri.</div>':'<div class="note n-n" style="font-size:15px;line-height:1.7">Kos kitab: <b>'+rm(c.kos)+'</b><br>'+rm(c.kos)+' × '+(1+d.markup/100).toFixed(2)+' = '+rm(mentah)+(cad>0?' → dibundar ke atas: <b style="font-size:18px">'+rm(cad)+'</b><br><span class="sub" style="font-size:13px">Ikut SOP M3: harga jual dibundar ke atas ke ringgit penuh</span>':'')+'</div>'))
      +'<label class="f">Harga jual (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="ke" data-k="hargaJual" value="'+esc(e.hargaJual)+'" placeholder="'+(cad?cad.toFixed(2):'')+'"></label><div class="sub" style="font-size:13px;margin-top:-6px">Biarkan kosong untuk guna harga dibundar '+(cad?rm(cad):'')+'</div>'
-     +'<div class="row"><button class="btn p" style="flex:1" data-act="katSave" '+(c.err?'disabled':'')+'>Simpan</button><button class="btn" data-act="katCancel">Batal</button></div></section>';
+     +'<div class="row"><button class="btn p" style="flex:1" data-act="katSave" '+(c.err?'disabled':'')+'>Simpan</button><button class="btn" data-act="katCancel">Batal</button></div>'
+     +(e.baru?'':'<div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px"><b>Gabung kitab yang sama</b><div class="sub" style="font-size:13px">Pilih kitab lain yang sebenarnya kitab ini (ejaan lain). Ia akan dibuang dari Katalog dan namanya diingat untuk kitab ini.</div>'
+       +'<div class="row"><select class="inp" data-in="kg" style="flex:1 1 220px"><option value="">— Pilih kitab —</option>'+d.rows.filter(r=>r.judul!==e.judulLama).sort((a,b)=>String(a.judul).localeCompare(String(b.judul))).map(r=>'<option value="'+esc(r.judul)+'" '+(e.gabung===r.judul?'selected':'')+'>'+esc(r.judul)+'</option>').join('')+'</select><button class="btn" data-act="katGabung" '+(e.gabung?'':'disabled')+'>'+(e.gConfirm?'Tekan lagi untuk sahkan':'Gabung')+'</button></div>'
+       +(isOwner()?'<button class="btn" data-act="katPadam" style="color:var(--r);align-self:flex-start">'+(e.pConfirm?'Tekan sekali lagi untuk padam':'Padam kitab ini')+'</button>':'')+'</div>')
+     +'</section>';
   }
-  h+='<section class="box">'+(rows.length?rows.map(r=>'<div class="li" style="justify-content:space-between"><div style="flex:1 1 200px;min-width:0"><b style="font-size:14px">'+esc(r.judul)+'</b><div class="sub">Harga jual '+rm(r.hargaJual)+' · kos '+(r.kos>0?rm(r.kos):'<span class="tag t-a">belum ada</span>')+(r.berat?' · '+beratTxt(r.berat):'')+'</div></div><button class="btn sm" data-act="katEdit" data-j="'+esc(r.judul)+'">'+(r.kos>0?'Ubah':'Isi kos')+'</button></div>').join(''):'<div class="li sub">Katalog kosong. Import Wasepme akan tambah judul secara automatik.</div>')+'</section>';
+  h+='<section class="box">'+(rows.length?rows.map(r=>'<div class="li" style="justify-content:space-between"><div style="flex:1 1 200px;min-width:0"><b style="font-size:14px">'+esc(r.judul)+'</b><div class="sub">Harga jual '+rm(r.hargaJual)+' · kos '+(r.kos>0?rm(r.kos):'<span class="tag t-a">belum ada</span>')+(r.berat?' · '+beratTxt(r.berat):'')+'</div>'+(r.lain&&r.lain.length?'<div class="sub" style="font-size:12px">Nama lain: '+r.lain.map(esc).join(', ')+'</div>':'')+'</div><button class="btn sm" data-act="katEdit" data-j="'+esc(r.judul)+'">'+(r.kos>0?'Ubah':'Isi kos')+'</button></div>').join(''):'<div class="li sub">Katalog kosong. Import Wasepme akan tambah judul secara automatik.</div>')+'</section>';
   if(!isOwner()) return h;
   const P=K.pos||{perKg:d.pos.perKg, step:d.pos.step};
   h+='<section class="box"><div class="hd"><div><h2>Kadar pos dari Mesir</h2><div class="sub">Kalkulator kira sendiri: berat (dibundar ke atas) × kadar sekilo. Ubah bila kadar naik.</div></div></div>'
@@ -1784,14 +1795,18 @@ const ACT = {
   async agBonus(){ const A=S.ag; if(!A.bConfirm){ A.bConfirm=true; repaint(); return; } try{ A.bDone=await run(call('api_saveBonus',S.pin,A.bonus)); repaint(); }catch(e){ A.bConfirm=false; } },
   async agSave(){ const A=S.ag; if(!A.confirm){ A.confirm=true; repaint(); return; } try{ A.done=await run(call('api_saveAgihan',S.pin,A.untung)); repaint(); }catch(e){ A.confirm=false; } },
   katNew(){ S.kat.edit={baru:true,judul:'',le:'',berat:'',hargaJual:'',kos:0}; repaint(); window.scrollTo(0,0); },
-  katEdit(el){ const r=S.data.kat.rows.find(x=>x.judul===el.dataset.j); S.kat.edit={judul:r.judul,le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos}; repaint(); window.scrollTo(0,0); },
+  katEdit(el){ const r=S.data.kat.rows.find(x=>x.judul===el.dataset.j); S.kat.edit={judul:r.judul,judulLama:r.judul,lain:r.lain||[],le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos}; repaint(); window.scrollTo(0,0); },
+  async katGabungPair(el){ const K=S.kat, a=el.dataset.a, b=el.dataset.b, key=a+'|'+b; if(K.gc!==key){ K.gc=key; repaint(); return; } K.gc=null; try{ const r=await run(call('api_gabungKatalog',S.pin,a,b)); await katReload('Digabung'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); }catch(e){ repaint(); } },
+  async katGabung(){ const e=S.kat.edit; if(!e.gabung) return; if(!e.gConfirm){ e.gConfirm=true; repaint(); return; } try{ const r=await run(call('api_gabungKatalog',S.pin,e.judulLama,e.gabung)); S.kat.edit=null; await katReload('Digabung'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); }catch(x){ e.gConfirm=false; repaint(); } },
+  async katPadam(){ const e=S.kat.edit; if(!e.pConfirm){ e.pConfirm=true; repaint(); return; } try{ await run(call('api_padamKatalog',S.pin,e.judulLama)); S.kat.edit=null; await katReload('Kitab dipadam'); }catch(x){ e.pConfirm=false; repaint(); } },
+  async katBukan(el){ try{ S.data.kat=await run(call('api_bukanSama',S.pin,el.dataset.a,el.dataset.b)); cacheSet('kat',S.data.kat); toast('Ditanda bukan kitab yang sama'); repaint(); }catch(e){} },
   katBerat(el){ S.kat.edit.berat=el.dataset.g; S.kat.edit.beratKg=null; repaint(); },
   katCancel(){ S.kat.edit=null; repaint(); },
   async katSave(){
     const d=S.data.kat, e=S.kat.edit;
     if(!String(e.judul).trim()) return toast('Isi judul');
     const c=kosCalc(e,d); if(c.err) return toast(c.err);
-    try{ const r=await run(call('api_saveKatalog',S.pin,{judul:e.judul,le:e.le,berat:e.berat,kos:c.kos,hargaJual:e.hargaJual||hargaBundar(c.kos,d.markup)})); toast('Disimpan'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); S.kat.edit=null; S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); repaint(); }catch(e2){}
+    try{ const r=await run(call('api_saveKatalog',S.pin,{judul:e.judul,judulLama:e.judulLama||'',le:e.le,berat:e.berat,kos:c.kos,hargaJual:e.hargaJual||hargaBundar(c.kos,d.markup)})); toast('Disimpan'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); S.kat.edit=null; S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); repaint(); }catch(e2){}
   },
   async kadarSave(){ const v=($('kadarIn')||{}).value; try{ S.data.kat=await run(call('api_saveKadar',S.pin,v)); cacheSet('kat',S.data.kat); toast('Kadar disimpan & ditanda disemak'); repaint(); }catch(e){} },
   async posSave(){ const d=S.data.kat; const P=S.kat.pos||d.pos; try{ d.pos=await run(call('api_savePos',S.pin,{perKg:P.perKg,step:P.step})); S.kat.pos=null; cacheSet('kat',d); toast('Kadar pos disimpan'); repaint(); }catch(e){} },
@@ -1825,6 +1840,7 @@ const IN = {
   jumlah(el){ S.R.jumlah=el.value; }, telefon(el){ S.R.telefon=el.value; }, tarikh(el){ S.R.tarikh=el.value; }, keterangan(el){ S.R.keterangan=el.value; }, diskaun(el){ S.R.diskaun=el.value; const w=$('diskWarn'); if(w) w.innerHTML=diskaunWarn(rekodItems(),S.R); },
   agU(el){ S.ag.untung=el.value; S.ag.confirm=false; agRefresh(); },
   agB(el){ S.ag.bonus=el.value; S.ag.bConfirm=false; const b=document.querySelector('[data-act="agBonus"]'), x=Number(el.value)||0, p=Number(S.data.ag.ocbc&&S.data.ag.ocbc.profit)||0; if(b){ b.disabled=!(x>0&&x<=p+0.01); b.textContent='Rekod bonus OCBC → Bank Islam'; } },
+  kg(el){ S.kat.edit.gabung=el.value; S.kat.edit.gConfirm=false; repaint(); },
   ke(el){ const k=el.dataset.k; S.kat.edit[k]=el.value; if(k==='beratKg'){ S.kat.edit.berat=el.value===''?'':Math.round(Number(el.value)*1000); } if(k==='le'||k==='beratKg') refocus('[data-in="ke"][data-k="'+k+'"]',el); },
   pk(el){ S.pk.edit[el.dataset.k]=el.value; },
   gj(el){ const r=S.gj.rows[+el.dataset.i]; r[el.dataset.k]=el.value; const c=calcG(r,S.data.gj.rates); const card=el.closest('section'); const n=card&&card.querySelector('.note'); if(n) n.innerHTML='<span>Kasar '+rm(c.kasar)+' − potongan '+rm(c.potongan)+'</span><b>Bersih '+rm(c.bersih)+'</b>'; },
@@ -1897,4 +1913,3 @@ if(S.pin) login();
 </script>
 </body>
 </html>
-
