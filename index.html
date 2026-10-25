@@ -196,7 +196,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.5';
+const APP_VERSI='1.6';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -367,7 +367,7 @@ async function go(p){
   try{
     if(p==='utama'){ S.data.dash=await call('api_dashboard',S.pin); cacheSet('dash',S.data.dash); }
     if(p==='tunai'){ S.data.tx=await call('api_listTx',S.pin,S.tx.month||''); S.tx.month=S.data.tx.bulan; cacheSet('tx',S.data.tx); }
-    if(p==='agihan'){ S.data.ag=await call('api_agihanInfo',S.pin); S.ag={untung:S.data.ag.untungCadangan, confirm:false, done:null}; }
+    if(p==='agihan'){ S.data.ag=await call('api_agihanInfo',S.pin); S.ag={untung:S.data.ag.untungCadangan, confirm:false, done:null, bonus:S.data.ag.bonus.cadangan, bConfirm:false, bDone:null}; }
     if(p==='katalog'){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.kat.pos=null; }
     if(p==='laporan'){ S.data.lap=await call('api_laporan',S.pin,S.lap.month||''); S.lap.month=S.data.lap.bulan; cacheSet('lap',S.data.lap); }
     if(p==='pekerja'){ S.data.pk=await call('api_pekerja',S.pin); }
@@ -596,7 +596,7 @@ function rekodHtml(){
       const want=out?((S.boot.outCats.find(c=>c.k===R.kategori)||{}).bank):'Maybank';
       const banks=S.boot.banks.filter(b=>b!=='Tunai'||out);
       let warn='';
-      if(R.bank&&R.bank!==want){ warn=R.bank.indexOf('OCBC')===0?'Jangan guna OCBC — itu duit Profit dan Cukai.':(out?(want==='Hong Leong'?'Belanja operasi mesti dibayar dari Hong Leong.':'Duit stok dibayar dari Maybank sahaja.'):'Duit masuk sepatutnya ke Maybank.'); }
+      if(R.bank&&R.bank!==want){ warn=R.bank.indexOf('OCBC')===0?'Jangan guna OCBC — itu duit Profit dan Cukai.':(out?(want==='Hong Leong'?'Belanja operasi mesti dibayar dari Hong Leong.':'Duit stok & pos (EasyParcel) dibayar dari Maybank sahaja.'):'Duit masuk sepatutnya ke Maybank.'); }
       h+='<h2>'+(out?'Dibayar dari bank mana?':'Masuk ke bank mana?')+'</h2><div class="tiles">'+banks.map(b=>'<button class="tile '+(R.bank===b?'on':'')+'" data-act="setR" data-k="bank" data-v="'+esc(b)+'"><b>'+esc(b)+'</b>'+(b===want?'<small>Dicadangkan</small>':'')+'</button>').join('')+'</div>'
        +(warn?'<div class="note n-r" role="alert">'+warn+'</div>':'')
        +'<label class="f">'+(out?'Snap resit':'Bukti bayaran')+'<input class="inp" type="file" accept="image/*,application/pdf" capture="environment" data-in="resit" style="padding-top:10px"></label>'+(R.resitName?'<div class="sub">✓ '+esc(R.resitName)+'</div>':'<div class="sub">Tanpa resit, rekod ditanda "perlu semak".</div>')
@@ -701,23 +701,57 @@ async function impPreview(){
 }
 
 /* ---------- AGIHAN ---------- */
+function agParts(d){ return [['Profit','OCBC',d.pelan.p[0]],['Cukai','OCBC',d.pelan.p[1]],['Gaji pemilik','Bank Islam',d.pelan.p[2]],['Belanja operasi','Hong Leong',d.pelan.p[3]]]; }
+function agNums(d,u){ const parts=agParts(d), jp=Math.round(parts.reduce((a,p)=>a+u*p[2]/100,0)*100)/100, mb=Number(d.baki&&d.baki.Maybank)||0; return {parts, jp, mb, ml:Math.round((mb-jp)*100)/100}; }
+function agBoxHtml(d,u){
+  const n=agNums(d,u);
+  return '<div class="hd"><h2>Pindahkan dari Maybank</h2><span class="sub">Peratus pelan bulan ini</span></div>'+n.parts.map(p=>'<div class="li" style="justify-content:space-between"><span><span class="tag t-b">'+p[2]+'%</span> <b>'+p[0]+'</b> → '+p[1]+'</span><b>'+rm(u*p[2]/100)+'</b></div>').join('')
+   +'<div class="li" style="justify-content:space-between"><span class="sub">Baki Maybank sekarang</span><span>'+rm(n.mb)+'</span></div>'
+   +'<div class="li" style="justify-content:space-between"><span class="sub">Jumlah dipindah</span><span class="amt-out">− '+rm(n.jp)+'</span></div>'
+   +'<div class="li" style="justify-content:space-between"><span style="font-weight:700">Baki Maybank selepas agihan</span><b style="color:'+(n.ml>=0?'var(--g)':'var(--r)')+'">'+rm(n.ml)+'</b></div>';
+}
+function agWarnHtml(d,u){ const n=agNums(d,u); return n.ml<0?'<div class="note n-r">Baki Maybank tidak cukup untuk agihan ini (kurang '+rm(-n.ml)+'). Semak semua duit masuk sudah direkod, atau kurangkan jumlah.</div>':''; }
+function agRefresh(){
+  const d=S.data.ag, u=Number(S.ag.untung)||0; if(!d) return;
+  const bx=document.getElementById('agBox'); if(bx) bx.innerHTML=agBoxHtml(d,u);
+  const w=document.getElementById('agWarn'); if(w) w.innerHTML=agWarnHtml(d,u);
+  const c=document.getElementById('agU2'); if(c) c.textContent=rm(u);
+  const k=document.getElementById('agKekal'); if(k) k.textContent=rm(Math.max(0,d.jualan-d.refund-u));
+  const b=document.querySelector('[data-act="agSave"]'); if(b){ b.disabled=!(u>0); b.textContent='Sahkan & rekod agihan'; }
+}
 function agihanHtml(){
   const d=S.data.ag, A=S.ag;
   let h='<div><h1>Agihan Profit First</h1><div class="sub">Rentak 10hb &amp; 25hb · agihan seterusnya '+(d?dateFmt(d.seterusnya):'')+'</div></div>';
   if(!d) return h+'<div class="sub">Memuatkan…</div>';
   if(A.done){
-    return h+'<div class="note n-g"><b>Agihan direkod ✓</b> Sekarang buat pindahan sebenar dalam app bank:</div><section class="box">'+A.done.parts.map(p=>'<div class="li" style="justify-content:space-between"><span>Maybank → <b>'+esc(p.ke)+'</b> ('+esc(p.nama)+' '+p.pct+'%)</span><b>'+rm(p.jumlah)+'</b></div>').join('')+'</section><div class="note n-n">Bayar semua bil dari Hong Leong sahaja. Jangan pinjam dari OCBC.</div>';
+    return h+'<div class="note n-g"><b>Agihan direkod ✓</b> Sekarang buat pindahan sebenar dalam app bank:</div><section class="box">'+A.done.parts.map(p=>'<div class="li" style="justify-content:space-between"><span>Maybank → <b>'+esc(p.ke)+'</b> ('+esc(p.nama)+' '+p.pct+'%)</span><b>'+rm(p.jumlah)+'</b></div>').join('')
+     +'<div class="li" style="justify-content:space-between"><span class="sub">Baki Maybank selepas agihan (duit stok)</span><b style="color:'+(A.done.bakiMaybank>=0?'var(--g)':'var(--r)')+'">'+rm(A.done.bakiMaybank)+'</b></div></section><div class="note n-n">Bayar semua bil dari Hong Leong sahaja. Jangan pinjam dari OCBC.</div>';
   }
-  const u=Number(A.untung)||0;
-  const parts=[['Profit','OCBC',d.pelan.p[0]],['Cukai','OCBC',d.pelan.p[1]],['Gaji pemilik','Bank Islam',d.pelan.p[2]],['Belanja operasi','Hong Leong',d.pelan.p[3]]];
-  h+='<div class="grid"><div class="card"><span class="lbl">Jualan belum diagih</span><span class="val">'+rm(d.jualan)+'</span><span class="sub">'+d.bilangan+' rekod · duit di bank</span></div><div class="card"><span class="lbl">Kekal di Maybank (duit stok)</span><span class="val">'+rm(Math.max(0,d.jualan-u))+'</span></div><div class="card" style="background:var(--bs)"><span class="lbl">Untung sebenar diagih</span><span class="val" style="color:var(--b)">'+rm(u)+'</span></div></div>'
-   +(d.tunaiBelumBank>0?'<div class="note n-y">Tunai '+rm(d.tunaiBelumBank)+' belum masuk Maybank — tidak dikira. Rekod bank-in dahulu jika sudah dimasukkan.</div>':'')
-   +(d.jualanTanpaKos>0?'<div class="note n-n">Untung sebenar = '+rm(d.untungKnown)+' (jualan yang ada kos) + anggaran '+d.pelan.margin+'% untuk '+rm(d.jualanTanpaKos)+' jualan tanpa kos. Isi kos di Katalog untuk angka tepat.</div>':'')
+  const u=Number(A.untung)||0, lp=d.lompatProfit||0;
+  if(Math.abs(lp)>2) h+='<div class="note n-y"><b>Profit % '+(lp>0?'naik ':'turun ')+Math.abs(lp)+' mata</b> — bulan ini '+d.pelan.p[0]+'%, bulan lepas '+d.pelanLepas.p[0]+'%. Profit First sarankan naik perlahan (lebih kurang 1% setiap suku) supaya belanja operasi sempat menyesuaikan diri. Semak sheet Pelan jika ini tidak disengajakan.</div>';
+  h+='<div class="grid"><div class="card"><span class="lbl">Jualan belum diagih</span><span class="val">'+rm(d.jualan)+'</span><span class="sub">'+d.bilangan+' rekod · bank '+rm(d.jualanBank)+(d.jualanTunai?' + tunai dah bank-in '+rm(d.jualanTunai):'')+'</span></div>'
+   +(d.refund>0?'<div class="card"><span class="lbl">Refund ditolak</span><span class="val amt-out">− '+rm(d.refund)+'</span><span class="sub">Duit dipulangkan kepada pelanggan</span></div>':'')
+   +'<div class="card"><span class="lbl">Kekal di Maybank (duit stok)</span><span class="val" id="agKekal">'+rm(Math.max(0,d.jualan-d.refund-u))+'</span></div><div class="card" style="background:var(--bs)"><span class="lbl">Untung sebenar diagih</span><span class="val" id="agU2" style="color:var(--b)">'+rm(u)+'</span></div></div>'
+   +(d.tunaiBelumBank>0?'<div class="note n-y">Tunai '+rm(d.tunaiBelumBank)+' belum di-bank-in. Ia akan dikira <b>automatik</b> dalam agihan selepas bank-in ke Maybank direkod (Duit Tunai → Bank-in).</div>':'')
+   +'<div class="note n-n">Untung sebenar = '+rm(d.untungKnown)+' (jualan yang ada kos)'+(d.jualanTanpaKos>0?' + anggaran '+d.pelan.margin+'% untuk '+rm(d.jualanTanpaKos)+' jualan tanpa kos':'')+(d.refund>0?' − refund '+rm(d.refund):'')+'.'+(d.jualanTanpaKos>0?' Isi kos di Katalog untuk angka tepat.':'')+'</div>'
    +'<label class="f" style="max-width:320px">Untung sebenar untuk diagih (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="agU" value="'+esc(A.untung)+'" style="font-size:22px;font-weight:700"></label>'
-   +'<section class="box"><div class="hd"><h2>Pindahkan dari Maybank</h2><span class="sub">Peratus pelan bulan ini</span></div>'+parts.map(p=>'<div class="li" style="justify-content:space-between"><span><span class="tag t-b">'+p[2]+'%</span> <b>'+p[0]+'</b> → '+p[1]+'</span><b>'+rm(u*p[2]/100)+'</b></div>').join('')+'</section>'
-   +(d.ocbc&&(d.ocbc.profit||d.ocbc.cukai)?'<div class="note n-n">Dalam OCBC (dari agihan SAFINAH): Profit <b>'+rm(d.ocbc.profit)+'</b> · Cukai <b>'+rm(d.ocbc.cukai)+'</b></div>':'')
+   +'<section class="box" id="agBox">'+agBoxHtml(d,u)+'</section>'
+   +'<div id="agWarn">'+agWarnHtml(d,u)+'</div>'
+   +(d.ocbc&&(d.ocbc.profit||d.ocbc.cukai)?'<div class="note n-n">Dalam OCBC (dari agihan SAFINAH): Profit <b>'+rm(d.ocbc.profit)+'</b> · Cukai <b>'+rm(d.ocbc.cukai)+'</b>'+(d.ocbc.bonusDiambil?' · bonus sudah diambil '+rm(d.ocbc.bonusDiambil):'')+'</div>':'')
    +'<button class="btn p" data-act="agSave" '+(u>0?'':'disabled')+'>'+(A.confirm?'Tekan sekali lagi untuk sahkan':'Sahkan &amp; rekod agihan')+'</button>';
-  return h;
+  return h+bonusHtml(d);
+}
+function bonusHtml(d){
+  const A=S.ag, B=d.bonus||{}, prof=Number(d.ocbc&&d.ocbc.profit)||0, x=Number(A.bonus)||0;
+  let h='<section class="card" style="gap:10px;margin-top:8px'+(B.waktu&&!B.sudah?';border-color:#93C5FD;background:#F5F9FF':'')+'"><div class="row between"><h2>Bonus Profit suku tahun</h2><span class="tag '+(B.sudah?'t-g':(B.waktu?'t-b':'t-n'))+'">'+(B.sudah?esc(B.suku)+' sudah diambil ✓':(B.waktu?'Masa ambil bonus '+esc(B.suku):'Akhir suku: '+esc(dateFmt(B.akhirSuku))))+'</span></div>'
+   +'<div class="sub" style="font-size:13px">Setiap akhir suku (25hb Mac, Jun, Sep, Dis), ambil <b>50% baki Profit</b> dalam OCBC sebagai ganjaran pemilik (OCBC → Bank Islam). Baki 50% kekal sebagai simpanan kecemasan. Duit Cukai tidak disentuh.</div>';
+  if(A.bDone) return h+'<div class="note n-g"><b>Bonus '+esc(A.bDone.suku)+' direkod ✓</b> Pindahkan '+rm(A.bDone.jumlah)+' dari OCBC ke Bank Islam dalam app bank. Baki Profit kini '+rm(A.bDone.bakiProfit)+'.</div></section>';
+  h+='<div class="row" style="gap:24px"><div><span class="lbl">Baki Profit (OCBC)</span><div class="val" style="font-size:20px">'+rm(prof)+'</div></div><div><span class="lbl">50% cadangan bonus</span><div class="val" style="font-size:20px;color:var(--b)">'+rm(B.cadangan||0)+'</div></div></div>';
+  if(B.sudah||prof<=0) return h+(prof<=0?'<div class="sub">Belum ada baki Profit.</div>':'')+'</section>';
+  h+='<label class="f" style="max-width:240px">Jumlah bonus (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="agB" value="'+esc(A.bonus)+'"></label>'
+   +(!B.waktu?'<div class="note n-y">Belum akhir suku. Profit First sarankan bonus diambil sekali sesuku sahaja.</div>':'')
+   +'<button class="btn '+(B.waktu?'p':'')+'" data-act="agBonus" '+(x>0&&x<=prof+0.01?'':'disabled')+'>'+(A.bConfirm?'Tekan sekali lagi untuk sahkan':'Rekod bonus OCBC → Bank Islam')+'</button>';
+  return h+'</section>';
 }
 
 /* ---------- KATALOG ---------- */
@@ -792,8 +826,8 @@ function laporanHtml(){
    +'<div class="row" style="align-items:stretch">'
    +'<section class="box" style="flex:1 1 300px"><div class="hd"><h2>Jualan ikut saluran</h2></div>'+(d.saluran.length?d.saluran.map(x=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between"><span>'+esc(x.k)+'</span><b>'+rm(x.v)+'</b></div><div class="bar" style="height:8px"><i style="width:'+Math.round(x.v/salMax*100)+'%"></i></div></div>').join(''):'<div class="li sub">Tiada jualan.</div>')+'</section>'
    +'<section class="box" style="flex:1 1 300px"><div class="hd"><h2>Untung rugi ringkas</h2></div>'
-   +[['Jualan kitab',d.jualan,''],['Kos kitab (yang direkod)',-d.kosKnown,''],['Untung sebenar',d.untungAnggaran,'b'],['Belanja operasi',-d.opex,'']].concat(d.refund?[['Refund / ganti pelanggan',-d.refund,'']]:[]).concat([['Baki',d.baki,'b']]).map(r=>'<div class="li" style="justify-content:space-between"><span'+(r[2]?' style="font-weight:700"':'')+'>'+r[0]+'</span><span class="'+(r[1]<0?'amt-out':'')+'"'+(r[2]?' style="font-weight:700"':'')+'>'+(r[1]<0?'− ':'')+rm(Math.abs(r[1]))+'</span></div>').join('')
-   +'<div class="li sub" style="font-size:12px">Caj pos dikutip '+rm(d.posDikutip)+' · beli stok kitab '+rm(d.stok)+' (tidak ditolak — sudah dalam kos kitab)</div></section></div>'
+   +[['Jualan kitab',d.jualan,''],['Kos kitab (yang direkod)',-d.kosKnown,''],['Untung sebenar',d.untungAnggaran,'b'],['Belanja operasi',-d.opex,'']].concat(d.refund?[['Refund / ganti pelanggan',-d.refund,'']]:[]).concat((d.posBayar||d.posDikutip)?[['Pos bersih (dikutip − EasyParcel)',Math.round(((d.posDikutip||0)-(d.posBayar||0))*100)/100,'']]:[]).concat([['Baki',d.baki,'b']]).map(r=>'<div class="li" style="justify-content:space-between"><span'+(r[2]?' style="font-weight:700"':'')+'>'+r[0]+'</span><span class="'+(r[1]<0?'amt-out':'')+'"'+(r[2]?' style="font-weight:700"':'')+'>'+(r[1]<0?'− ':'')+rm(Math.abs(r[1]))+'</span></div>').join('')
+   +'<div class="li sub" style="font-size:12px">Caj pos dikutip '+rm(d.posDikutip)+' · dibayar EasyParcel '+rm(d.posBayar||0)+' (kedua-duanya dalam Maybank) · beli stok kitab '+rm(d.stok)+' (tidak ditolak — sudah dalam kos kitab)</div></section></div>'
    +'<div class="row" style="align-items:stretch">'
    +'<section class="box" style="flex:1 1 300px"><div class="hd"><h2>Kitab paling laku</h2></div>'+(d.topKitab.length?d.topKitab.map((k,i)=>'<div class="li" style="justify-content:space-between"><span style="flex:1;min-width:0">'+(i+1)+'. '+esc(k.judul)+'</span><span class="sub">'+k.q+' naskhah · '+rm(k.jumlah)+'</span></div>').join(''):'<div class="li sub">Tiada data kitab.</div>')+'</section>'
    +'<section class="box" style="flex:1 1 300px"><div class="hd"><h2>Belanja ikut kategori</h2></div>'+(d.belanja.length?d.belanja.map(x=>'<div class="li" style="justify-content:space-between"><span>'+esc(x.k)+'</span><b class="amt-out">'+rm(x.v)+'</b></div>').join(''):'<div class="li sub">Tiada belanja direkod.</div>')+'</section></div>';
@@ -1663,6 +1697,7 @@ function tugasList(d){
     L.push(['sah','Sahkan duit pelanggan benar-benar masuk Maybank','go','tunai']);
     if(hari===10||hari===25){ L.push(['imp','Import SalesReport Wasep.me ke SAFINAH','go','imp']); L.push(['agih','Buat agihan Profit First','go','agihan']); }
     if(hari===25) L.push(['padan','Padankan baki SAFINAH dengan 4 akaun bank','go','tunai']);
+    if(hari===25&&[3,6,9,12].indexOf(+p[1])>-1) L.push(['bonus','Akhir suku: ambil bonus 50% baki Profit (OCBC → Bank Islam)','go','agihan']);
     if(hari===1) L.push(['gaji','Bayar gaji staf & jana slip gaji (Hong Leong)','go','gaji']);
     if(dow===0) L.push(['konten','Semak 14 posting Ketua Konten sebelum dijadualkan','','']);
     if(T.susulan) L.push(['sus','Susulan bayaran institusi ('+T.susulan+' invois)','go','invois']);
@@ -1742,6 +1777,7 @@ const ACT = {
   async fixDone(el){ try{ await run(call('api_completeTx',S.pin,el.dataset.id,{selesai:true})); toast('Ditanda selesai'); go('tunai'); }catch(e){} },
   impReset(){ S.imp=null; repaint(); },
   async impCommit(){ const I=S.imp; try{ I.done=await run(call('api_commitImport',S.pin,I.orders,I.includePos)); repaint(); }catch(e){} },
+  async agBonus(){ const A=S.ag; if(!A.bConfirm){ A.bConfirm=true; repaint(); return; } try{ A.bDone=await run(call('api_saveBonus',S.pin,A.bonus)); repaint(); }catch(e){ A.bConfirm=false; } },
   async agSave(){ const A=S.ag; if(!A.confirm){ A.confirm=true; repaint(); return; } try{ A.done=await run(call('api_saveAgihan',S.pin,A.untung)); repaint(); }catch(e){ A.confirm=false; } },
   katNew(){ S.kat.edit={baru:true,judul:'',le:'',berat:'',hargaJual:'',kos:0}; repaint(); window.scrollTo(0,0); },
   katEdit(el){ const r=S.data.kat.rows.find(x=>x.judul===el.dataset.j); S.kat.edit={judul:r.judul,le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos}; repaint(); window.scrollTo(0,0); },
@@ -1783,7 +1819,8 @@ const IN = {
   rq(el){ S.R.q=el.value; refocus('[data-in="rq"]',el); },
   kq(el){ S.kat.q=el.value; refocus('[data-in="kq"]',el); },
   jumlah(el){ S.R.jumlah=el.value; }, telefon(el){ S.R.telefon=el.value; }, tarikh(el){ S.R.tarikh=el.value; }, keterangan(el){ S.R.keterangan=el.value; }, diskaun(el){ S.R.diskaun=el.value; const w=$('diskWarn'); if(w) w.innerHTML=diskaunWarn(rekodItems(),S.R); },
-  agU(el){ S.ag.untung=el.value; S.ag.confirm=false; refocus('[data-in="agU"]',el); },
+  agU(el){ S.ag.untung=el.value; S.ag.confirm=false; agRefresh(); },
+  agB(el){ S.ag.bonus=el.value; S.ag.bConfirm=false; const b=document.querySelector('[data-act="agBonus"]'), x=Number(el.value)||0, p=Number(S.data.ag.ocbc&&S.data.ag.ocbc.profit)||0; if(b){ b.disabled=!(x>0&&x<=p+0.01); b.textContent='Rekod bonus OCBC → Bank Islam'; } },
   ke(el){ const k=el.dataset.k; S.kat.edit[k]=el.value; if(k==='beratKg'){ S.kat.edit.berat=el.value===''?'':Math.round(Number(el.value)*1000); } if(k==='le'||k==='beratKg') refocus('[data-in="ke"][data-k="'+k+'"]',el); },
   pk(el){ S.pk.edit[el.dataset.k]=el.value; },
   gj(el){ const r=S.gj.rows[+el.dataset.i]; r[el.dataset.k]=el.value; const c=calcG(r,S.data.gj.rates); const card=el.closest('section'); const n=card&&card.querySelector('.note'); if(n) n.innerHTML='<span>Kasar '+rm(c.kasar)+' − potongan '+rm(c.potongan)+'</span><b>Bersih '+rm(c.bersih)+'</b>'; },
