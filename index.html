@@ -196,7 +196,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.6';
+const APP_VERSI='1.6.1';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -687,6 +687,9 @@ function importHtml(){
    +'<div class="grid"><div class="card" style="background:var(--gs)"><span class="lbl">Akan diimport</span><span class="val">'+s.import+'</span></div><div class="card"><span class="lbl">Dilangkau</span><span class="val">'+s.langkau+'</span></div><div class="card"><span class="lbl">Sudah pernah diimport</span><span class="val">'+s.ada+'</span></div><div class="card"><span class="lbl">Tiada kos kitab</span><span class="val" style="color:'+(s.tiadaKos?'var(--a)':'inherit')+'">'+s.tiadaKos+'</span></div></div>'
    +(posCount?'<label class="note n-y row" style="cursor:pointer"><input type="checkbox" data-in="impPos" '+(I.includePos?'checked':'')+' style="width:20px;height:20px"> <span><b>Import '+posCount+' jualan POS Wasepme</b> (kedai &amp; event). Jualan pada tarikh program dipadankan sendiri dengan program dalam Kalendar.</span></label>':'')
    +'<section class="card" style="border:2px solid var(--b)"><div class="row between"><span>Jualan kitab</span><b>'+rm(s.jualan)+'</b></div><div class="row between sub"><span>Caj pos dikutip (bukan jualan)</span><span>'+rm(s.pos)+'</span></div><div class="row between" style="font-weight:700"><span>Jumlah duit masuk</span><span>'+rm(s.masuk)+'</span></div><div class="sub">'+esc(bay)+(s.tunai?' · tunai '+rm(s.tunai)+' belum masuk Maybank':'')+'</div></section>'
+   +(!s.import&&s.ada?'<div class="note n-g" style="font-size:15px"><b>Tiada pesanan baru.</b> Semua '+s.ada+' pesanan dalam fail ini sudah pernah diimport — SAFINAH tak akan masukkan dua kali.</div>':(s.import&&s.ada?'<div class="note n-n">'+s.ada+' pesanan sudah ada dalam SAFINAH dan akan dilangkau. Hanya <b>'+s.import+' pesanan baru</b> akan diimport.</div>':''))
+   +((p.berulang||[]).length?'<div class="note n-r" style="display:flex;flex-direction:column;gap:8px"><span>Ada <b>'+p.berulang.length+' pesanan</b> yang sudah masuk lebih sekali dalam SAFINAH dari import sebelum ini: '+p.berulang.slice(0,8).map(d=>'#'+esc(d.no)+' ('+d.bil+'×)').join(', ')+(p.berulang.length>8?' …':'')+'. Jualan jadi lebih tinggi dari sebenar.</span><button class="btn sm" data-act="impBuang" style="align-self:flex-start">'+(I.bConfirm?'Tekan sekali lagi untuk sahkan':'Buang salinan berulang')+'</button></div>':'')
+   +(I.buangRes?'<div class="note n-g">'+I.buangRes.dibuang+' baris berulang dibuang ✓'+(I.buangRes.kekalDiagih.length?' · '+I.buangRes.kekalDiagih.length+' salinan dikekalkan kerana sudah masuk agihan — semak di sheet Transaksi.':'')+'</div>':'')
    +(p.kitabBaru.length?'<div class="note n-y">'+p.kitabBaru.length+' judul kitab belum ada dalam Katalog — akan ditambah automatik. Isi kos di Katalog selepas import.</div>':'')
    +low.map(r=>'<div class="note n-r">#'+esc(r.no)+': '+esc(r.bendera.find(b=>/terlalu rendah/.test(b)))+'</div>').join('')
    +'<section class="box tbl"><table><thead><tr><th>No.</th><th>Tarikh</th><th>Kitab</th><th style="text-align:right">Jualan</th><th>Bayaran</th><th>Status</th><th>Keputusan</th></tr></thead><tbody>'
@@ -1776,6 +1779,7 @@ const ACT = {
   async fixBank(el){ try{ await run(call('api_completeTx',S.pin,el.dataset.id,{bank:$('fixBank').value})); toast('Dikemas kini'); go('tunai'); }catch(e){} },
   async fixDone(el){ try{ await run(call('api_completeTx',S.pin,el.dataset.id,{selesai:true})); toast('Ditanda selesai'); go('tunai'); }catch(e){} },
   impReset(){ S.imp=null; repaint(); },
+  async impBuang(){ const I=S.imp; if(!I.bConfirm){ I.bConfirm=true; repaint(); return; } I.bConfirm=false; try{ I.buangRes=await run(call('api_buangBerulang',S.pin)); I.preview=await call('api_previewImport',S.pin,I.orders,I.includePos); repaint(); }catch(e){ repaint(); } },
   async impCommit(){ const I=S.imp; try{ I.done=await run(call('api_commitImport',S.pin,I.orders,I.includePos)); repaint(); }catch(e){} },
   async agBonus(){ const A=S.ag; if(!A.bConfirm){ A.bConfirm=true; repaint(); return; } try{ A.bDone=await run(call('api_saveBonus',S.pin,A.bonus)); repaint(); }catch(e){ A.bConfirm=false; } },
   async agSave(){ const A=S.ag; if(!A.confirm){ A.confirm=true; repaint(); return; } try{ A.done=await run(call('api_saveAgihan',S.pin,A.untung)); repaint(); }catch(e){ A.confirm=false; } },
@@ -1893,3 +1897,4 @@ if(S.pin) login();
 </script>
 </body>
 </html>
+
