@@ -209,7 +209,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.7.3';
+const APP_VERSI='1.8';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -418,6 +418,12 @@ document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==
 window.addEventListener('pageshow',e=>{ if(e.persisted) muatSemula(true); });
 setInterval(()=>{ if(document.visibilityState==='visible'&&S.synced&&(Date.now()-S.synced.getTime())>5*60000) muatSemula(true); },60000);
 
+/* v1.8: selepas masuk, ambil data halaman yang selalu dibuka di belakang tabir */
+async function prefetch(){
+  if(!S.user) return;
+  const L=S.user.role==='pemilik'?['tunai','laporan','opex','agihan']:(S.user.role==='operasi'?['katalog','kalendar','invois']:[]);
+  for(const p of L){ if(!S.user||S.page===p) continue; try{ await loadPage(p); }catch(e){ return; } }
+}
 async function go(p){
   S.page=p; window.scrollTo(0,0);
   try{ const g=groupOf(p); if(g) S.lastSub[g.id]=p; }catch(e){}
@@ -427,6 +433,8 @@ async function go(p){
   if(p==='tunai'&&!S.data.tx) S.data.tx=cacheGet('tx');
   if(p==='katalog'&&!S.data.kat) S.data.kat=cacheGet('kat');
   if(p==='laporan'&&!S.data.lap) S.data.lap=cacheGet('lap');
+  if(p==='laporan'&&!S.data.rk&&(S.lap.tempoh||'bulan')==='bulan'&&!S.lap.month) S.data.rk=cacheGet('rk');
+  if(p==='opex'&&!S.data.ox&&!S.ox.month) S.data.ox=cacheGet('ox');
   render();
   try{
     await loadPage(p);
@@ -461,8 +469,8 @@ async function login(){
     const b=await run(call('api_login',pin));
     S.pin=pin; S.user=b.user; S.boot=b; try{localStorage.setItem('hpr_pin',pin);}catch(e){}
     if(b.dash){ S.data.dash=b.dash; cacheSet('dash',b.dash); }
-    S.page='utama'; if(!S.R) S.R=newRekod('jualan'); render();
-    flushOutbox();
+    S.page='utama'; if(!S.R) S.R=newRekod('jualan'); S.synced=new Date(); render();
+    flushOutbox(); setTimeout(prefetch,1200);
   }catch(e){ S.user=null; }
 }
 
@@ -858,7 +866,7 @@ function opexEditHtml(d){
    +'<div class="oxbar"><button class="btn p" style="flex:1" data-act="oxSave">Simpan</button><button class="btn" data-act="oxEdit">Batal</button></div>';
   return h;
 }
-async function oxLoad(){ S.data.ox=await call('api_opex',S.pin,S.ox.month||''); if(!S.ox.month) S.ox.month=S.data.ox.ym; }
+async function oxLoad(){ S.data.ox=await call('api_opex',S.pin,S.ox.month||''); if(!S.ox.month) S.ox.month=S.data.ox.ym; if(S.data.ox.ym===((S.boot&&S.boot.today)||'').slice(0,7)) cacheSet('ox',S.data.ox); }
 
 /* ---------- RINGKASAN PENGASAS (v1.7) ---------- */
 function lapTabs(){ const v=S.lap.view||'ringkas'; return '<div class="row noprint" role="tablist" style="gap:6px">'+[['ringkas','Ringkasan Pengasas'],['penuh','Laporan penuh']].map(x=>'<button class="chip '+(v===x[0]?'on':'')+'" data-act="lapView" data-v="'+x[0]+'" role="tab" aria-selected="'+(v===x[0])+'">'+x[1]+'</button>').join('')+'</div>'; }
@@ -922,7 +930,7 @@ function ringkasHtml(){
   return h;
 }
 function r2c(n){ return Math.round(n*100)/100; }
-async function rkLoad(){ S.data.rk=await call('api_ringkasan',S.pin,S.lap.tempoh||'bulan',S.lap.month||''); if(!S.lap.month) S.lap.month=S.data.rk.ym; }
+async function rkLoad(){ S.data.rk=await call('api_ringkasan',S.pin,S.lap.tempoh||'bulan',S.lap.month||''); if(!S.lap.month) S.lap.month=S.data.rk.ym; if((S.lap.tempoh||'bulan')==='bulan') cacheSet('rk',S.data.rk); }
 
 /* ---------- LAPORAN CUKAI TAHUNAN (v1.7) ---------- */
 function ckRow(label,v,o){ o=o||{}; const neg=v<0; return '<div class="li" style="justify-content:space-between;flex-wrap:nowrap;gap:10px;'+(o.b?'font-weight:700;background:var(--soft)':'')+(o.ind?';padding-left:28px':'')+'"><span style="flex:1;min-width:0">'+label+(o.nota?'<div class="sub" style="font-size:12px;font-weight:400">'+o.nota+'</div>':'')+'</span><span class="'+(o.out?'amt-out':'')+'" style="white-space:nowrap">'+(v===null||v===undefined?'<span class="tag t-a">belum diisi</span>':(o.out&&v?'− ':'')+(neg?'− ':'')+rm(Math.abs(v)))+'</span></div>'; }
@@ -2037,7 +2045,7 @@ function lagiHtml(){
 
 /* ---------- tindakan ---------- */
 const ACT = {
-  login, logout(){ S.user=null; S.pin=''; try{localStorage.removeItem('hpr_pin');}catch(e){} render(); },
+  login, logout(){ S.user=null; S.pin=''; S.data={}; try{localStorage.removeItem('hpr_pin'); Object.keys(localStorage).filter(k=>k.indexOf('safinah:c:')===0).forEach(k=>localStorage.removeItem(k)); }catch(e){} render(); },
   go(el){ go(el.dataset.p); },
   goG(el){ const g=myGroups().find(x=>x.id===el.dataset.g); if(!g) return; const last=S.lastSub[g.id]; go(last&&g.subs.indexOf(last)>-1?last:g.subs[0]); },
   semak(){ S.tx.filter='semak'; go('tunai'); },
