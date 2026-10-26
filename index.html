@@ -207,7 +207,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.7.1';
+const APP_VERSI='1.7.2';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -674,6 +674,8 @@ function txRowHtml(r){
     h+='<div class="li" style="background:var(--bs);flex-direction:column;align-items:stretch">'
      +(r.items&&r.items.length&&r.jenis==='Masuk'?'<button class="btn sm g" style="align-self:flex-start" data-act="resitTx" data-id="'+esc(r.id)+'">🧾 Resit pelanggan</button>':'')
      +(r.resit?'<a href="'+esc(r.resit)+'" target="_blank" rel="noopener">Lihat bukti bayaran / resit belanja</a>':'')
+     +(r.sah?'<div class="note n-g" style="font-size:13px;display:flex;flex-direction:column;gap:6px"><span><b>✓ Disahkan Pengurus Utama</b> · '+esc(r.sah.no)+' · '+esc(tglTxt(r.sah.tarikh))+'</span><span>Sebab tiada resit: '+esc(r.sah.sebab)+'</span>'+(r.sah.bukti?'<a href="'+esc(r.sah.bukti)+'" target="_blank" rel="noopener">Lihat bukti lain</a>':'')+'<button class="btn sm" style="align-self:flex-start" data-act="baucar" data-id="'+esc(r.id)+'">Lihat baucar</button></div>':'')
+     +(!r.sah&&isOwner()&&/resit|bukti/i.test(fl)?(S.tx.sah===r.id?'<div class="card" style="gap:10px;padding:14px"><b>Sahkan tanpa resit</b><label class="f">Sebab tiada resit (wajib)<textarea class="inp" rows="3" style="font:inherit;font-size:15px;resize:vertical" data-in="sahSebab" placeholder="Contoh: Bayar tunai kepada pemandu lori, penjual tiada resit">'+esc(S.tx.sahSebab||'')+'</textarea></label><label class="f">Bukti lain (pilihan) — screenshot WhatsApp / slip bank<input class="inp" type="file" accept="image/*,application/pdf" data-in="sahBukti" style="padding-top:10px"></label>'+(S.tx.sahBuktiNama?'<span class="sub" style="font-size:12px">Dilampirkan: '+esc(S.tx.sahBuktiNama)+'</span>':'')+'<div class="row"><button class="btn p" data-act="sahkan" data-id="'+esc(r.id)+'">Sahkan &amp; jana baucar</button><button class="btn" data-act="sahBatal">Batal</button></div></div>':'<button class="btn sm" style="align-self:flex-start" data-act="sahBuka" data-id="'+esc(r.id)+'">Sahkan tanpa resit (Pengurus Utama)</button>'):'')
      +(/resit|bukti/i.test(fl)?'<label class="f">Muat naik resit<input class="inp" type="file" accept="image/*,application/pdf" data-in="fixResit" data-id="'+esc(r.id)+'" style="padding-top:10px"></label>':'')
      +(/Bank salah|sepatutnya/i.test(fl)?'<div class="row"><select class="inp" id="fixBank" style="flex:1">'+S.boot.banks.map(b=>'<option>'+esc(b)+'</option>').join('')+'</select><button class="btn sm" data-act="fixBank" data-id="'+esc(r.id)+'">Betulkan bank</button></div>':'')
      +(/Kos nampak/i.test(fl)?'<button class="btn sm" data-act="fixKat" data-id="'+esc(r.id)+'">Guna kos dari Katalog</button>':'')
@@ -1166,6 +1168,15 @@ function waLink(g,co){
   const pot=r2((+g.kwspP||0)+(+g.perkesoP||0)+(+g.sipP||0)+(+g.pcb||0)+(+g.pendahuluan||0)+(+g.potonganLain||0));
   const msg='Assalamualaikum '+g.nama+'.\nSlip gaji '+bulanTxt(g.bulan)+' — '+co.nama+'\nGaji kasar: '+rm(kasar)+'\nPotongan: '+rm(pot)+'\nGaji bersih: '+rm(kasar-pot)+(g.tarikhBayar?'\nTarikh bayar: '+g.tarikhBayar.split('-').reverse().join('/'):'')+'\nTerima kasih atas khidmat anda.';
   return 'https://wa.me/'+t+'?text='+encodeURIComponent(msg);
+}
+function baucarHtml(t,co){
+  const masuk=t.jenis==='Masuk', a=t.sah||{};
+  const row=(k,v)=>'<tr><td style="width:38%">'+k+'</td><td>'+v+'</td></tr>';
+  return '<article class="slip"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;padding-bottom:14px;border-bottom:2px solid #064C7D"><div style="display:flex;gap:12px;align-items:center"><img src="'+LOGO+'" alt="Logo" style="width:52px;height:55px;object-fit:contain"><div><div style="font-size:16px;font-weight:700">'+esc(co.nama||'')+'</div><div style="color:#4B5563;font-size:12px">No. SSM: '+esc(co.noDaftar||'')+'</div><div style="color:#4B5563;font-size:12px;max-width:340px">'+esc(co.alamat||'')+'</div></div></div><div style="text-align:right"><div style="font-size:18px;font-weight:700;letter-spacing:1px;color:#064C7D">'+(masuk?'BAUCAR TERIMAAN':'BAUCAR BAYARAN')+'</div><div style="color:#4B5563">No. '+esc(a.no||'')+'</div></div></div>'
+   +'<table>'+row('Tarikh transaksi',esc(tglTxt(t.tarikh)))+row(masuk?'Diterima ke':'Dibayar dari',esc(t.bank||''))+row('Kategori',esc(t.kategori||''))+row('Butiran',esc(t.keterangan||''))+row('Sebab tiada resit',esc(a.sebab||''))+(a.bukti?row('Bukti lain','<a href="'+esc(a.bukti)+'" target="_blank" rel="noopener">Dilampirkan</a>'):'')+'</table>'
+   +'<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-radius:6px;background:#064C7D;color:#fff"><span style="font-weight:600">JUMLAH</span><span style="font-size:22px;font-weight:700">'+rm(t.jumlah)+'</span></div>'
+   +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;font-size:13px"><div><div style="border-top:1px solid #9CA3AF;padding-top:6px">Disediakan oleh</div><b>'+esc(t.oleh||'')+'</b></div><div><div style="border-top:1px solid #9CA3AF;padding-top:6px">Diluluskan oleh</div><b>Pengurus Utama</b><div style="color:#4B5563">'+esc(tglTxt(a.tarikh||''))+'</div></div></div>'
+   +'<div style="padding-top:12px;border-top:1px solid #E5E7EB;font-size:11px;color:#4B5563;text-align:center">Baucar ini menggantikan resit yang tiada dan diluluskan dalam SAFINAH.'+(co.tema?' · '+esc(co.tema):'')+'</div></article>';
 }
 function openSlip(g,co){ openView(slipHtml(g,co), g.telefon?waLink(g,co):''); }
 function openView(inner,wa){
@@ -1691,6 +1702,10 @@ function resitWa(r){
 function openResit(t){ const r=resitData(t); openView(resitDoc(r), resitWa(r)); }
 const ACT_RS = {
   resitDone(){ openResit(S.R.done); },
+  sahBuka(el){ S.tx.sah=el.dataset.id; S.tx.sahSebab=''; S.tx.sahBukti=null; S.tx.sahBuktiNama=''; rp(); },
+  sahBatal(){ S.tx.sah=null; rp(); },
+  async sahkan(el){ const T=S.tx; if(String(T.sahSebab||'').trim().length<5) return toast('Tulis sebab ringkas kenapa tiada resit.'); try{ const r=await run(call('api_sahkanTx',S.pin,el.dataset.id,T.sahSebab,T.sahBukti)); const t=S.data.tx.rows.find(x=>x.id===el.dataset.id); if(t){ t.sah=r.sah; t.status=r.status; t.bendera=String(t.bendera||'').split('; ').filter(f=>f&&f!=='Tiada resit'&&f!=='Tiada bukti bayaran').join('; '); } T.sah=null; toast('Disahkan · '+r.sah.no); rp(); if(t) openView(baucarHtml(t,S.boot.syarikat||{}),''); }catch(e){} },
+  baucar(el){ const t=S.data.tx.rows.find(x=>x.id===el.dataset.id); if(t) openView(baucarHtml(t,S.boot.syarikat||{}),''); },
   resitTx(el){ const t=S.data.tx.rows.find(x=>x.id===el.dataset.id); if(t) openResit(t); },
   resitMine(el){ const t=(S.data.dash.mine||[]).find(x=>x.id===el.dataset.id); if(t) openResit(t); }
 };
@@ -2070,6 +2085,7 @@ const IN = {
   agB(el){ S.ag.bonus=el.value; S.ag.bConfirm=false; const b=document.querySelector('[data-act="agBonus"]'), x=Number(el.value)||0, p=Number(S.data.ag.ocbc&&S.data.ag.ocbc.profit)||0; if(b){ b.disabled=!(x>0&&x<=p+0.01); b.textContent='Rekod bonus OCBC → Bank Islam'; } },
   oxB(el){ S.ox.f.bajet[el.dataset.k]=el.value; const t=$('oxTot'); if(t) t.textContent=rm(Object.keys(S.ox.f.bajet).reduce((a,k)=>a+(Number(S.ox.f.bajet[k])||0),0)); },
   oxT(el){ S.ox.f.tetap[+el.dataset.i][el.dataset.k]=el.value; },
+  sahSebab(el){ S.tx.sahSebab=el.value; },
   ckF(el){ S.ck.f[el.dataset.k]=el.value; },
   ckP(el){ S.ck.p[el.dataset.k]=el.value; },
   ckA(el){ S.ck.a[el.dataset.k]=el.value; },
@@ -2132,6 +2148,7 @@ document.addEventListener('change',async e=>{
   if(k==='tgs'){ const D=tugasDone(); D[el.dataset.k]=el.checked; try{ localStorage.setItem(tugasKey(),JSON.stringify(D)); }catch(e){} rp(); }
   if(k==='ivPay'){ S.iv.pay=el.value; }
   if(k==='kg'){ IN.kg(el); }
+  if(k==='sahBukti'){ const f=el.files[0]; if(!f) return; try{ busy(true); S.tx.sahBukti=await readReceipt(f); S.tx.sahBuktiNama=f.name; }catch(er){ toast(er.message); } finally{ busy(false); } rp(); }
   if(k==='oxT'&&el.tagName==='SELECT'){ IN.oxT(el); }
   if(k==='oxMonth'){ S.ox.month=el.value; S.data.ox=null; S.ox.edit=false; go('opex'); }
   if(k==='ckTahun'){ S.ck.tahun=el.value; S.data.ck=null; S.ck.a=null; S.ck.stokRes=null; go('cukai'); }
@@ -2152,3 +2169,4 @@ if(S.pin) login();
 </script>
 </body>
 </html>
+
