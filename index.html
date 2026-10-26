@@ -161,6 +161,8 @@ label.f{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:60
 .oxcard .inp{background:#fff;font-weight:500}
 .oxdua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .oxbar{display:flex;gap:10px}
+.syncbar{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:12px;color:var(--mut);margin-bottom:-6px}
+.syncbar .btn{min-height:32px;padding:4px 12px;font-size:12px}
 .printonly{display:none}@media print{.printonly{display:block}}
 @media (max-width:760px){
   .side{display:none}
@@ -207,7 +209,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.7.2';
+const APP_VERSI='1.7.3';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -340,7 +342,7 @@ function render(){
   tabScroll();
 }
 function crumb(){ if(NAVMODE!=='C'||S.page==='utama') return ''; const g=groupOf(S.page); return '<nav class="crumb" aria-label="Lokasi"><button data-act="go" data-p="utama">← Utama</button><span aria-hidden="true">›</span><span>'+esc(g?gLabel(g):'')+'</span></nav>'; }
-function pageHtml(){ if(S.page==='menu') return menuHtml(); return crumb()+(NAVMODE==='B'?'':subTabs())+(NAVMODE==='C'&&S.page==='utama'?hubHtml():'')+pageBody()+(S.page==='utama'?'<div class="sub" style="text-align:center;font-size:11px;margin-top:8px">SAFINAH v'+APP_VERSI+'</div>':''); }
+function pageHtml(){ if(S.page==='menu') return menuHtml(); return syncBar()+crumb()+(NAVMODE==='B'?'':subTabs())+(NAVMODE==='C'&&S.page==='utama'?hubHtml():'')+pageBody()+(S.page==='utama'?'<div class="sub" style="text-align:center;font-size:11px;margin-top:8px">SAFINAH v'+APP_VERSI+'</div>':''); }
 function pageBody(){
   switch(S.page){
     case 'utama': return S.user.role==='pemilik'?(S.data.dash&&S.data.dash.role==='pemilik'?(UTAMA==='1'?utamaOwner1():UTAMA==='2'?utamaOwner2():utamaOwner()):utamaOwner()):utamaStaf();
@@ -367,17 +369,8 @@ function pageBody(){
 function tabScroll(){ const c=document.querySelector('.subtabs .chip.on'); if(c&&c.parentNode) c.parentNode.scrollLeft=Math.max(0,c.offsetLeft-c.parentNode.offsetLeft-16); }
 function repaint(){ const p=$('page'); if(p){ const sl=(document.querySelector('.subtabs')||{}).scrollLeft; p.innerHTML=pageHtml(); const t=document.querySelector('.subtabs'); if(t&&sl!=null) t.scrollLeft=sl; } else render(); }
 
-async function go(p){
-  S.page=p; window.scrollTo(0,0);
-  try{ const g=groupOf(p); if(g) S.lastSub[g.id]=p; }catch(e){}
-  if(p==='rekod' && !S.R) S.R=newRekod('jualan');
-  // tunjuk data simpanan dahulu (laju), kemudian ambil data terkini
-  if(p==='utama'&&!S.data.dash) S.data.dash=cacheGet('dash');
-  if(p==='tunai'&&!S.data.tx) S.data.tx=cacheGet('tx');
-  if(p==='katalog'&&!S.data.kat) S.data.kat=cacheGet('kat');
-  if(p==='laporan'&&!S.data.lap) S.data.lap=cacheGet('lap');
-  render();
-  try{
+/* v1.7.3: ambil data terkini (dipakai oleh go, butang Muat semula & muat semula automatik) */
+async function loadPage(p){
     if(p==='utama'){ S.data.dash=await call('api_dashboard',S.pin); cacheSet('dash',S.data.dash); }
     if(p==='tunai'){ S.data.tx=await call('api_listTx',S.pin,S.tx.month||''); S.tx.month=S.data.tx.bulan; cacheSet('tx',S.data.tx); }
     if(p==='agihan'){ S.data.ag=await call('api_agihanInfo',S.pin); S.ag={untung:S.data.ag.untungCadangan, confirm:false, done:null, bonus:S.data.ag.bonus.cadangan, bConfirm:false, bDone:null}; }
@@ -394,6 +387,49 @@ async function go(p){
     if(p==='hajat'){ S.data.hj=await call('api_hajat',S.pin); }
     if(p==='surat'){ S.data.sr=await call('api_surat',S.pin); }
     if(p==='invois'){ S.data.iv=await call('api_invois',S.pin); if(!S.data.kat){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); } }
+  S.synced=new Date();
+}
+function autoOk(p){
+  if(document.querySelector('#slipView[style*="block"]')) return false;
+  const a=document.activeElement; if(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)) return false;
+  switch(p){
+    case 'utama': case 'laporan': return true;
+    case 'tunai': return !S.tx.sah;
+    case 'opex': return !S.ox.edit;
+    case 'katalog': return !S.kat.edit;
+    case 'kalendar': return !S.kal.edit;
+    case 'invois': return !S.iv.edit;
+    case 'hajat': return !S.hj.edit;
+    case 'beli': return !S.bl.edit&&!S.bl.kedit&&!S.bl.sampai;
+    case 'templat': return !S.tp.edit;
+    case 'surat': return !S.sr.edit;
+    default: return false;
+  }
+}
+let syncing=false;
+async function muatSemula(auto){
+  if(!S.user||syncing||S.page==='menu') return; if(auto&&!autoOk(S.page)) return;
+  syncing=true; const p=S.page; const b=document.querySelector('.syncbar button'); if(b) b.textContent='Memuat…';
+  try{ await loadPage(p); if(S.page===p) rp(); if(!auto) toast('Data terkini dimuatkan'); }catch(e){ if(!auto) toast(e.message); }
+  finally{ syncing=false; const b2=document.querySelector('.syncbar button'); if(b2) b2.textContent='↻ Muat semula'; }
+}
+function syncBar(){ if(!S.user||S.page==='menu'||S.page==='rekod'||S.page==='imp') return ''; const t=S.synced?('0'+S.synced.getHours()).slice(-2)+':'+('0'+S.synced.getMinutes()).slice(-2):''; return '<div class="syncbar noprint"><span>'+(t?'Dikemas kini '+t:'Memuatkan data terkini…')+'</span><button class="btn sm" data-act="muatSemula">↻ Muat semula</button></div>'; }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&S.synced&&(Date.now()-S.synced.getTime())>30000) muatSemula(true); });
+window.addEventListener('pageshow',e=>{ if(e.persisted) muatSemula(true); });
+setInterval(()=>{ if(document.visibilityState==='visible'&&S.synced&&(Date.now()-S.synced.getTime())>5*60000) muatSemula(true); },60000);
+
+async function go(p){
+  S.page=p; window.scrollTo(0,0);
+  try{ const g=groupOf(p); if(g) S.lastSub[g.id]=p; }catch(e){}
+  if(p==='rekod' && !S.R) S.R=newRekod('jualan');
+  // tunjuk data simpanan dahulu (laju), kemudian ambil data terkini
+  if(p==='utama'&&!S.data.dash) S.data.dash=cacheGet('dash');
+  if(p==='tunai'&&!S.data.tx) S.data.tx=cacheGet('tx');
+  if(p==='katalog'&&!S.data.kat) S.data.kat=cacheGet('kat');
+  if(p==='laporan'&&!S.data.lap) S.data.lap=cacheGet('lap');
+  render();
+  try{
+    await loadPage(p);
     const a=document.activeElement;
     if(S.page===p && !(a && /INPUT|SELECT|TEXTAREA/.test(a.tagName) && $('page') && $('page').contains(a))) repaint();
   }catch(e){ toast(e.message); }
@@ -1932,7 +1968,7 @@ function doDoc(x){
 
 /* ---------- KALENDAR TUGAS (v1.5 · SOP Lampiran) ---------- */
 function tugasKey(){ return 'safinah:tugas:'+(S.user?S.user.name:'')+':'+((S.boot&&S.boot.today)||''); }
-function tugasDone(){ try{ return JSON.parse(localStorage.getItem(tugasKey())||'{}'); }catch(e){ return {}; } }
+function tugasDone(){ const d=S.data.dash; if(d&&d.tugasSelesai) return d.tugasSelesai; try{ return JSON.parse(localStorage.getItem(tugasKey())||'{}'); }catch(e){ return {}; } }
 function tugasList(d){
   const role=S.user.role, today=(S.boot&&S.boot.today)||'', p=today.split('-'), hari=+p[2], dow=new Date(+p[0],+p[1]-1,+p[2]).getDay(), T=(d&&d.tugas)||{};
   const L=[], soon=[];
@@ -2026,6 +2062,7 @@ const ACT = {
   oxTDel(el){ S.ox.f.tetap.splice(+el.dataset.i,1); rp(); },
   async oxSave(){ const O=S.ox; try{ S.data.ox=await run(call('api_saveOpex',S.pin,O.f,O.month)); O.edit=false; toast('Bajet disimpan'); rp(); }catch(e){} },
   async oxBayar(el){ const O=S.ox, id=el.dataset.id; if(O.bc!==id){ O.bc=id; rp(); return; } O.bc=null; try{ S.data.ox=await run(call('api_bayarTetap',S.pin,id,O.month,S.boot.today)); toast('Direkod sebagai Duit Keluar (Hong Leong)'); rp(); }catch(e){ rp(); } },
+  muatSemula(){ muatSemula(false); },
   lapView(el){ S.lap.view=el.dataset.v; go('laporan'); },
   rkTempoh(el){ S.lap.tempoh=el.dataset.v; S.data.rk=null; go('laporan'); },
   async ckSave(){ const C=S.ck; try{ S.data.ck=await run(call('api_saveCukai',S.pin,C.tahun,Object.assign({},C.f,{pelarasan:C.p}))); ckInit(); toast('Disimpan'); rp(); }catch(e){} },
@@ -2145,7 +2182,7 @@ document.addEventListener('change',async e=>{
   if(k==='blE'&&el.type==='date'){ S.bl.edit[el.dataset.k]=el.value; }
   if(k==='blK'&&el.type==='date'){ S.bl.kedit[el.dataset.k]=el.value; }
   if(k==='kalTC'){ S.kal.tutup[el.dataset.k]=el.checked; rp(); }
-  if(k==='tgs'){ const D=tugasDone(); D[el.dataset.k]=el.checked; try{ localStorage.setItem(tugasKey(),JSON.stringify(D)); }catch(e){} rp(); }
+  if(k==='tgs'){ const d=S.data.dash||(S.data.dash={}); d.tugasSelesai=d.tugasSelesai||{}; const kk=el.dataset.k, on=el.checked; if(on) d.tugasSelesai[kk]='…'; else delete d.tugasSelesai[kk]; rp(); try{ d.tugasSelesai=await call('api_tugasTanda',S.pin,kk,on); cacheSet('dash',d); rp(); }catch(er){ if(on) delete d.tugasSelesai[kk]; else d.tugasSelesai[kk]='…'; toast('Tak dapat simpan tanda — semak internet'); rp(); } }
   if(k==='ivPay'){ S.iv.pay=el.value; }
   if(k==='kg'){ IN.kg(el); }
   if(k==='sahBukti'){ const f=el.files[0]; if(!f) return; try{ busy(true); S.tx.sahBukti=await readReceipt(f); S.tx.sahBuktiNama=f.name; }catch(er){ toast(er.message); } finally{ busy(false); } rp(); }
