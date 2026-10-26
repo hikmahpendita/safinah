@@ -183,6 +183,8 @@ const ICON = {
   agihan:'<path d="M12 3v18"/><path d="M5 8h14l-2 4H7z"/><path d="M8 21h8"/>',
   katalog:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
   laporan:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  opex:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/><path d="M3 12h2M19 12h2"/>',
+  cukai:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
   lagi:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
   pekerja:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   gaji:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>',
@@ -194,22 +196,22 @@ const ICON = {
   templat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
   sop:'<path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/>'
 };
-const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['katalog','Katalog']];
+const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.6.2';
+const APP_VERSI='1.7';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
 function isOwner(){ return S.user&&S.user.role==='pemilik'; }
 /* Menu digabung ikut kumpulan (v1.4): 5 menu utama, sub-feature dalam tab */
-const GROUPS=[{id:'g-utama',nama:'Utama',icon:'utama',subs:['utama']},{id:'g-rekod',nama:'Rekod',icon:'rekod',subs:['rekod','imp']},{id:'g-wang',nama:'Kewangan',icon:'tunai',subs:['tunai','agihan','laporan']},{id:'g-kitab',nama:'Kitab & Pelanggan',short:'Kitab',icon:'katalog',subs:['katalog','beli','hajat','invois','templat']},{id:'g-pejabat',nama:'Pejabat',icon:'kalendar',subs:['kalendar','surat','pekerja','gaji']}];
-const SUBNAMA={utama:'Utama',rekod:'Rekod Baru',imp:'Import Wasepme',tunai:'Aliran Tunai',agihan:'Agihan Profit First',laporan:'Laporan',katalog:'Katalog & Harga',beli:'Pembelian & Kargo',templat:'Jawapan Pantas',hajat:'Senarai Hajat',invois:'Invois & Hutang',kalendar:'Kalendar Program',surat:'Surat Rasmi',pekerja:'Pekerja',gaji:'Gaji & Slip'};
+const GROUPS=[{id:'g-utama',nama:'Utama',icon:'utama',subs:['utama']},{id:'g-rekod',nama:'Rekod',icon:'rekod',subs:['rekod','imp']},{id:'g-wang',nama:'Kewangan',icon:'tunai',subs:['tunai','agihan','opex','laporan','cukai']},{id:'g-kitab',nama:'Kitab & Pelanggan',short:'Kitab',icon:'katalog',subs:['katalog','beli','hajat','invois','templat']},{id:'g-pejabat',nama:'Pejabat',icon:'kalendar',subs:['kalendar','surat','pekerja','gaji']}];
+const SUBNAMA={utama:'Utama',rekod:'Rekod Baru',imp:'Import Wasepme',tunai:'Aliran Tunai',agihan:'Agihan Profit First',opex:'Pantau OPEX',laporan:'Laporan',cukai:'Laporan Cukai',katalog:'Katalog & Harga',beli:'Pembelian & Kargo',templat:'Jawapan Pantas',hajat:'Senarai Hajat',invois:'Invois & Hutang',kalendar:'Kalendar Program',surat:'Surat Rasmi',pekerja:'Pekerja',gaji:'Gaji & Slip'};
 function myGroups(){ const ok=rolePages().map(p=>p[0]); return GROUPS.map(g=>Object.assign({},g,{subs:g.subs.filter(x=>ok.indexOf(x)>-1)})).filter(g=>g.subs.length); }
 function groupOf(pg){ return myGroups().find(g=>g.subs.indexOf(pg)>-1)||null; }
 function gLabel(g,pendek){ if(g.subs.length===1&&g.id!=='g-utama') return pendek?(SHORT[g.subs[0]]||SUBNAMA[g.subs[0]]):SUBNAMA[g.subs[0]]; return pendek?(g.short||g.nama):g.nama; }
 function gIcon(g){ return g.subs.length===1?g.subs[0]:g.icon; }
 function subTabs(){ const g=groupOf(S.page); if(!g||g.subs.length<2) return ''; return '<div class="subtabs" role="tablist" aria-label="'+esc(g.nama)+'">'+g.subs.map(x=>'<button class="chip '+(S.page===x?'on':'')+'" role="tab" aria-selected="'+(S.page===x)+'" data-act="go" data-p="'+x+'">'+esc(SUBNAMA[x])+'</button>').join('')+'</div>'; }
-const SUBDESC={rekod:'Jualan, duit masuk & duit keluar',imp:'Muat naik SalesReport Wasep.me',tunai:'Semua transaksi & baki bank',agihan:'Profit First 10hb & 25hb',laporan:'Untung rugi & graf bulanan',katalog:'Kos, berat & kalkulator harga',beli:'Pesanan Mesir & kargo',templat:'Templat WhatsApp pelanggan',hajat:'Kitab tiada stok & pre-order',invois:'Sebut harga, invois & susulan',kalendar:'Program, event & senarai semak',surat:'Surat rasmi berkepala HPR',pekerja:'Profil, bank & dokumen staf',gaji:'Kira gaji & slip PDF'};
+const SUBDESC={rekod:'Jualan, duit masuk & duit keluar',imp:'Muat naik SalesReport Wasep.me',tunai:'Semua transaksi & baki bank',agihan:'Profit First 10hb & 25hb',opex:'Bajet, kos tetap & Hong Leong',laporan:'Untung rugi & graf bulanan',cukai:'P&L tahunan untuk Borang B',katalog:'Kos, berat & kalkulator harga',beli:'Pesanan Mesir & kargo',templat:'Templat WhatsApp pelanggan',hajat:'Kitab tiada stok & pre-order',invois:'Sebut harga, invois & susulan',kalendar:'Program, event & senarai semak',surat:'Surat rasmi berkepala HPR',pekerja:'Profil, bank & dokumen staf',gaji:'Kira gaji & slip PDF'};
 let NAVMODE='B'; // Susunan dipilih: B · Menu bertajuk
 function setNav(m){ NAVMODE=m; try{ localStorage.setItem('safinah:nav',m); }catch(e){} if(S.user){ if(m!=='B'&&S.page==='menu') S.page='utama'; render(); window.scrollTo(0,0); } }
 function navBtn(p,sz){ return '<button class="'+(S.page===p?'on':'')+'" data-act="go" data-p="'+p+'">'+ico(p,sz)+'<span>'+esc(SUBNAMA[p])+'</span></button>'; }
@@ -231,9 +233,9 @@ function hubHtml(){
 }
 function rolePages(){ return S.user.role==='pemilik'?PAGES_OWNER:(S.user.role==='operasi'?PAGES_OPS:PAGES_STAF); }
 function roleNama(){ return S.user.role==='pemilik'?'Pengurus Utama':(S.user.role==='operasi'?'Pengurus Operasi':'Staf'); }
-const SHORT = {utama:'Utama',tunai:'Tunai',rekod:'Rekod',imp:'Import',agihan:'Agihan',katalog:'Katalog',laporan:'Laporan',lagi:'Lagi',gaji:'Gaji',pekerja:'Pekerja',kalendar:'Kalendar',invois:'Invois',surat:'Surat',hajat:'Hajat',beli:'Beli',templat:'Templat'};
+const SHORT = {utama:'Utama',tunai:'Tunai',rekod:'Rekod',imp:'Import',agihan:'Agihan',opex:'OPEX',katalog:'Katalog',laporan:'Laporan',cukai:'Cukai',lagi:'Lagi',gaji:'Gaji',pekerja:'Pekerja',kalendar:'Kalendar',invois:'Invois',surat:'Surat',hajat:'Hajat',beli:'Beli',templat:'Templat'};
 
-const S = { pin:'', user:null, boot:null, page:'utama', data:{}, R:null, tx:{filter:'semua', open:null, month:''}, imp:null, ag:null, kat:{q:'', edit:null, pos:null}, lap:{month:''}, pk:{filter:'semua', edit:null}, gj:{month:'', rows:null, slip:null, payDate:''}, kal:{month:'', sel:'', edit:null, open:null}, iv:{filter:'belum', open:null, edit:null, q:'', pay:''}, sr:{q:'', f:'Semua', open:null, edit:null, del:null}, bl:{tab:'pesanan', open:null, edit:null, kedit:null, sampai:null, res:null}, tp:{edit:null, q:'', del:null}, hj:{f:'aktif', q:'', open:null, edit:null, kitab:null, form:{kitab:'',pelanggan:'',telefon:'',q:1,catatan:''}}, slipView:null, outbox:[], lastSub:{} };
+const S = { pin:'', user:null, boot:null, page:'utama', data:{}, R:null, tx:{filter:'semua', open:null, month:''}, imp:null, ag:null, kat:{q:'', edit:null, pos:null}, lap:{month:''}, ox:{month:'', edit:false, f:null, bc:null}, ck:{tahun:'', f:{}, p:{}, a:null, stokRes:null, delId:null}, pk:{filter:'semua', edit:null}, gj:{month:'', rows:null, slip:null, payDate:''}, kal:{month:'', sel:'', edit:null, open:null}, iv:{filter:'belum', open:null, edit:null, q:'', pay:''}, sr:{q:'', f:'Semua', open:null, edit:null, del:null}, bl:{tab:'pesanan', open:null, edit:null, kedit:null, sampai:null, res:null}, tp:{edit:null, q:'', del:null}, hj:{f:'aktif', q:'', open:null, edit:null, kitab:null, form:{kitab:'',pelanggan:'',telefon:'',q:1,catatan:''}}, slipView:null, outbox:[], lastSub:{} };
 try { S.outbox = JSON.parse(localStorage.getItem('safinah:outbox')||'[]'); } catch(e) { S.outbox=[]; }
 function cacheGet(k){ try{ const v=localStorage.getItem('safinah:c:'+k); return v?JSON.parse(v):null; }catch(e){ return null; } }
 function cacheSet(k,v){ try{ localStorage.setItem('safinah:c:'+k, JSON.stringify(v)); }catch(e){} }
@@ -338,7 +340,9 @@ function pageBody(){
     case 'imp': return importHtml();
     case 'agihan': return agihanHtml();
     case 'katalog': return katalogHtml();
-    case 'laporan': return laporanHtml();
+    case 'laporan': return (S.lap.view||'ringkas')==='ringkas'?ringkasHtml():laporanHtml();
+    case 'cukai': return cukaiHtml();
+    case 'opex': return opexHtml();
     case 'lagi': return lagiHtml();
     case 'pekerja': return pekerjaHtml();
     case 'gaji': return gajiHtml();
@@ -369,7 +373,10 @@ async function go(p){
     if(p==='tunai'){ S.data.tx=await call('api_listTx',S.pin,S.tx.month||''); S.tx.month=S.data.tx.bulan; cacheSet('tx',S.data.tx); }
     if(p==='agihan'){ S.data.ag=await call('api_agihanInfo',S.pin); S.ag={untung:S.data.ag.untungCadangan, confirm:false, done:null, bonus:S.data.ag.bonus.cadangan, bConfirm:false, bDone:null}; }
     if(p==='katalog'){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.kat.pos=null; }
-    if(p==='laporan'){ S.data.lap=await call('api_laporan',S.pin,S.lap.month||''); S.lap.month=S.data.lap.bulan; cacheSet('lap',S.data.lap); }
+    if(p==='opex') await oxLoad();
+    if(p==='cukai'){ if(!S.ck.tahun) S.ck.tahun=String(+(S.boot.today||'2026').slice(0,4)); await ckLoad(); }
+    if(p==='laporan'&&(S.lap.view||'ringkas')==='ringkas') await rkLoad();
+    else if(p==='laporan'){ S.data.lap=await call('api_laporan',S.pin,S.lap.month||''); S.lap.month=S.data.lap.bulan; cacheSet('lap',S.data.lap); }
     if(p==='pekerja'){ S.data.pk=await call('api_pekerja',S.pin); }
     if(p==='gaji'){ setGaji(await call('api_gaji',S.pin,S.gj.month||'')); }
     if(p==='kalendar'){ setKal(await call('api_kalendar',S.pin,S.kal.month||'')); }
@@ -757,6 +764,201 @@ function bonusHtml(d){
   return h+'</section>';
 }
 
+/* ---------- PANTAU OPEX (v1.7) ---------- */
+function opexWarna(p){ return p===null?'var(--mut)':(p>100?'var(--r)':(p>=80?'#B45309':'var(--g)')); }
+function opexHtml(){
+  const d=S.data.ox, O=S.ox;
+  let h='<div class="row between"><div><h1>Pantau OPEX</h1><div class="sub">Belanja operasi bulanan berbanding bajet</div></div><div class="row noprint"><input class="inp" type="month" data-in="oxMonth" value="'+esc(O.month||(d&&d.ym)||'')+'" aria-label="Bulan" style="width:auto"><button class="btn" data-act="oxEdit">'+(O.edit?'Tutup':'Ubah bajet')+'</button></div></div>';
+  if(!d) return h+'<div class="sub">Memuatkan…</div>';
+  if(O.edit) return h+opexEditHtml(d);
+  const tp=d.jumBajet?Math.round(d.jumlah/d.jumBajet*100):null;
+  h+='<div class="grid">'
+   +'<div class="card"><span class="lbl">OPEX '+esc(d.label)+'</span><span class="val">'+rm(d.jumlah)+'</span>'+(d.jumBajet?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,tp)+'%;background:'+opexWarna(tp)+'"></i></div><span class="sub" style="font-size:12px">'+tp+'% daripada bajet '+rm(d.jumBajet)+'</span>':'<span class="sub" style="font-size:12px">Bajet belum ditetapkan</span>')+'</div>'
+   +'<div class="card"><span class="lbl">Masuk ke Hong Leong</span><span class="val" style="color:var(--g)">'+rm(d.hl.masuk)+'</span><span class="sub" style="font-size:12px">Dari agihan Profit First bulan ini</span></div>'
+   +'<div class="card"><span class="lbl">Keluar dari Hong Leong</span><span class="val amt-out">'+rm(d.hl.keluar)+'</span><span class="sub" style="font-size:12px">'+(d.hl.keluar>d.hl.masuk?'<b style="color:var(--r)">Lebih '+rm(d.hl.keluar-d.hl.masuk)+' daripada yang masuk</b>':'Dalam had duit opex ✓')+'</span></div>'
+   +'<div class="card" style="background:var(--bs)"><span class="lbl">Baki Hong Leong sekarang</span><span class="val" style="color:var(--b)">'+rm(d.hl.baki)+'</span></div></div>';
+  if(d.amaran.length) h+='<div class="note n-y">'+d.amaran.map(a=>'<b>'+esc(a.k)+'</b> '+(a.pct>100?'terlebih bajet ('+a.pct+'%)':'dah guna '+a.pct+'% bajet')).join(' · ')+'</div>';
+  // kos tetap
+  const ST={dibayar:['Dibayar','t-g'],lewat:['Lewat','t-r'],hampir:['Hampir tiba','t-a'],belum:['Belum','t-n']};
+  h+='<section class="box"><div class="hd"><div><h2>Kos tetap bulanan</h2><div class="sub">Tekan "Rekod bayar" selepas bayar dalam app Hong Leong — SAFINAH rekod Duit Keluar sendiri</div></div></div>'
+   +(d.tetap.length?d.tetap.map(t=>{ const s=ST[t.status]; return '<div class="li" style="justify-content:space-between;gap:10px"><div style="flex:1 1 180px;min-width:0"><b style="font-size:14px">'+esc(t.nama)+'</b> <span class="tag '+s[1]+'">'+s[0]+(t.dibayar?' '+esc(dateFmt(t.dibayar)):'')+'</span><div class="sub">'+rm(t.jumlah)+' · '+esc(t.kat)+' · setiap '+t.hari+'hb</div></div>'+(t.dibayar?'':'<button class="btn sm '+(t.status==='lewat'?'p':'')+'" data-act="oxBayar" data-id="'+esc(t.id)+'">'+(O.bc===t.id?'Tekan lagi untuk sahkan':'Rekod bayar')+'</button>')+'</div>'; }).join(''):'<div class="li sub">Belum ada kos tetap. Tekan "Ubah bajet" untuk tambah (contoh: internet, sewa, ansuran, langganan Wasep.me).</div>')+'</section>';
+  // bajet ikut kategori
+  h+='<div class="row" style="align-items:stretch"><section class="box" style="flex:2 1 340px"><div class="hd"><h2>Bajet ikut kategori</h2></div>'
+   +d.rows.filter(r=>r.bajet||r.guna).map(r=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span>'+esc(r.k)+'</span><span style="white-space:nowrap"><b>'+rm(r.guna)+'</b>'+(r.bajet?' <span class="sub">/ '+rm(r.bajet)+'</span>':' <span class="sub">tiada bajet</span>')+'</span></div>'
+     +(r.bajet?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,r.pct)+'%;background:'+opexWarna(r.pct)+'"></i></div><span class="sub" style="font-size:12px;color:'+opexWarna(r.pct)+'">'+(r.pct>100?'Terlebih '+rm(r.guna-r.bajet)+' ⚠️':'Baki '+rm(r.bajet-r.guna)+' · '+r.pct+'%')+'</span>':'')+'</div>').join('')
+   +(d.rows.some(r=>r.bajet||r.guna)?'':'<div class="li sub">Tiada belanja operasi bulan ini.</div>')+'</section>';
+  // trend
+  const mx=Math.max(1,d.jumBajet,...d.trend.map(t=>t.v));
+  h+='<section class="box" style="flex:1 1 260px"><div class="hd"><div><h2>Trend 6 bulan</h2>'+(d.jumBajet?'<div class="sub">Garis = bajet '+rm(d.jumBajet)+'</div>':'')+'</div></div><div style="position:relative;display:flex;align-items:flex-end;gap:10px;height:170px;padding:16px 16px 8px">'
+   +(d.jumBajet?'<div style="position:absolute;left:16px;right:16px;bottom:'+(8+Math.round(d.jumBajet/mx*130)+18)+'px;border-top:2px dashed #9CA3AF"></div>':'')
+   +d.trend.map(t=>'<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0"><span style="font-size:10px;color:var(--mut);white-space:nowrap">'+(t.v?(t.v>=1000?(Math.round(t.v/100)/10)+'k':Math.round(t.v)):'')+'</span><div style="width:100%;max-width:34px;height:'+Math.max(2,Math.round(t.v/mx*130))+'px;border-radius:6px 6px 2px 2px;background:'+(t.ym===d.ym?'var(--b)':'#C7D7E6')+'"></div><span style="font-size:11px">'+esc(t.label)+'</span></div>').join('')+'</div></section></div>';
+  return h;
+}
+function opexEditHtml(d){
+  const E=S.ox.f;
+  let h='<section class="card" style="gap:12px"><h2>Bajet bulanan ikut kategori</h2><div class="sub" style="font-size:13px">Kosongkan jika tiada bajet. Panduan Profit First: jumlah bajet sepatutnya tidak melebihi duit opex yang masuk ke Hong Leong setiap bulan.</div><div class="row">'
+   +d.kats.map(k=>'<label class="f" style="flex:1 1 220px">'+esc(k)+' (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="oxB" data-k="'+esc(k)+'" value="'+esc(E.bajet[k]||'')+'"></label>').join('')+'</div></section>'
+   +'<section class="card" style="gap:12px"><h2>Kos tetap bulanan</h2><div class="sub" style="font-size:13px">Bil yang sama setiap bulan. SAFINAH ingatkan 3 hari sebelum tarikh bayar.</div>'
+   +E.tetap.map((t,i)=>'<div class="row" style="align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:10px"><label class="f" style="flex:2 1 180px">Nama<input class="inp" data-in="oxT" data-i="'+i+'" data-k="nama" value="'+esc(t.nama||'')+'" placeholder="Contoh: Internet Unifi"></label>'
+     +'<label class="f" style="flex:2 1 200px">Kategori<select class="inp" data-in="oxT" data-i="'+i+'" data-k="kat">'+d.kats.map(k=>'<option '+(t.kat===k?'selected':'')+'>'+esc(k)+'</option>').join('')+'</select></label>'
+     +'<label class="f" style="flex:1 1 110px">Jumlah (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="oxT" data-i="'+i+'" data-k="jumlah" value="'+esc(t.jumlah||'')+'"></label>'
+     +'<label class="f" style="flex:1 1 90px">Hari bayar<input class="inp" type="number" min="1" max="28" data-in="oxT" data-i="'+i+'" data-k="hari" value="'+esc(t.hari||'')+'"></label>'
+     +'<button class="btn sm" data-act="oxTDel" data-i="'+i+'" aria-label="Buang">Buang</button></div>').join('')
+   +'<button class="btn" data-act="oxTAdd" style="align-self:flex-start">+ Tambah kos tetap</button></section>'
+   +'<div class="row"><button class="btn p" style="flex:1" data-act="oxSave">Simpan</button><button class="btn" data-act="oxEdit">Batal</button></div>';
+  return h;
+}
+async function oxLoad(){ S.data.ox=await call('api_opex',S.pin,S.ox.month||''); if(!S.ox.month) S.ox.month=S.data.ox.ym; }
+
+/* ---------- RINGKASAN PENGASAS (v1.7) ---------- */
+function lapTabs(){ const v=S.lap.view||'ringkas'; return '<div class="row noprint" role="tablist" style="gap:6px">'+[['ringkas','Ringkasan Pengasas'],['penuh','Laporan penuh']].map(x=>'<button class="chip '+(v===x[0]?'on':'')+'" data-act="lapView" data-v="'+x[0]+'" role="tab" aria-selected="'+(v===x[0])+'">'+x[1]+'</button>').join('')+'</div>'; }
+function pctChg(a,b){ return b?Math.round((a-b)/Math.abs(b)*100):null; }
+function chgTag(a,b,baik){ const c=pctChg(a,b); if(c===null) return '<span class="sub" style="font-size:12px">tiada data '+(S.data.rk?S.data.rk.lepas.label:'')+'</span>'; const up=c>=0, good=baik==='turun'?!up:up; return '<span style="font-size:13px;font-weight:600;color:'+(c===0?'var(--mut)':(good?'var(--g)':'var(--r)'))+'">'+(c===0?'= sama':(up?'▲ ':'▼ ')+Math.abs(c)+'%')+'</span> <span class="sub" style="font-size:12px">vs '+esc(S.data.rk.lepas.label)+'</span>'; }
+function ringkasHtml(){
+  const R=S.data.rk, L=S.lap;
+  let h='<div class="row between"><div><h1>Laporan</h1><div class="sub">Ringkasan untung rugi dalam bahasa mudah</div></div><div class="row noprint"><input class="inp" type="month" data-in="lapMonth" value="'+esc(L.month||(R&&R.ym)||'')+'" aria-label="Bulan" style="width:auto"><button class="btn" data-act="print">Cetak / PDF</button></div></div>'+lapTabs()
+   +'<div class="row noprint" style="gap:6px">'+[['bulan','Bulan'],['suku','Suku tahun'],['tahun','Tahun']].map(x=>'<button class="chip '+((L.tempoh||'bulan')===x[0]?'on':'')+'" data-act="rkTempoh" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
+  if(!R) return h+'<div class="sub">Memuatkan…</div>';
+  const a=R.ini, b=R.lepas;
+  h+='<h2 style="margin:4px 0 0">'+esc(a.label)+'</h2>';
+  if(R.sejak&&R.sejak>R.ym+'-01'&&R.tempoh!=='bulan') h+='<div class="note n-n" style="font-size:13px">SAFINAH ada rekod sejak '+esc(dateFmt(R.sejak))+' sahaja — tempoh sebelum itu tidak dikira.</div>';
+  // 3 nombor utama
+  const per100=a.jualan?Math.round(a.bersih/a.jualan*10000)/100:0;
+  h+='<div class="grid">'
+   +'<div class="card" style="background:'+(a.bersih>=0?'var(--gs)':'var(--rs)')+'"><span class="lbl">'+(a.bersih>=0?'HPR untung bersih':'HPR rugi')+'</span><span class="val" style="color:'+(a.bersih>=0?'var(--g)':'var(--r)')+'">'+rm(Math.abs(a.bersih))+'</span>'+chgTag(a.bersih,b.bersih)+'</div>'
+   +'<div class="card"><span class="lbl">Untung bagi setiap RM100 jualan</span><span class="val">'+rm(per100)+'</span><span class="sub" style="font-size:12px">'+(b.jualan?'Sebelum ini '+rm(Math.round(b.bersih/b.jualan*10000)/100):'&nbsp;')+'</span></div>'
+   +'<div class="card"><span class="lbl">Simpanan Profit di OCBC</span><span class="val" style="color:var(--b)">'+rm(R.ocbc.profit)+'</span><span class="sub" style="font-size:12px">Duit cukai berasingan: '+rm(R.ocbc.cukai)+'</span></div></div>';
+  // ayat ringkas
+  const cj=pctChg(a.jualan,b.jualan), cb=pctChg(a.belanja,b.belanja), ay=[];
+  if(cj!==null) ay.push('Jualan '+(cj>=0?'naik':'turun')+' <b>'+Math.abs(cj)+'%</b> berbanding '+esc(b.label)+'.');
+  if(cj!==null&&cb!==null) ay.push(cb>cj+5?'Belanja naik <b>lebih laju</b> daripada jualan ('+(cb>=0?'+':'')+cb+'%) — semak bahagian kos di bawah.':(cb<=cj?'Belanja terkawal ('+(cb>=0?'+':'')+cb+'%) ✓':'Belanja '+(cb>=0?'naik':'turun')+' '+Math.abs(cb)+'%.'));
+  if(a.bersih<0) ay.push('Tempoh ini <b>rugi</b>: kos jalankan bisnes lebih besar daripada untung dari kitab.');
+  if(!ay.length) ay.push(a.bilJualan+' jualan direkod dalam tempoh ini.');
+  h+='<div class="note n-n" style="font-size:15px;line-height:1.7">'+ay.join(' ')+'</div>';
+  // aliran
+  const step=(lbl,v,sub,o)=>'<div class="card" style="gap:2px;padding:14px 16px;'+(o&&o.bg?'background:'+o.bg:'')+'"><div class="row between" style="flex-wrap:nowrap;gap:10px"><span style="flex:1;min-width:0'+(o&&o.b?';font-weight:700':'')+'">'+lbl+'</span><b style="font-size:'+(o&&o.b?'22px':'18px')+';white-space:nowrap;'+(o&&o.c?'color:'+o.c:'')+'">'+v+'</b></div>'+(sub?'<span class="sub" style="font-size:12px">'+sub+'</span>':'')+'</div>';
+  const arrow=t=>'<div style="text-align:center;color:var(--mut);font-size:13px;line-height:1.2">↓ '+t+'</div>';
+  h+='<section style="display:flex;flex-direction:column;gap:6px;max-width:560px">'
+   +step('Pelanggan bayar',rm(a.jualan),a.bilJualan+' jualan (selepas refund)')
+   +arrow('tolak modal kitab yang dijual')
+   +step('Modal kitab','− '+rm(a.kos),'Harga beli di Mesir + kargo',{c:'var(--r)'})
+   +arrow('jadi')
+   +step('Untung dari kitab',rm(a.untungKitab),a.jualan?'Setiap RM100 jualan, RM'+(Math.round(a.untungKitab/a.jualan*1000)/10)+' ialah untung kitab':'',{b:true})
+   +arrow('tolak kos jalankan bisnes')
+   +step('Kos jalankan bisnes','− '+rm(a.belanja),'Gaji staf, sewa, minyak, bil, iklan',{c:'var(--r)'})
+   +arrow('baki')
+   +step(a.bersih>=0?'HPR untung bersih':'HPR rugi',rm(Math.abs(a.bersih))+(a.bersih>=0?' ✓':''),'Inilah yang sebenarnya tinggal untuk perniagaan dan tuan',{b:true,c:a.bersih>=0?'var(--g)':'var(--r)',bg:a.bersih>=0?'var(--gs)':'var(--rs)'})
+   +'</section>';
+  // kos jalankan bisnes
+  const kmax=Math.max(1,...a.belanjaKat.map(x=>x.v));
+  h+='<div class="row" style="align-items:stretch">'
+   +'<section class="box" style="flex:1 1 300px"><div class="hd"><h2>Ke mana kos bisnes pergi</h2></div>'+(a.belanjaKat.length?a.belanjaKat.map(x=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span>'+esc(x.k)+'</span><b style="white-space:nowrap">'+rm(x.v)+'</b></div><div class="bar" style="height:8px"><i style="width:'+Math.round(x.v/kmax*100)+'%"></i></div></div>').join(''):'<div class="li sub">Tiada belanja direkod.</div>')+'</section>';
+  // ke mana duit pergi (agihan)
+  const g=a.agihan;
+  const parts=[['Simpanan Profit (OCBC)',g.profit,'#064C7D'],['Duit cukai (OCBC)',g.cukai,'#6B7280'],['Gaji tuan (Bank Islam)',g.gaji,'#15803D'],['Belanja operasi (Hong Leong)',g.opex,'#B45309'],['Modal stok (kekal di Maybank)',Math.max(0,r2c(g.jualan-g.untung)),'#9CA3AF']];
+  const tot=parts.reduce((s,x)=>s+x[1],0)||1;
+  h+='<section class="box" style="flex:1 1 300px"><div class="hd"><div><h2>Ke mana duit jualan dibahagi</h2><div class="sub">Dari '+g.bil+' agihan Profit First dalam tempoh ini</div></div></div>'
+   +(g.bil?'<div style="display:flex;height:14px;border-radius:7px;overflow:hidden;margin:12px 16px 4px">'+parts.map(x=>'<i style="display:block;width:'+(x[1]/tot*100)+'%;background:'+x[2]+'"></i>').join('')+'</div>'+parts.map(x=>'<div class="li" style="justify-content:space-between;flex-wrap:nowrap;gap:8px"><span><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:'+x[2]+';margin-right:8px"></i>'+x[0]+'</span><b>'+rm(x[1])+'</b></div>').join(''):'<div class="li sub">Belum ada agihan dalam tempoh ini.</div>')+'</section></div>';
+  // semak profit first
+  const opexR=R.pelan.p[3], opexS=a.untungKitab>0?Math.round(a.belanja/a.untungKitab*100):null;
+  const marR=R.pelan.margin, marS=a.jualan?Math.round(a.untungKitab/a.jualan*100):null;
+  const chk=(lbl,r,sv,ok,nota)=>'<div class="li" style="justify-content:space-between;flex-wrap:nowrap;gap:10px"><span style="flex:1;min-width:0">'+lbl+'<div class="sub" style="font-size:12px">'+nota+'</div></span><span style="white-space:nowrap;text-align:right">rancang <b>'+r+'%</b> · sebenar <b style="color:'+(sv===null?'var(--mut)':(ok?'var(--g)':'var(--r)'))+'">'+(sv===null?'—':sv+'%')+'</b> '+(sv===null?'':(ok?'✓':'⚠️'))+'</span></div>';
+  h+='<section class="box"><div class="hd"><div><h2>Semak Profit First</h2><div class="sub">Adakah peratus dalam Pelan sesuai dengan apa yang berlaku?</div></div></div>'
+   +chk('Belanja operasi',opexR,opexS,opexS!==null&&opexS<=opexR+2,'Kos bisnes ÷ untung dari kitab. Kalau melebihi, Hong Leong akan selalu tak cukup.')
+   +chk('Untung dari kitab',marR,marS,marS!==null&&marS>=marR-2,'Untung kitab ÷ jualan. Kalau rendah, semak harga jual atau kos kitab.')
+   +((opexS!==null&&opexS>opexR+2)?'<div class="li note n-y" style="margin:8px 16px;font-size:13px">Belanja sebenar '+opexS+'% melebihi '+opexR+'% yang dirancang. Pilihan: kurangkan belanja, naikkan jualan, atau ubah peratus dalam sheet Pelan.</div>':'')+'</section>';
+  if(a.stokBeli||a.pinjaman) h+='<div class="note n-n" style="font-size:13px">Tidak dikira dalam untung: beli stok baru '+rm(a.stokBeli)+(a.pinjaman?' · bayaran pinjaman '+rm(a.pinjaman):'')+'. Ini duit keluar, tapi bukan kos — stok jadi kos bila kitab dijual.</div>';
+  h+='<div class="row noprint" style="align-items:center;gap:8px"><span class="sub" style="font-size:12px">Angka ini untuk bacaan tuan sendiri. Untuk Borang B, guna Laporan Cukai.</span><button class="btn sm" data-act="go" data-p="cukai">Laporan Cukai</button></div>';
+  return h;
+}
+function r2c(n){ return Math.round(n*100)/100; }
+async function rkLoad(){ S.data.rk=await call('api_ringkasan',S.pin,S.lap.tempoh||'bulan',S.lap.month||''); if(!S.lap.month) S.lap.month=S.data.rk.ym; }
+
+/* ---------- LAPORAN CUKAI TAHUNAN (v1.7) ---------- */
+function ckRow(label,v,o){ o=o||{}; const neg=v<0; return '<div class="li" style="justify-content:space-between;flex-wrap:nowrap;gap:10px;'+(o.b?'font-weight:700;background:var(--soft)':'')+(o.ind?';padding-left:28px':'')+'"><span style="flex:1;min-width:0">'+label+(o.nota?'<div class="sub" style="font-size:12px;font-weight:400">'+o.nota+'</div>':'')+'</span><span class="'+(o.out?'amt-out':'')+'" style="white-space:nowrap">'+(v===null||v===undefined?'<span class="tag t-a">belum diisi</span>':(o.out&&v?'− ':'')+(neg?'− ':'')+rm(Math.abs(v)))+'</span></div>'; }
+function ckNum(k,label,v,help){ return '<label class="f" style="flex:1 1 200px">'+label+'<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="ckF" data-k="'+k+'" value="'+esc(v===null||v===undefined?'':v)+'">'+(help?'<span class="sub" style="font-size:12px;font-weight:400">'+help+'</span>':'')+'</label>'; }
+function cukaiHtml(){
+  const d=S.data.ck, C=S.ck;
+  const thisY=+((S.boot&&S.boot.today)||'2026').slice(0,4);
+  let h='<div class="row between"><div><h1>Laporan Cukai Tahunan</h1><div class="sub">Penyata untung rugi &amp; kunci kira-kira untuk e-Borang B (enterprise)</div></div><div class="row noprint"><select class="inp" data-in="ckTahun" style="width:auto" aria-label="Tahun">'+[thisY,thisY-1,thisY-2].map(y=>'<option '+(+C.tahun===y?'selected':'')+'>'+y+'</option>').join('')+'</select><button class="btn" data-act="print">Cetak / PDF</button></div></div>';
+  if(!d) return h+'<div class="sub">Memuatkan…</div>';
+  const F=C.f, P=C.p;
+  const co=d.syarikat||{};
+  h+='<div class="printonly" style="margin-bottom:8px"><h2 style="margin:0">'+esc(co.nama||'')+'</h2><div class="sub">'+esc(co.noDaftar||'')+'</div><h2 style="margin:8px 0 0">Penyata Untung Rugi bagi tahun berakhir 31 Disember '+d.tahun+'</h2></div>';
+  // senarai semak
+  const semak=[
+    [d.stokAwal!==null,'Nilai stok pada 1 Januari '+d.tahun],
+    [d.stokAkhir!==null,'Nilai stok pada 31 Disember '+d.tahun],
+    [!d.asetBelumDaftar.length,'Daftar aset yang dibeli tahun ini'+(d.asetBelumDaftar.length?' ('+d.asetBelumDaftar.length+' belum)':'')],
+    [!d.perluPelarasan||Object.keys(d.pelarasan||{}).some(k=>Number(d.pelarasan[k])),'Jumlah dari rekod lama sebelum SAFINAH'],
+    [!d.bilTiadaResit,'Resit untuk semua belanja'+(d.bilTiadaResit?' ('+d.bilTiadaResit+' tiada resit)':'')]
+  ].filter((x,i)=>i!==3||d.perluPelarasan);
+  const siap=semak.filter(x=>x[0]).length;
+  h+='<section class="box noprint"><div class="hd"><h2>Lengkapkan sebelum isi Borang B</h2><span class="tag '+(siap===semak.length?'t-g':'t-a')+'">'+siap+' / '+semak.length+'</span></div>'+semak.map(x=>'<div class="li" style="gap:10px;flex-wrap:nowrap"><span style="font-size:18px;color:'+(x[0]?'var(--g)':'var(--a)')+'">'+(x[0]?'✓':'○')+'</span><span>'+esc(x[1])+'</span></div>').join('')+'</section>';
+  if(d.perluPelarasan) h+='<div class="note n-y noprint">SAFINAH mula digunakan pada <b>'+esc(dateFmt(d.sejak))+'</b>. Rekod dari 1 Januari hingga sebelum tarikh itu tiada dalam sistem — isi jumlahnya di bahagian <b>Rekod lama</b> di bawah.</div>';
+  if(d.kosAnggaran) h+='<div class="note n-y noprint">Kos jualan di bawah masih <b>anggaran</b> (dari kos kitab setiap jualan). Isi nilai stok awal &amp; akhir untuk kiraan ikut cara LHDN.</div>';
+  // A. Penyata untung rugi
+  const j=d.jualan;
+  h+='<section class="box"><div class="hd"><div><h2>A. Penyata untung rugi '+d.tahun+'</h2><div class="sub">Susunan ikut bahagian Maklumat Akaun Perniagaan, Borang B</div></div></div>'
+   +ckRow('Jualan / perolehan',j.bersih,{b:true,nota:'Jualan '+rm(j.kasar)+(j.refund?' − refund '+rm(j.refund):'')+(j.pelarasan?' + rekod lama '+rm(j.pelarasan):'')})
+   +j.pecah.map(x=>ckRow(esc(x.k),x.v,{ind:true})).join('')
+   +ckRow('Stok awal',d.stokAwal)
+   +ckRow('Belian dan kos pengeluaran',d.belian,{nota:'Beli kitab, bayaran ejen &amp; kargo Mesir'})
+   +ckRow('Stok akhir',d.stokAkhir,{out:true})
+   +ckRow('Kos jualan'+(d.kosAnggaran?' (anggaran)':''),d.kosJualan,{out:true,b:true})
+   +ckRow('Untung kasar',d.untungKasar,{b:true})
+   +ckRow('Pendapatan perniagaan lain',d.pendLain,{nota:'Caj pos dikutip &amp; duit masuk lain'})
+   +d.belanja.map(x=>ckRow(esc(x.k),x.v,{out:true,nota:esc(x.nota)})).join('')
+   +ckRow('Jumlah perbelanjaan',d.jumBelanja,{out:true,b:true})
+   +ckRow(d.untungBersih>=0?'Untung bersih':'Rugi bersih',d.untungBersih,{b:true})
+   +ckRow('Elaun modal',d.em,{out:true,nota:'Dari senarai aset (bahagian E)'})
+   +'<div class="li" style="justify-content:space-between;background:var(--bs)"><span style="font-weight:700;color:var(--b)">Pendapatan berkanun perniagaan<div class="sub" style="font-size:12px;font-weight:400">Untung bersih − elaun modal</div></span><b style="font-size:20px;color:var(--b)">'+(d.berkanun<0?'Rugi ':'')+rm(Math.abs(d.berkanun))+'</b></div></section>';
+  // B. Tidak ditolak
+  h+='<section class="box"><div class="hd"><div><h2>B. Tidak dikira sebagai belanja</h2><div class="sub">SAFINAH keluarkan perkara ini daripada penyata di atas</div></div></div>'+(d.takDitolak.length?d.takDitolak.map(x=>ckRow(esc(x.k),x.v,{nota:esc(x.nota)})).join(''):'<div class="li sub">Tiada.</div>')+'</section>';
+  // C. Kunci kira-kira
+  const K=d.kunci;
+  h+='<section class="box"><div class="hd"><div><h2>C. Kunci kira-kira pada 31 Disember '+d.tahun+'</h2><div class="sub">Bank Islam (akaun peribadi) tidak dikira</div></div></div>'
+   +ckRow('Aset tetap (nilai baki)',K.asetTetap)+ckRow('Penghutang (invois belum dibayar)',K.penghutang)+ckRow('Stok dagangan',K.stok)+ckRow('Tunai di bank (Maybank, Hong Leong, OCBC)',K.bank)+ckRow('Tunai di tangan',K.tunai)
+   +ckRow('Jumlah aset',K.jumAset,{b:true})+ckRow('Pinjaman',K.pinjaman,{out:true})+ckRow('Modal pemilik',K.modal,{b:true})
+   +'<div class="li sub" style="font-size:12px;flex-direction:column;align-items:flex-start;gap:2px"><b style="color:var(--ink)">Akaun modal</b><span>Modal awal tahun '+rm(K.modalAwal)+' + modal dimasukkan '+rm(K.modalMasuk)+' + untung '+rm(K.untung)+' − ambilan pemilik '+rm(K.ambilan)+' = '+rm(K.modal)+'</span></div></section>';
+  // D. Isi maklumat
+  h+='<section class="card noprint" style="gap:12px"><h2>D. Maklumat yang perlu tuan isi</h2>'
+   +'<div class="row">'+ckNum('stokAwal','Stok pada 1 Januari '+d.tahun+' (RM)',F.stokAwal,'Sama dengan stok akhir tahun lepas')+ckNum('stokAkhir','Stok pada 31 Disember '+d.tahun+' (RM)',F.stokAkhir,'Kira stok selepas tutup kedai 31 Dis')+'</div>'
+   +'<label class="note n-n" style="display:flex;flex-direction:column;gap:6px;cursor:pointer"><span><b>Kira stok dari fail Wasep.me</b> — muat naik laporan stok (ada lajur nama produk &amp; kuantiti). SAFINAH darab kuantiti × kos Katalog.</span><input type="file" accept=".xls,.xlsx,.csv,.html,.htm" data-in="ckStokFile"></label>'
+   +(C.stokRes?'<div class="note n-g" style="display:flex;flex-direction:column;gap:8px"><span>'+C.stokRes.naskhah+' naskhah · nilai <b>'+rm(C.stokRes.jumlah)+'</b>'+(C.stokRes.tiada.length?' · <b style="color:var(--a)">'+C.stokRes.tiada.length+' judul tiada kos dalam Katalog</b> (tidak dikira): '+C.stokRes.tiada.slice(0,6).map(x=>esc(x.judul)).join(', ')+(C.stokRes.tiada.length>6?' …':''):'')+'</span><div class="row"><button class="btn sm" data-act="ckGunaStok" data-k="stokAkhir">Guna sebagai stok 31 Dis</button><button class="btn sm" data-act="ckGunaStok" data-k="stokAwal">Guna sebagai stok 1 Jan</button></div></div>':'')
+   +'<div class="row">'+ckNum('faedah','Faedah / keuntungan pembiayaan tahun ini (RM)',F.faedah,'Lihat penyata pinjaman — bahagian faedah sahaja')+ckNum('bakiPinjaman','Baki pinjaman pada 31 Disember (RM)',F.bakiPinjaman,'')+'</div>'
+   +'<details'+(d.perluPelarasan?' open':'')+'><summary style="cursor:pointer;font-weight:600">Rekod lama (sebelum SAFINAH digunakan)</summary><div class="sub" style="font-size:13px;margin:6px 0">Isi jumlah dari buku / penyata bank lama untuk tempoh yang tiada dalam SAFINAH.</div><div class="row">'
+   +[['jualan','Jualan'],['belian','Belian kitab &amp; kargo'],['gaji','Gaji, upah &amp; caruman'],['sewa','Sewa'],['pengangkutan','Pengangkutan &amp; pos'],['iklan','Promosi &amp; iklan'],['lain','Perbelanjaan lain'],['ambilan','Gaji / ambilan pemilik']].map(x=>'<label class="f" style="flex:1 1 160px">'+x[1]+' (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="ckP" data-k="'+x[0]+'" value="'+esc(P[x[0]]||'')+'"></label>').join('')+'</div></details>'
+   +'<button class="btn p" data-act="ckSave">Simpan &amp; kira semula</button></section>';
+  // E. Aset
+  const A=C.a;
+  h+='<section class="box"><div class="hd"><div><h2>E. Aset &amp; elaun modal '+d.tahun+'</h2><div class="sub">Laptop, printer, rak, kenderaan dan lain-lain. Kadar ialah anggaran — sahkan dengan akauntan.</div></div></div>'
+   +(d.aset.length?d.aset.map(a=>'<div class="li" style="justify-content:space-between;gap:8px"><div style="flex:1 1 200px;min-width:0"><b style="font-size:14px">'+esc(a.nama)+'</b><div class="sub">'+esc(dateFmt(a.tarikh))+' · '+esc(a.jenis)+' · kos '+rm(a.kos)+' · baki nilai '+rm(a.bakiNilai)+'</div></div><div style="text-align:right"><b>'+rm(a.em)+'</b><div class="sub" style="font-size:12px">elaun '+d.tahun+'</div></div><button class="btn sm noprint" data-act="ckAsetDel" data-id="'+esc(a.id)+'">'+(C.delId===a.id?'Sahkan padam':'Padam')+'</button></div>').join(''):'<div class="li sub">Belum ada aset didaftar.</div>')
+   +d.asetBelumDaftar.map(t=>'<div class="li noprint" style="justify-content:space-between;background:#FFFBF5"><span><span class="tag t-a">Belum daftar</span> '+esc(t.keterangan)+' · '+esc(dateFmt(t.tarikh))+'</span><button class="btn sm" data-act="ckDaftar" data-id="'+esc(t.id)+'">Daftar '+rm(t.jumlah)+'</button></div>').join('')
+   +'<div class="li noprint" style="flex-direction:column;align-items:stretch;gap:10px"><b>'+(A.txId?'Daftar aset dari rekod belanja':'Tambah aset')+'</b><div class="row">'
+   +'<label class="f" style="flex:2 1 200px">Nama aset<input class="inp" data-in="ckA" data-k="nama" value="'+esc(A.nama||'')+'" placeholder="Contoh: Laptop Asus"></label>'
+   +'<label class="f" style="flex:1 1 150px">Tarikh beli<input class="inp" type="date" data-in="ckA" data-k="tarikh" value="'+esc(A.tarikh||'')+'"></label>'
+   +'<label class="f" style="flex:1 1 130px">Kos (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="ckA" data-k="kos" value="'+esc(A.kos||'')+'"></label>'
+   +'<label class="f" style="flex:2 1 220px">Jenis<select class="inp" data-in="ckA" data-k="jenis">'+d.asetJenis.map(x=>'<option '+(A.jenis===x?'selected':'')+'>'+esc(x)+'</option>').join('')+'</select></label></div>'
+   +'<div class="sub" style="font-size:12px">Aset RM2,000 ke bawah dituntut 100% pada tahun dibeli.</div><button class="btn" data-act="ckAsetSave" style="align-self:flex-start">Simpan aset</button></div></section>';
+  // F. Resit
+  if(d.bilTiadaResit) h+='<section class="box noprint"><div class="hd"><div><h2>F. Belanja tanpa resit ('+d.bilTiadaResit+')</h2><div class="sub">LHDN boleh minta bukti. Simpan resit sekurang-kurangnya 7 tahun — tambah resit di Aliran Tunai.</div></div><button class="btn sm" data-act="go" data-p="tunai">Aliran Tunai</button></div>'
+   +d.tiadaResit.slice(0,15).map(t=>'<div class="li" style="justify-content:space-between"><span>'+esc(dateFmt(t.tarikh))+' · '+esc(t.kategori)+'<div class="sub" style="font-size:12px">'+esc(t.keterangan||'')+'</div></span><b class="amt-out">'+rm(t.jumlah)+'</b></div>').join('')+(d.bilTiadaResit>15?'<div class="li sub">… dan '+(d.bilTiadaResit-15)+' lagi</div>':'')+'</section>';
+  h+='<div class="note n-n" style="font-size:13px">Laporan ini membantu menyusun angka untuk e-Borang B di MyTax. Ia bukan nasihat cukai — untuk tahun pertama, minta akauntan atau ejen cukai semak sebelum dihantar.</div>';
+  return h;
+}
+async function ckLoad(){ const C=S.ck; S.data.ck=await call('api_cukai',S.pin,C.tahun); ckInit(); }
+function ckInit(){ const d=S.data.ck, C=S.ck; C.f={stokAwal:d.set.stokAwal!==undefined&&d.set.stokAwal!==''?d.set.stokAwal:(d.stokAwal!==null?d.stokAwal:''),stokAkhir:d.stokAkhir!==null?d.stokAkhir:'',faedah:d.set.faedah||'',bakiPinjaman:d.set.bakiPinjaman||''}; C.p=Object.assign({},d.pelarasan||{}); if(!C.a||!C.a.nama) C.a={jenis:d.asetJenis[1],tarikh:''}; }
+function parseStokFile(text){
+  let rows=[];
+  if(/<tr/i.test(text)){ const trRe=/<tr[^>]*>([\s\S]*?)<\/tr>/gi; let m; while((m=trRe.exec(text))){ const cells=[]; const tdRe=/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi; let c; while((c=tdRe.exec(m[1]))) cells.push(cleanCell(c[1])); if(cells.length) rows.push(cells); } }
+  else rows=text.split(/\r?\n/).map(l=>{ const out=[]; let cur='',q=false; for(const ch of l){ if(ch==='"'){ q=!q; } else if((ch===','||ch===';'||ch==='\t')&&!q){ out.push(cur.trim()); cur=''; } else cur+=ch; } out.push(cur.trim()); return out; });
+  const hi=rows.findIndex(r=>r.some(c=>/nama|produk|judul|product|name|tajuk/i.test(c))&&r.some(c=>/stok|stock|kuantiti|quantity|qty|baki|jumlah unit/i.test(c)));
+  if(hi<0) throw new Error('Tak jumpa lajur nama produk dan kuantiti dalam fail ini.');
+  const H=rows[hi], iN=H.findIndex(c=>/nama|produk|judul|product|name|tajuk/i.test(c)), iQ=H.findIndex(c=>/stok|stock|kuantiti|quantity|qty|baki|jumlah unit/i.test(c));
+  return rows.slice(hi+1).map(r=>({judul:r[iN]||'',q:Number(String(r[iQ]||'').replace(/[^0-9.\-]/g,''))||0})).filter(x=>x.judul&&x.q>0);
+}
+
 /* ---------- KATALOG ---------- */
 async function katReload(msg){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); toast(msg); repaint(); }
 const BERAT_CEPAT=[250,500,800,1000,1500,2000,3000,5000,10000,15000,20000];
@@ -826,7 +1028,7 @@ function barChart(vals, target){
 }
 function laporanHtml(){
   const d=S.data.lap;
-  let h='<div class="row between"><div><h1>Laporan</h1><div class="sub">Untung rugi &amp; jualan bulanan</div></div><div class="row noprint"><input class="inp" type="month" data-in="lapMonth" value="'+esc(S.lap.month||(d&&d.bulan)||'')+'" aria-label="Bulan" style="width:auto"><button class="btn" data-act="print">Cetak / PDF</button></div></div>';
+  let h='<div class="row between"><div><h1>Laporan</h1><div class="sub">Untung rugi &amp; jualan bulanan</div></div><div class="row noprint"><input class="inp" type="month" data-in="lapMonth" value="'+esc(S.lap.month||(d&&d.bulan)||'')+'" aria-label="Bulan" style="width:auto"><button class="btn" data-act="print">Cetak / PDF</button></div></div>'+lapTabs();
   if(!d) return h+'<div class="sub">Memuatkan…</div>';
   const t=d.pelan.target||0, pct=t?Math.round(d.jualan/t*100):0;
   const diff=d.prevJualan?Math.round((d.jualan-d.prevJualan)/d.prevJualan*100):null;
@@ -1712,6 +1914,8 @@ function tugasList(d){
     if(hari===10||hari===25){ L.push(['imp','Import SalesReport Wasep.me ke SAFINAH','go','imp']); L.push(['agih','Buat agihan Profit First','go','agihan']); }
     if(hari===25) L.push(['padan','Padankan baki SAFINAH dengan 4 akaun bank','go','tunai']);
     if(hari===25&&[3,6,9,12].indexOf(+p[1])>-1) L.push(['bonus','Akhir suku: ambil bonus 50% baki Profit (OCBC → Bank Islam)','go','agihan']);
+    ((d&&d.opex&&d.opex.tetap)||[]).forEach(t=>L.push(['kt'+t.id,(t.status==='lewat'?'Lewat bayar: ':'Bayar sebelum '+t.hari+'hb: ')+t.nama+' ('+rm(t.jumlah)+')','go','opex']));
+    if(d&&d.opex&&d.opex.amaran.length) L.push(['oxa','OPEX: '+d.opex.amaran.map(a=>a.k+' '+a.pct+'%').join(', '),'go','opex']);
     if(hari===1) L.push(['gaji','Bayar gaji staf & jana slip gaji (Hong Leong)','go','gaji']);
     if(dow===0) L.push(['konten','Semak 14 posting Ketua Konten sebelum dijadualkan','','']);
     if(T.susulan) L.push(['sus','Susulan bayaran institusi ('+T.susulan+' invois)','go','invois']);
@@ -1790,6 +1994,18 @@ const ACT = {
   async fixBank(el){ try{ await run(call('api_completeTx',S.pin,el.dataset.id,{bank:$('fixBank').value})); toast('Dikemas kini'); go('tunai'); }catch(e){} },
   async fixDone(el){ try{ await run(call('api_completeTx',S.pin,el.dataset.id,{selesai:true})); toast('Ditanda selesai'); go('tunai'); }catch(e){} },
   impReset(){ S.imp=null; repaint(); },
+  oxEdit(){ const O=S.ox, d=S.data.ox; O.edit=!O.edit; if(O.edit) O.f={bajet:Object.assign({},d.set.bajet),tetap:d.set.tetap.map(t=>Object.assign({},t))}; rp(); },
+  oxTAdd(){ S.ox.f.tetap.push({nama:'',kat:S.data.ox.kats[0],jumlah:'',hari:1}); rp(); },
+  oxTDel(el){ S.ox.f.tetap.splice(+el.dataset.i,1); rp(); },
+  async oxSave(){ const O=S.ox; try{ S.data.ox=await run(call('api_saveOpex',S.pin,O.f,O.month)); O.edit=false; toast('Bajet disimpan'); rp(); }catch(e){} },
+  async oxBayar(el){ const O=S.ox, id=el.dataset.id; if(O.bc!==id){ O.bc=id; rp(); return; } O.bc=null; try{ S.data.ox=await run(call('api_bayarTetap',S.pin,id,O.month,S.boot.today)); toast('Direkod sebagai Duit Keluar (Hong Leong)'); rp(); }catch(e){ rp(); } },
+  lapView(el){ S.lap.view=el.dataset.v; go('laporan'); },
+  rkTempoh(el){ S.lap.tempoh=el.dataset.v; S.data.rk=null; go('laporan'); },
+  async ckSave(){ const C=S.ck; try{ S.data.ck=await run(call('api_saveCukai',S.pin,C.tahun,Object.assign({},C.f,{pelarasan:C.p}))); ckInit(); toast('Disimpan'); rp(); }catch(e){} },
+  ckGunaStok(el){ const C=S.ck; C.f[el.dataset.k]=C.stokRes.jumlah; C.stokRes=null; ACT.ckSave(); },
+  ckDaftar(el){ const t=S.data.ck.asetBelumDaftar.find(x=>x.id===el.dataset.id); S.ck.a={nama:t.keterangan,tarikh:t.tarikh,kos:t.jumlah,jenis:t.jumlah<=2000?S.data.ck.asetJenis[0]:S.data.ck.asetJenis[1],txId:t.id}; rp(); const n=document.querySelector('[data-in="ckA"][data-k="nama"]'); if(n) n.scrollIntoView({block:'center'}); },
+  async ckAsetSave(){ const C=S.ck; try{ S.data.ck=await run(call('api_saveAset',S.pin,Object.assign({tahun:C.tahun},C.a))); C.a=null; ckInit(); toast('Aset disimpan'); rp(); }catch(e){} },
+  async ckAsetDel(el){ const C=S.ck, id=el.dataset.id; if(C.delId!==id){ C.delId=id; rp(); return; } C.delId=null; try{ S.data.ck=await run(call('api_padamAset',S.pin,id,C.tahun)); ckInit(); toast('Aset dipadam'); rp(); }catch(e){ rp(); } },
   async impBuang(){ const I=S.imp; if(!I.bConfirm){ I.bConfirm=true; repaint(); return; } I.bConfirm=false; try{ I.buangRes=await run(call('api_buangBerulang',S.pin)); I.preview=await call('api_previewImport',S.pin,I.orders,I.includePos); repaint(); }catch(e){ repaint(); } },
   async impCommit(){ const I=S.imp; try{ I.done=await run(call('api_commitImport',S.pin,I.orders,I.includePos)); repaint(); }catch(e){} },
   async agBonus(){ const A=S.ag; if(!A.bConfirm){ A.bConfirm=true; repaint(); return; } try{ A.bDone=await run(call('api_saveBonus',S.pin,A.bonus)); repaint(); }catch(e){ A.bConfirm=false; } },
@@ -1840,6 +2056,11 @@ const IN = {
   jumlah(el){ S.R.jumlah=el.value; }, telefon(el){ S.R.telefon=el.value; }, tarikh(el){ S.R.tarikh=el.value; }, keterangan(el){ S.R.keterangan=el.value; }, diskaun(el){ S.R.diskaun=el.value; const w=$('diskWarn'); if(w) w.innerHTML=diskaunWarn(rekodItems(),S.R); },
   agU(el){ S.ag.untung=el.value; S.ag.confirm=false; agRefresh(); },
   agB(el){ S.ag.bonus=el.value; S.ag.bConfirm=false; const b=document.querySelector('[data-act="agBonus"]'), x=Number(el.value)||0, p=Number(S.data.ag.ocbc&&S.data.ag.ocbc.profit)||0; if(b){ b.disabled=!(x>0&&x<=p+0.01); b.textContent='Rekod bonus OCBC → Bank Islam'; } },
+  oxB(el){ S.ox.f.bajet[el.dataset.k]=el.value; },
+  oxT(el){ S.ox.f.tetap[+el.dataset.i][el.dataset.k]=el.value; },
+  ckF(el){ S.ck.f[el.dataset.k]=el.value; },
+  ckP(el){ S.ck.p[el.dataset.k]=el.value; },
+  ckA(el){ S.ck.a[el.dataset.k]=el.value; },
   kg(el){ S.kat.edit.gabung=el.value; S.kat.edit.gConfirm=false; repaint(); },
   ke(el){ const k=el.dataset.k; S.kat.edit[k]=el.value; if(k==='beratKg'){ S.kat.edit.berat=el.value===''?'':Math.round(Number(el.value)*1000); } if(k==='le'||k==='beratKg') refocus('[data-in="ke"][data-k="'+k+'"]',el); },
   pk(el){ S.pk.edit[el.dataset.k]=el.value; },
@@ -1898,7 +2119,13 @@ document.addEventListener('change',async e=>{
   if(k==='kalTC'){ S.kal.tutup[el.dataset.k]=el.checked; rp(); }
   if(k==='tgs'){ const D=tugasDone(); D[el.dataset.k]=el.checked; try{ localStorage.setItem(tugasKey(),JSON.stringify(D)); }catch(e){} rp(); }
   if(k==='ivPay'){ S.iv.pay=el.value; }
-  if(k==='lapMonth'){ S.lap.month=el.value; S.data.lap=null; go('laporan'); }
+  if(k==='kg'){ IN.kg(el); }
+  if(k==='oxT'&&el.tagName==='SELECT'){ IN.oxT(el); }
+  if(k==='oxMonth'){ S.ox.month=el.value; S.data.ox=null; S.ox.edit=false; go('opex'); }
+  if(k==='ckTahun'){ S.ck.tahun=el.value; S.data.ck=null; S.ck.a=null; S.ck.stokRes=null; go('cukai'); }
+  if(k==='ckA'&&(el.tagName==='SELECT'||el.type==='date')){ IN.ckA(el); }
+  if(k==='ckStokFile'){ const f=el.files[0]; if(!f) return; try{ busy(true); const items=parseStokFile(await f.text()); if(!items.length) throw new Error('Tiada stok dalam fail.'); S.ck.stokRes=await call('api_kiraStok',S.pin,items); busy(false); rp(); }catch(er){ busy(false); toast(er.message); } }
+  if(k==='lapMonth'){ S.lap.month=el.value; S.data.lap=null; S.data.rk=null; go('laporan'); }
   if(k==='ke'&&el.tagName==='SELECT'){ IN.ke(el); }
   if(k==='impPos'){ S.imp.includePos=el.checked; impPreview(); }
   if(k==='impFile'){
