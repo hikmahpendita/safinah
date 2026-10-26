@@ -152,6 +152,15 @@ label.f{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:60
 @media (max-width:760px){ .cal{gap:2px} .cal button.day{min-height:58px;padding:2px} .cal .ev{font-size:9px;padding:0 2px} .cal .dn{font-size:12px;width:22px;height:22px} }
 @media print{ body.printing-slip .shell,body.printing-slip .slipbar{display:none!important} body.printing-slip #slipView{position:static;background:none;padding:0} body.printing-slip .slip{border-radius:0;padding:0} }
 @media print{ .side,.bnav,.top,.noprint,.toast,.load{display:none!important} .main{padding:0;max-width:none} .box,.card{break-inside:avoid} }
+.oxrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap;cursor:text}
+.oxlbl{flex:1;min-width:0;font-size:14px}
+.oxrm{display:flex;align-items:center;gap:6px;flex:0 0 150px}
+.oxrm i{font-style:normal;font-size:13px;color:var(--mut)}
+.oxrm .inp{text-align:right;font-weight:500;padding:10px 12px;min-height:44px}
+.oxcard{display:flex;flex-direction:column;gap:10px;margin:12px 16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+.oxcard .inp{background:#fff;font-weight:500}
+.oxdua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.oxbar{display:flex;gap:10px}
 .printonly{display:none}@media print{.printonly{display:block}}
 @media (max-width:760px){
   .side{display:none}
@@ -198,7 +207,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.7';
+const APP_VERSI='1.7.1';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -795,17 +804,20 @@ function opexHtml(){
   return h;
 }
 function opexEditHtml(d){
-  const E=S.ox.f;
-  let h='<section class="card" style="gap:12px"><h2>Bajet bulanan ikut kategori</h2><div class="sub" style="font-size:13px">Kosongkan jika tiada bajet. Panduan Profit First: jumlah bajet sepatutnya tidak melebihi duit opex yang masuk ke Hong Leong setiap bulan.</div><div class="row">'
-   +d.kats.map(k=>'<label class="f" style="flex:1 1 220px">'+esc(k)+' (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="oxB" data-k="'+esc(k)+'" value="'+esc(E.bajet[k]||'')+'"></label>').join('')+'</div></section>'
-   +'<section class="card" style="gap:12px"><h2>Kos tetap bulanan</h2><div class="sub" style="font-size:13px">Bil yang sama setiap bulan. SAFINAH ingatkan 3 hari sebelum tarikh bayar.</div>'
-   +E.tetap.map((t,i)=>'<div class="row" style="align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:10px"><label class="f" style="flex:2 1 180px">Nama<input class="inp" data-in="oxT" data-i="'+i+'" data-k="nama" value="'+esc(t.nama||'')+'" placeholder="Contoh: Internet Unifi"></label>'
-     +'<label class="f" style="flex:2 1 200px">Kategori<select class="inp" data-in="oxT" data-i="'+i+'" data-k="kat">'+d.kats.map(k=>'<option '+(t.kat===k?'selected':'')+'>'+esc(k)+'</option>').join('')+'</select></label>'
-     +'<label class="f" style="flex:1 1 110px">Jumlah (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="oxT" data-i="'+i+'" data-k="jumlah" value="'+esc(t.jumlah||'')+'"></label>'
-     +'<label class="f" style="flex:1 1 90px">Hari bayar<input class="inp" type="number" min="1" max="28" data-in="oxT" data-i="'+i+'" data-k="hari" value="'+esc(t.hari||'')+'"></label>'
-     +'<button class="btn sm" data-act="oxTDel" data-i="'+i+'" aria-label="Buang">Buang</button></div>').join('')
-   +'<button class="btn" data-act="oxTAdd" style="align-self:flex-start">+ Tambah kos tetap</button></section>'
-   +'<div class="row"><button class="btn p" style="flex:1" data-act="oxSave">Simpan</button><button class="btn" data-act="oxEdit">Batal</button></div>';
+  const E=S.ox.f, tot=Object.keys(E.bajet).reduce((a,k)=>a+(Number(E.bajet[k])||0),0);
+  let h='<section class="box"><div class="hd"><div><h2>Bajet bulanan</h2><div class="sub">Kosongkan jika tiada bajet untuk kategori itu</div></div></div>'
+   +d.kats.map(k=>'<label class="li oxrow"><span class="oxlbl">'+esc(k)+'</span><span class="oxrm"><i>RM</i><input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="oxB" data-k="'+esc(k)+'" value="'+esc(E.bajet[k]||'')+'" placeholder="0"></span></label>').join('')
+   +'<div class="li oxrow" style="background:var(--soft)"><b class="oxlbl">Jumlah bajet sebulan</b><b id="oxTot" style="white-space:nowrap">'+rm(tot)+'</b></div></section>'
+   +'<div class="note n-n" style="font-size:13px">Panduan Profit First: jumlah bajet sepatutnya tidak melebihi duit opex yang masuk ke Hong Leong setiap bulan.</div>'
+   +'<section class="box"><div class="hd"><div><h2>Kos tetap bulanan</h2><div class="sub">Bil yang sama setiap bulan. SAFINAH ingatkan 3 hari sebelum tarikh bayar.</div></div></div>'
+   +(E.tetap.length?'':'<div class="li sub">Belum ada kos tetap.</div>')
+   +E.tetap.map((t,i)=>'<div class="oxcard"><div class="row between" style="flex-wrap:nowrap"><b style="font-size:14px">Kos tetap '+(i+1)+'</b><button class="btn sm" data-act="oxTDel" data-i="'+i+'" style="color:var(--r)">Buang</button></div>'
+     +'<label class="f">Nama<input class="inp" data-in="oxT" data-i="'+i+'" data-k="nama" value="'+esc(t.nama||'')+'" placeholder="Contoh: Internet Unifi"></label>'
+     +'<label class="f">Kategori<select class="inp" data-in="oxT" data-i="'+i+'" data-k="kat">'+d.kats.map(k=>'<option '+(t.kat===k?'selected':'')+'>'+esc(k)+'</option>').join('')+'</select></label>'
+     +'<div class="oxdua"><label class="f">Jumlah (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="oxT" data-i="'+i+'" data-k="jumlah" value="'+esc(t.jumlah||'')+'"></label>'
+     +'<label class="f">Hari bayar (1–28)<input class="inp" type="number" inputmode="numeric" min="1" max="28" data-in="oxT" data-i="'+i+'" data-k="hari" value="'+esc(t.hari||'')+'"></label></div></div>').join('')
+   +'<div style="padding:12px 16px 16px"><button class="btn" data-act="oxTAdd" style="width:100%;border-style:dashed">+ Tambah kos tetap</button></div></section>'
+   +'<div class="oxbar"><button class="btn p" style="flex:1" data-act="oxSave">Simpan</button><button class="btn" data-act="oxEdit">Batal</button></div>';
   return h;
 }
 async function oxLoad(){ S.data.ox=await call('api_opex',S.pin,S.ox.month||''); if(!S.ox.month) S.ox.month=S.data.ox.ym; }
@@ -2056,7 +2068,7 @@ const IN = {
   jumlah(el){ S.R.jumlah=el.value; }, telefon(el){ S.R.telefon=el.value; }, tarikh(el){ S.R.tarikh=el.value; }, keterangan(el){ S.R.keterangan=el.value; }, diskaun(el){ S.R.diskaun=el.value; const w=$('diskWarn'); if(w) w.innerHTML=diskaunWarn(rekodItems(),S.R); },
   agU(el){ S.ag.untung=el.value; S.ag.confirm=false; agRefresh(); },
   agB(el){ S.ag.bonus=el.value; S.ag.bConfirm=false; const b=document.querySelector('[data-act="agBonus"]'), x=Number(el.value)||0, p=Number(S.data.ag.ocbc&&S.data.ag.ocbc.profit)||0; if(b){ b.disabled=!(x>0&&x<=p+0.01); b.textContent='Rekod bonus OCBC → Bank Islam'; } },
-  oxB(el){ S.ox.f.bajet[el.dataset.k]=el.value; },
+  oxB(el){ S.ox.f.bajet[el.dataset.k]=el.value; const t=$('oxTot'); if(t) t.textContent=rm(Object.keys(S.ox.f.bajet).reduce((a,k)=>a+(Number(S.ox.f.bajet[k])||0),0)); },
   oxT(el){ S.ox.f.tetap[+el.dataset.i][el.dataset.k]=el.value; },
   ckF(el){ S.ck.f[el.dataset.k]=el.value; },
   ckP(el){ S.ck.p[el.dataset.k]=el.value; },
@@ -2140,4 +2152,3 @@ if(S.pin) login();
 </script>
 </body>
 </html>
-
