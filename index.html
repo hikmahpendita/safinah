@@ -196,6 +196,7 @@ const ICON = {
   agihan:'<path d="M12 3v18"/><path d="M5 8h14l-2 4H7z"/><path d="M8 21h8"/>',
   katalog:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
   laporan:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  stok:'<path d="M4 19V5a1 1 0 0 1 1-1h3v15H5a1 1 0 0 1-1-1z"/><path d="M8 4h4v15H8z"/><path d="M13.5 5.5l3.4-.9 3.6 13.5-3.4.9z"/><path d="M3 21h18"/>',
   pelanggan:'<circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/><path d="M17 11l2 2 4-4"/>',
   opex:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/><path d="M3 12h2M19 12h2"/>',
   cukai:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
@@ -210,22 +211,22 @@ const ICON = {
   templat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
   sop:'<path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/>'
 };
-const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog'],['pelanggan','Pelanggan']];
+const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.9.2';
+const APP_VERSI='2.0';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
-const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['pelanggan','Pelanggan']];
+const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
 function isOwner(){ return S.user&&S.user.role==='pemilik'; }
 /* Menu digabung ikut kumpulan (v1.4): 5 menu utama, sub-feature dalam tab */
-const GROUPS=[{id:'g-utama',nama:'Utama',icon:'utama',subs:['utama']},{id:'g-rekod',nama:'Rekod',icon:'rekod',subs:['rekod','imp']},{id:'g-wang',nama:'Kewangan',icon:'tunai',subs:['tunai','agihan','opex','laporan','cukai']},{id:'g-kitab',nama:'Kitab & Pelanggan',short:'Kitab',icon:'katalog',subs:['pelanggan','katalog','beli','hajat','invois','templat']},{id:'g-pejabat',nama:'Pejabat',icon:'kalendar',subs:['kalendar','surat','pekerja','gaji']}];
-const SUBNAMA={utama:'Utama',rekod:'Rekod Baru',imp:'Import Wasepme',tunai:'Aliran Tunai',agihan:'Agihan Profit First',opex:'Pantau OPEX',laporan:'Laporan',cukai:'Laporan Cukai',pelanggan:'Pelanggan',katalog:'Katalog & Harga',beli:'Pembelian & Kargo',templat:'Jawapan Pantas',hajat:'Senarai Hajat',invois:'Invois & Hutang',kalendar:'Kalendar Program',surat:'Surat Rasmi',pekerja:'Pekerja',gaji:'Gaji & Slip'};
+const GROUPS=[{id:'g-utama',nama:'Utama',icon:'utama',subs:['utama']},{id:'g-rekod',nama:'Rekod',icon:'rekod',subs:['rekod','imp']},{id:'g-wang',nama:'Kewangan',icon:'tunai',subs:['tunai','agihan','opex','laporan','cukai']},{id:'g-kitab',nama:'Kitab & Pelanggan',short:'Kitab',icon:'katalog',subs:['pelanggan','katalog','stok','beli','hajat','invois','templat']},{id:'g-pejabat',nama:'Pejabat',icon:'kalendar',subs:['kalendar','surat','pekerja','gaji']}];
+const SUBNAMA={utama:'Utama',rekod:'Rekod Baru',imp:'Import Wasepme',tunai:'Aliran Tunai',agihan:'Agihan Profit First',opex:'Pantau OPEX',laporan:'Laporan',cukai:'Laporan Cukai',pelanggan:'Pelanggan',katalog:'Katalog & Harga',stok:'Stok & Prestasi Kitab',beli:'Pembelian & Kargo',templat:'Jawapan Pantas',hajat:'Senarai Hajat',invois:'Invois & Hutang',kalendar:'Kalendar Program',surat:'Surat Rasmi',pekerja:'Pekerja',gaji:'Gaji & Slip'};
 function myGroups(){ const ok=rolePages().map(p=>p[0]); return GROUPS.map(g=>Object.assign({},g,{subs:g.subs.filter(x=>ok.indexOf(x)>-1)})).filter(g=>g.subs.length); }
 function groupOf(pg){ return myGroups().find(g=>g.subs.indexOf(pg)>-1)||null; }
 function gLabel(g,pendek){ if(g.subs.length===1&&g.id!=='g-utama') return pendek?(SHORT[g.subs[0]]||SUBNAMA[g.subs[0]]):SUBNAMA[g.subs[0]]; return pendek?(g.short||g.nama):g.nama; }
 function gIcon(g){ return g.subs.length===1?g.subs[0]:g.icon; }
 function subTabs(){ const g=groupOf(S.page); if(!g||g.subs.length<2) return ''; return '<div class="subtabs" role="tablist" aria-label="'+esc(g.nama)+'">'+g.subs.map(x=>'<button class="chip '+(S.page===x?'on':'')+'" role="tab" aria-selected="'+(S.page===x)+'" data-act="go" data-p="'+x+'">'+esc(SUBNAMA[x])+'</button>').join('')+'</div>'; }
-const SUBDESC={rekod:'Jualan, duit masuk & duit keluar',imp:'Muat naik SalesReport Wasep.me',tunai:'Semua transaksi & baki bank',agihan:'Profit First 10hb & 25hb',opex:'Bajet, kos tetap & Hong Leong',laporan:'Untung rugi & graf bulanan',cukai:'P&L tahunan untuk Borang B',pelanggan:'Profil, sejarah belian & WhatsApp',katalog:'Kos, berat & kalkulator harga',beli:'Pesanan Mesir & kargo',templat:'Templat WhatsApp pelanggan',hajat:'Kitab tiada stok & pre-order',invois:'Sebut harga, invois & susulan',kalendar:'Program, event & senarai semak',surat:'Surat rasmi berkepala HPR',pekerja:'Profil, bank & dokumen staf',gaji:'Kira gaji & slip PDF'};
+const SUBDESC={rekod:'Jualan, duit masuk & duit keluar',imp:'Muat naik SalesReport Wasep.me',tunai:'Semua transaksi & baki bank',agihan:'Profit First 10hb & 25hb',opex:'Bajet, kos tetap & Hong Leong',laporan:'Untung rugi & graf bulanan',cukai:'P&L tahunan untuk Borang B',pelanggan:'Profil, sejarah belian & WhatsApp',katalog:'Kos, berat & kalkulator harga',stok:'Beli semula, stok mati & kitab laris',beli:'Pesanan Mesir & kargo',templat:'Templat WhatsApp pelanggan',hajat:'Kitab tiada stok & pre-order',invois:'Sebut harga, invois & susulan',kalendar:'Program, event & senarai semak',surat:'Surat rasmi berkepala HPR',pekerja:'Profil, bank & dokumen staf',gaji:'Kira gaji & slip PDF'};
 let NAVMODE='B'; // Susunan dipilih: B · Menu bertajuk
 function setNav(m){ NAVMODE=m; try{ localStorage.setItem('safinah:nav',m); }catch(e){} if(S.user){ if(m!=='B'&&S.page==='menu') S.page='utama'; render(); window.scrollTo(0,0); } }
 function navBtn(p,sz){ return '<button class="'+(S.page===p?'on':'')+'" data-act="go" data-p="'+p+'">'+ico(p,sz)+'<span>'+esc(SUBNAMA[p])+'</span></button>'; }
@@ -247,9 +248,9 @@ function hubHtml(){
 }
 function rolePages(){ return S.user.role==='pemilik'?PAGES_OWNER:(S.user.role==='operasi'?PAGES_OPS:PAGES_STAF); }
 function roleNama(){ return S.user.role==='pemilik'?'Pengurus Utama':(S.user.role==='operasi'?'Pengurus Operasi':'Staf'); }
-const SHORT = {utama:'Utama',tunai:'Tunai',rekod:'Rekod',imp:'Import',agihan:'Agihan',opex:'OPEX',pelanggan:'Pelanggan',katalog:'Katalog',laporan:'Laporan',cukai:'Cukai',lagi:'Lagi',gaji:'Gaji',pekerja:'Pekerja',kalendar:'Kalendar',invois:'Invois',surat:'Surat',hajat:'Hajat',beli:'Beli',templat:'Templat'};
+const SHORT = {utama:'Utama',tunai:'Tunai',rekod:'Rekod',imp:'Import',agihan:'Agihan',opex:'OPEX',pelanggan:'Pelanggan',katalog:'Katalog',stok:'Stok',laporan:'Laporan',cukai:'Cukai',lagi:'Lagi',gaji:'Gaji',pekerja:'Pekerja',kalendar:'Kalendar',invois:'Invois',surat:'Surat',hajat:'Hajat',beli:'Beli',templat:'Templat'};
 
-const S = { pin:'', user:null, boot:null, page:'utama', data:{}, R:null, tx:{filter:'semua', open:null, month:''}, imp:null, ag:null, kat:{q:'', edit:null, pos:null}, lap:{month:''}, ox:{month:'', edit:false, f:null, bc:null}, pl:{q:'', f:'semua', sort:'belanja', lim:50, open:null, det:null, edit:null, imp:null, pc:false, pilih:false, sel:{}, pk:null}, ck:{tahun:'', f:{}, p:{}, a:null, stokRes:null, delId:null}, pk:{filter:'semua', edit:null}, gj:{month:'', rows:null, slip:null, payDate:''}, kal:{month:'', sel:'', edit:null, open:null}, iv:{filter:'belum', open:null, edit:null, q:'', pay:''}, sr:{q:'', f:'Semua', open:null, edit:null, del:null}, bl:{tab:'pesanan', open:null, edit:null, kedit:null, sampai:null, res:null}, tp:{edit:null, q:'', del:null}, hj:{f:'aktif', q:'', open:null, edit:null, kitab:null, form:{kitab:'',pelanggan:'',telefon:'',q:1,catatan:''}}, slipView:null, outbox:[], lastSub:{} };
+const S = { pin:'', user:null, boot:null, page:'utama', data:{}, R:null, tx:{filter:'semua', open:null, month:''}, imp:null, ag:null, kat:{q:'', edit:null, pos:null}, lap:{month:''}, ox:{month:'', edit:false, f:null, bc:null}, st:{tab:'beli', q:'', sort:'laris', lim:40, liputan:12, imp:null}, pl:{q:'', f:'semua', sort:'belanja', lim:50, open:null, det:null, edit:null, imp:null, pc:false, pilih:false, sel:{}, pk:null}, ck:{tahun:'', f:{}, p:{}, a:null, stokRes:null, delId:null}, pk:{filter:'semua', edit:null}, gj:{month:'', rows:null, slip:null, payDate:''}, kal:{month:'', sel:'', edit:null, open:null}, iv:{filter:'belum', open:null, edit:null, q:'', pay:''}, sr:{q:'', f:'Semua', open:null, edit:null, del:null}, bl:{tab:'pesanan', open:null, edit:null, kedit:null, sampai:null, res:null}, tp:{edit:null, q:'', del:null}, hj:{f:'aktif', q:'', open:null, edit:null, kitab:null, form:{kitab:'',pelanggan:'',telefon:'',q:1,catatan:''}}, slipView:null, outbox:[], lastSub:{} };
 try { S.outbox = JSON.parse(localStorage.getItem('safinah:outbox')||'[]'); } catch(e) { S.outbox=[]; }
 function cacheGet(k){ try{ const v=localStorage.getItem('safinah:c:'+k); return v?JSON.parse(v):null; }catch(e){ return null; } }
 function cacheSet(k,v){ try{ localStorage.setItem('safinah:c:'+k, JSON.stringify(v)); }catch(e){} }
@@ -358,6 +359,7 @@ function pageBody(){
     case 'cukai': return cukaiHtml();
     case 'opex': return opexHtml();
     case 'pelanggan': return pelangganHtml();
+    case 'stok': return stokHtml();
     case 'lagi': return lagiHtml();
     case 'pekerja': return pekerjaHtml();
     case 'gaji': return gajiHtml();
@@ -380,6 +382,7 @@ async function loadPage(p){
     if(p==='agihan'){ S.data.ag=await call('api_agihanInfo',S.pin); S.ag={untung:S.data.ag.untungCadangan, confirm:false, done:null, bonus:S.data.ag.bonus.cadangan, bConfirm:false, bDone:null}; }
     if(p==='katalog'){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.kat.pos=null; }
     if(p==='opex') await oxLoad();
+    if(p==='stok'){ await stLoad(); cacheSet('st',S.data.st); }
     if(p==='pelanggan'){ S.data.pl=await call('api_pelanggan',S.pin); cacheSet('pl',S.data.pl); if(S.pl.open&&!S.pl.edit) S.pl.det=await call('api_pelangganDetail',S.pin,S.pl.open); }
     if(p==='cukai'){ if(!S.ck.tahun) S.ck.tahun=String(+(S.boot.today||'2026').slice(0,4)); await ckLoad(); }
     if(p==='laporan'&&(S.lap.view||'ringkas')==='ringkas') await rkLoad();
@@ -403,6 +406,7 @@ function autoOk(p){
     case 'opex': return !S.ox.edit;
     case 'pelanggan': return !S.pl.edit&&!S.pl.imp;
     case 'katalog': return !S.kat.edit;
+    case 'stok': return !S.st.imp;
     case 'kalendar': return !S.kal.edit;
     case 'invois': return !S.iv.edit;
     case 'hajat': return !S.hj.edit;
@@ -435,7 +439,7 @@ async function go(p){
   try{ const g=groupOf(p); if(g) S.lastSub[g.id]=p; }catch(e){}
   if(p==='rekod' && !S.R) S.R=newRekod('jualan');
   // tunjuk data simpanan dahulu (laju), kemudian ambil data terkini
-  if(p==='utama'&&!S.data.dash) S.data.dash=cacheGet('dash');
+  if(p==='utama'&&!S.data.dash){ S.data.dash=cacheGet('dash'); if(S.data.dash) S.data.dash._lama=1; }
   if(p==='tunai'&&!S.data.tx) S.data.tx=cacheGet('tx');
   if(p==='katalog'&&!S.kat.keep){ S.kat.edit=null; S.kat.balik=null; }
   if(p==='katalog'&&!S.data.kat) S.data.kat=cacheGet('kat');
@@ -443,6 +447,7 @@ async function go(p){
   if(p==='laporan'&&!S.data.rk&&(S.lap.tempoh||'bulan')==='bulan'&&!S.lap.month) S.data.rk=cacheGet('rk');
   if(p==='opex'&&!S.data.ox&&!S.ox.month) S.data.ox=cacheGet('ox');
   if(p==='pelanggan'&&!S.data.pl) S.data.pl=cacheGet('pl');
+  if(p==='stok'&&!S.data.st) S.data.st=cacheGet('st');
   render();
   try{
     await loadPage(p);
@@ -813,7 +818,13 @@ function agihanHtml(){
    +'<div id="agWarn">'+agWarnHtml(d,u)+'</div>'
    +(d.ocbc&&(d.ocbc.profit||d.ocbc.cukai)?'<div class="note n-n">Dalam OCBC (dari agihan SAFINAH): Profit <b>'+rm(d.ocbc.profit)+'</b> · Cukai <b>'+rm(d.ocbc.cukai)+'</b>'+(d.ocbc.bonusDiambil?' · bonus sudah diambil '+rm(d.ocbc.bonusDiambil):'')+'</div>':'')
    +'<button class="btn p" data-act="agSave" '+(u>0?'':'disabled')+'>'+(A.confirm?'Tekan sekali lagi untuk sahkan':'Sahkan &amp; rekod agihan')+'</button>';
-  return h+bonusHtml(d);
+  return h+bonusHtml(d)+emelAgHtml(d);
+}
+function emelAgHtml(d){
+  const E=d.emel; if(!E) return '';
+  return '<section class="card" style="gap:10px;margin-top:8px"><div class="row between"><h2>Email automatik</h2><span class="tag '+(E.hidup?'t-g':'t-n')+'">'+(E.hidup?'Hidup':'Mati')+'</span></div>'
+   +'<div class="sub" style="font-size:13px">Setiap <b>10hb &amp; 25hb, pukul 10 malam</b>, SAFINAH hantar ringkasan agihan (untung sebenar &amp; jumlah pindahan ke setiap akaun) kepada <b>'+esc(E.kepada||'')+'</b>.'+(E.terakhir?' Kali terakhir dihantar: '+esc(tglTxt(E.terakhir))+'.':'')+'</div>'
+   +'<div class="row"><button class="btn sm" data-act="emUji">Hantar contoh sekarang</button><button class="btn sm" data-act="emTukar" data-v="'+(E.hidup?'mati':'hidup')+'">'+(E.hidup?'Matikan':'Hidupkan')+'</button></div></section>';
 }
 function bonusHtml(d){
   const A=S.ag, B=d.bonus||{}, prof=Number(d.ocbc&&d.ocbc.profit)||0, x=Number(A.bonus)||0;
@@ -1133,15 +1144,158 @@ function cukaiHtml(){
 }
 async function ckLoad(){ const C=S.ck; S.data.ck=await call('api_cukai',S.pin,C.tahun); ckInit(); }
 function ckInit(){ const d=S.data.ck, C=S.ck; C.f={stokAwal:d.set.stokAwal!==undefined&&d.set.stokAwal!==''?d.set.stokAwal:(d.stokAwal!==null?d.stokAwal:''),stokAkhir:d.stokAkhir!==null?d.stokAkhir:'',faedah:d.set.faedah||'',bakiPinjaman:d.set.bakiPinjaman||''}; C.p=Object.assign({},d.pelarasan||{}); if(!C.a||!C.a.nama) C.a={jenis:d.asetJenis[1],tarikh:''}; }
-function parseStokFile(text){
-  let rows=[];
-  if(/<tr/i.test(text)){ const trRe=/<tr[^>]*>([\s\S]*?)<\/tr>/gi; let m; while((m=trRe.exec(text))){ const cells=[]; const tdRe=/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi; let c; while((c=tdRe.exec(m[1]))) cells.push(cleanCell(c[1])); if(cells.length) rows.push(cells); } }
-  else rows=text.split(/\r?\n/).map(l=>{ const out=[]; let cur='',q=false; for(const ch of l){ if(ch==='"'){ q=!q; } else if((ch===','||ch===';'||ch==='\t')&&!q){ out.push(cur.trim()); cur=''; } else cur+=ch; } out.push(cur.trim()); return out; });
+function parseStokFile(rows){
+  if(typeof rows==='string') rows=teksRows(rows);
   const hi=rows.findIndex(r=>r.some(c=>/nama|produk|judul|product|name|tajuk/i.test(c))&&r.some(c=>/stok|stock|kuantiti|quantity|qty|baki|jumlah unit/i.test(c)));
   if(hi<0) throw new Error('Tak jumpa lajur nama produk dan kuantiti dalam fail ini.');
   const H=rows[hi], iN=H.findIndex(c=>/nama|produk|judul|product|name|tajuk/i.test(c)), iQ=H.findIndex(c=>/stok|stock|kuantiti|quantity|qty|baki|jumlah unit/i.test(c));
   return rows.slice(hi+1).map(r=>({judul:r[iN]||'',q:Number(String(r[iQ]||'').replace(/[^0-9.\-]/g,''))||0})).filter(x=>x.judul&&x.q>0);
 }
+
+/* ---------- v2.0 BACA FAIL JADUAL (xlsx / xls-html / csv) tanpa pustaka luar ---------- */
+async function bacaJadual(f){
+  const buf=new Uint8Array(await f.arrayBuffer());
+  if(buf[0]===0x50&&buf[1]===0x4B) return await xlsxRows(buf);
+  return teksRows(new TextDecoder().decode(buf));
+}
+function teksRows(text){
+  if(/<tr/i.test(text)){ const rows=[], trRe=/<tr[^>]*>([\s\S]*?)<\/tr>/gi; let m; while((m=trRe.exec(text))){ const cells=[]; const tdRe=/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi; let c; while((c=tdRe.exec(m[1]))) cells.push(cleanCell(c[1])); if(cells.length) rows.push(cells); } return rows; }
+  return text.split(/\r?\n/).map(l=>{ const out=[]; let cur='',q=false; for(const ch of l){ if(ch==='"'){ q=!q; } else if((ch===','||ch===';'||ch==='\t')&&!q){ out.push(cur.trim()); cur=''; } else cur+=ch; } out.push(cur.trim()); return out; });
+}
+async function xlsxRows(b){
+  if(typeof DecompressionStream==='undefined') throw new Error('Telefon ini tak boleh baca .xlsx. Kemas kini Chrome, atau buka di laptop.');
+  const u16=o=>b[o]|(b[o+1]<<8), u32=o=>(b[o]|(b[o+1]<<8)|(b[o+2]<<16)|(b[o+3]<<24))>>>0;
+  let e=b.length-22; while(e>=0&&u32(e)!==0x06054b50) e--; if(e<0) throw new Error('Fail .xlsx rosak.');
+  const files={}; let p=u32(e+16); const n=u16(e+10);
+  for(let i=0;i<n;i++){ if(u32(p)!==0x02014b50) break; const nl=u16(p+28), xl=u16(p+30), cl=u16(p+32); const name=new TextDecoder().decode(b.subarray(p+46,p+46+nl)); files[name]={m:u16(p+10),cs:u32(p+20),off:u32(p+42)}; p+=46+nl+xl+cl; }
+  const baca=async name=>{ const f=files[name]; if(!f) return ''; const o=f.off, s=o+30+u16(o+26)+u16(o+28), d=b.subarray(s,s+f.cs);
+    if(f.m===0) return new TextDecoder().decode(d);
+    return await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text(); };
+  const xml=t=>new DOMParser().parseFromString(t,'application/xml'), tag=(el,t)=>Array.from(el.getElementsByTagNameNS('*',t));
+  const ss=[]; const sst=await baca('xl/sharedStrings.xml'); if(sst) tag(xml(sst),'si').forEach(si=>ss.push(tag(si,'t').map(t=>t.textContent).join('')));
+  const sn=Object.keys(files).filter(k=>/^xl\/worksheets\/sheet\d+\.xml$/.test(k)).sort((a,c)=>parseInt(a.replace(/\D/g,''))-parseInt(c.replace(/\D/g,'')))[0];
+  if(!sn) throw new Error('Tiada helaian dalam fail .xlsx.');
+  const col=r=>{ let c=0; for(const ch of String(r).replace(/\d/g,'')) c=c*26+(ch.charCodeAt(0)-64); return c-1; };
+  return tag(xml(await baca(sn)),'row').map(row=>{ const out=[]; tag(row,'c').forEach((c,ix)=>{ const t=c.getAttribute('t'), v=(tag(c,'v')[0]||{}).textContent;
+    const val=t==='s'?ss[+v]:(t==='inlineStr'?tag(c,'t').map(x=>x.textContent).join(''):(v==null?'':v)); const i=c.getAttribute('r')?col(c.getAttribute('r')):ix; out[i]=String(val==null?'':val).trim(); });
+    for(let i=0;i<out.length;i++) if(out[i]===undefined) out[i]=''; return out; });
+}
+/* product_database.xlsx Wasep.me → [{nama,label,harga,berat,stok,terjual,jumlah}] */
+function parseProduk(rows){
+  const hi=rows.findIndex(r=>r.some(c=>/^(nama|name|product|produk)/i.test(c))&&r.some(c=>/^(stok|stock)/i.test(c)));
+  if(hi<0) throw new Error('Tak jumpa lajur Nama dan Stok. Pastikan ini fail product_database dari Wasep.me.');
+  const H=rows[hi].map(c=>String(c||'').trim()), f=re=>H.findIndex(c=>re.test(c));
+  const I={nama:f(/^(nama|name|product|produk)/i),label:f(/^(label|bidang|kategori kitab)/i),harga:f(/^(harga|price)/i),berat:f(/berat|weight/i),stok:f(/^(stok|stock)/i),terjual:f(/quantity sold|terjual|qty sold/i),jumlah:f(/amount sold|jumlah jualan|sales amount/i)};
+  const nb=v=>{ const x=Number(String(v||'').replace(/[^0-9.\-]/g,'')); return isFinite(x)?x:0; };
+  return rows.slice(hi+1).map(r=>{ const st=String(r[I.stok]==null?'':r[I.stok]).trim();
+    return {nama:String(r[I.nama]||'').trim(),label:I.label>-1?String(r[I.label]||'').trim():'',harga:I.harga>-1?nb(r[I.harga]):0,berat:I.berat>-1?nb(r[I.berat]):0,
+      stok:(st===''||st==='-')?null:nb(st),terjual:I.terjual>-1?nb(r[I.terjual]):0,jumlah:I.jumlah>-1?nb(r[I.jumlah]):0}; }).filter(x=>x.nama);
+}
+
+/* ---------- v2.0 STOK & PRESTASI KITAB ---------- */
+function stKira(d){
+  const T=S.st, hari90=Math.max(7,Math.min(90,d.sejak?Math.round((new Date(d.today)-new Date(d.sejak))/864e5):90)), mg=hari90/7;
+  return d.rows.map(r=>{ const rate=r.q90/mg, habis=r.s<=0, minggu=(!habis&&rate>0)?r.s/rate:null;
+    const beli=(habis&&(r.q180>=3||(!r.q180&&r.w>=15)))||(!habis&&minggu!==null&&minggu<=6&&r.q90>=3);
+    const mati=r.s>0&&(!r.a||r.a<d.d180);
+    const cad=rate>0?Math.max(1,Math.ceil(rate*T.liputan-r.s)):null;
+    return Object.assign({},r,{rate:rate,minggu:minggu,habis:habis,beli:beli,mati:mati,cad:cad,nilai:r.s*r.k,untung:r.k>0?r.rmYr-r.k*r.qYr:null}); });
+}
+function stTagStok(r){
+  if(r.t) return '<span class="tag t-r">Ditutup · habis</span>';
+  if(r.habis) return '<span class="tag t-r">Stok 0</span>';
+  if(r.minggu!==null&&r.minggu<=6) return '<span class="tag t-a">Tinggal '+r.s+' · ~'+Math.max(1,Math.round(r.minggu))+' minggu</span>';
+  return '<span class="tag t-n">Stok '+r.s+'</span>';
+}
+function stNama(r){ return esc(r.j||r.n); }
+function stokHtml(){
+  const d=S.data.st, T=S.st;
+  let h='<div class="row between"><div><h1>Stok &amp; Prestasi Kitab</h1><div class="sub">'+(d&&d.tarikh?'Stok dari Wasep.me · dikemaskini '+esc(tglTxt(d.tarikh.slice(0,10)))+' '+esc(d.tarikh.slice(11)):'Stok kekal diurus dalam Wasep.me — SAFINAH baca dan analisis')+'</div></div>'
+   +(d&&!d.kosong&&!T.imp?'<button class="btn" data-act="stImpBuka">'+ico('imp',18)+' Kemas kini stok</button>':'')+'</div>';
+  if(!d) return h+'<div class="sub">Memuatkan…</div>';
+  if(d.kosong||T.imp) return h+stImpHtml(d);
+  if(d.umur!==null&&d.umur>16) h+='<div class="note n-y">Data stok dah <b>'+d.umur+' hari</b>. Muat naik fail baru dari Wasep.me supaya cadangan tepat (sebaiknya setiap 10hb &amp; 25hb).</div>';
+  const R=stKira(d), ada=R.filter(r=>r.s>0), beli=R.filter(r=>r.beli), mati=R.filter(r=>r.mati);
+  const nilai=ada.reduce((a,r)=>a+r.nilai,0), tiadaKos=ada.filter(r=>!(r.k>0)).length, nMati=mati.reduce((a,r)=>a+r.nilai,0);
+  h+='<div class="grid">'
+   +'<div class="card"><span class="lbl">Stok di tangan</span><span class="val">'+ada.reduce((a,r)=>a+r.s,0).toLocaleString('en-MY')+' naskhah</span><span class="sub" style="font-size:12px">'+ada.length+' judul ada stok · '+R.filter(r=>r.t).length+' ditutup</span></div>'
+   +'<div class="card"><span class="lbl">Nilai stok (modal)</span><span class="val" style="color:var(--b)">'+rm(nilai)+'</span><span class="sub" style="font-size:12px">'+(tiadaKos?'<b style="color:#B45309">'+tiadaKos+' judul tiada kos dalam Katalog</b>':'Ikut kos Katalog ✓')+'</span></div>'
+   +'<div class="card" style="'+(beli.length?'background:#FFF7ED':'')+'"><span class="lbl">Perlu beli semula</span><span class="val" style="color:'+(beli.length?'#B45309':'var(--g)')+'">'+beli.length+' judul</span><span class="sub" style="font-size:12px">Laris tapi habis / hampir habis</span></div>'
+   +'<div class="card"><span class="lbl">Stok mati</span><span class="val">'+rm(nMati)+'</span><span class="sub" style="font-size:12px">'+mati.length+' judul tiada jualan 6 bulan</span></div></div>';
+  h+='<div class="row noprint" role="tablist" style="gap:6px">'+[['beli','🔄 Perlu beli semula'],['mati','💤 Stok mati'],['semua','📚 Semua kitab'],['bidang','📊 Ikut bidang']].map(x=>'<button class="chip '+(T.tab===x[0]?'on':'')+'" data-act="stTab" data-v="'+x[0]+'" role="tab" aria-selected="'+(T.tab===x[0])+'">'+x[1]+'</button>').join('')+'</div>';
+  if(T.tab==='beli') h+=stBeliHtml(beli,d);
+  else if(T.tab==='mati') h+=stMatiHtml(mati,d);
+  else if(T.tab==='bidang') h+=stBidangHtml(R,d);
+  else h+=stSemuaHtml(R,d);
+  if(d.sejak) h+='<div class="sub" style="font-size:12px">Jualan dikira dari rekod SAFINAH sejak '+esc(tglTxt(d.sejak))+'. Stok dari Wasep.me. Harga &amp; kos ikut Katalog SAFINAH.</div>';
+  return h;
+}
+function stBeliHtml(L,d){
+  const T=S.st; L=L.slice().sort((a,b)=>(b.q180-a.q180)||(b.w-a.w));
+  let h='<section class="box"><div class="hd"><div><h2>Perlu beli semula</h2><div class="sub">Cadangan cukup untuk '+T.liputan+' minggu (ikut jualan 3 bulan lepas, tolak stok sekarang)</div></div>'
+   +(L.length?'<button class="btn sm p" data-act="stSalin">Salin senarai</button>':'')+'</div>'
+   +'<div class="row" style="gap:6px;padding:10px 16px 0"><span class="sub" style="font-size:13px;align-self:center">Liputan:</span>'+[8,12,16].map(w=>'<button class="chip '+(T.liputan===w?'on':'')+'" data-act="stLiputan" data-v="'+w+'">'+w+' minggu</button>').join('')+'</div>';
+  if(!L.length) return h+'<div class="li sub">Tiada kitab laris yang habis. Bagus! ✓</div></section>';
+  h+=L.map(r=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:4px"><div class="row between" style="flex-wrap:nowrap;gap:8px;align-items:flex-start"><b style="font-size:14px;flex:1;min-width:0">'+stNama(r)+'</b><span style="white-space:nowrap;text-align:right">'+(r.cad?'<b style="font-size:16px">'+r.cad+'</b> <span class="sub">naskhah</span>':'<span class="sub">tentukan sendiri</span>')+'</span></div>'
+    +'<div class="row" style="gap:6px">'+stTagStok(r)+'<span class="tag t-b">'+esc(r.b)+'</span></div>'
+    +'<span class="sub" style="font-size:12px">Terjual 6 bulan: <b>'+r.q180+'</b> · 3 bulan: '+r.q90+(r.a?' · terakhir '+esc(tglTxt(r.a)):'')+(!r.q180&&r.w?' · Wasep.me rekod '+r.w+' terjual (sebelum SAFINAH)':'')+(r.k>0?' · kos '+rm(r.k):'')+'</span></div>').join('');
+  return h+'</section><div class="note n-n" style="font-size:13px">Tekan <b>Salin senarai</b>, kemudian tampal dalam WhatsApp kepada pembekal di Mesir. Ubah bilangan ikut bajet Maybank (duit modal stok).</div>';
+}
+function stMatiHtml(L,d){
+  L=L.slice().sort((a,b)=>b.nilai-a.nilai||b.s-a.s);
+  let h='<section class="box"><div class="hd"><div><h2>Stok mati</h2><div class="sub">Ada stok, tapi tiada jualan sejak '+esc(tglTxt(d.d180))+'</div></div></div>';
+  if(!L.length) return h+'<div class="li sub">Tiada stok mati ✓</div></section>';
+  h+=L.slice(0,S.st.lim).map(r=>'<div class="li" style="justify-content:space-between;gap:8px;flex-wrap:nowrap"><div style="flex:1;min-width:0"><b style="font-size:14px">'+stNama(r)+'</b><div class="sub" style="font-size:12px">'+esc(r.b)+' · stok '+r.s+' · '+(r.a?'terakhir dijual '+esc(tglTxt(r.a)):'belum pernah dijual dalam SAFINAH')+'</div></div><b style="white-space:nowrap">'+(r.k>0?rm(r.nilai):'<span class="sub">tiada kos</span>')+'</b></div>').join('')
+   +(L.length>S.st.lim?'<div class="li"><button class="btn sm" data-act="stLagi">Tunjuk lagi ('+(L.length-S.st.lim)+')</button></div>':'');
+  return h+'</section><div class="note n-n" style="font-size:13px">Idea: buat bundle dengan kitab laris, beri diskaun pameran, atau tawarkan kepada institusi. Duit modal yang tersangkut boleh dipusing semula.</div>';
+}
+function stSemuaHtml(R,d){
+  const T=S.st, q=normT(T.q||'');
+  let L=R.filter(r=>!q||normT(r.j+' '+r.n+' '+r.b).indexOf(q)>-1);
+  const so={laris:(a,b)=>b.qYr-a.qYr||b.q90-a.q90,untung:(a,b)=>(b.untung||0)-(a.untung||0),stok:(a,b)=>b.s-a.s,nama:(a,b)=>stNama(a).localeCompare(stNama(b))};
+  L.sort(so[T.sort]||so.laris);
+  let h='<input class="inp" type="search" placeholder="Cari judul atau bidang…" data-in="stQ" value="'+esc(T.q||'')+'" aria-label="Cari kitab">'
+   +'<div class="row" style="gap:6px"><span class="sub" style="font-size:13px;align-self:center">Susun:</span>'+[['laris','Paling laris '+d.tahun],['untung','Untung'],['stok','Stok'],['nama','Nama']].map(x=>'<button class="chip '+(T.sort===x[0]?'on':'')+'" data-act="stSort" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>'
+   +'<section class="box" id="stList"><div class="hd"><span class="sub">'+L.length+' judul</span></div>';
+  h+=L.slice(0,T.lim).map(r=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:4px"><div class="row between" style="flex-wrap:nowrap;gap:8px;align-items:flex-start"><b style="font-size:14px;flex:1;min-width:0">'+stNama(r)+'</b><span style="white-space:nowrap"><b>'+r.qYr+'</b> <span class="sub">terjual</span></span></div>'
+    +'<div class="row" style="gap:6px">'+stTagStok(r)+'<span class="tag t-b">'+esc(r.b)+'</span>'+(r.minggu!==null&&r.minggu>6?'<span class="tag t-n">~'+Math.round(r.minggu)+' minggu lagi</span>':'')+'</div>'
+    +'<span class="sub" style="font-size:12px">Jualan '+d.tahun+': '+rm(r.rmYr)+(r.untung!==null?' · untung '+rm(r.untung):' · <span style="color:#B45309">tiada kos</span>')+(r.a?' · terakhir '+esc(tglTxt(r.a)):'')+(r.j?'':' · <span style="color:#B45309">tiada dalam Katalog</span>')+'</span>'+(!(r.k>0)&&r.s>0?'<button class="btn sm" style="align-self:flex-start" data-act="katJ" data-j="'+esc(r.j||r.n)+'" data-h="'+esc(r.h||'')+'" data-b="stok" data-n="Stok">Isi kos</button>':'')+'</div>').join('')
+   +(L.length>T.lim?'<div class="li"><button class="btn sm" data-act="stLagi">Tunjuk lagi ('+(L.length-T.lim)+')</button></div>':'')
+   +(L.length?'':'<div class="li sub">Tiada kitab sepadan.</div>');
+  return h+'</section>';
+}
+function stBidangHtml(R,d){
+  const G={}; R.forEach(r=>{ const g=G[r.b]||(G[r.b]={b:r.b,judul:0,ada:0,s:0,nilai:0,q:0,rm:0,untung:0}); g.judul++; if(r.s>0) g.ada++; g.s+=r.s; g.nilai+=r.nilai; g.q+=r.qYr; g.rm+=r.rmYr; if(r.untung!==null&&r.qYr){ g.untung+=r.untung; g.uk=1; } });
+  const L=Object.values(G).sort((a,b)=>b.rm-a.rm), tot=L.reduce((a,g)=>a+g.rm,0)||1, mx=Math.max(1,...L.map(g=>g.rm));
+  return '<section class="box"><div class="hd"><div><h2>Ikut bidang</h2><div class="sub">Jualan '+d.tahun+' berbanding stok yang ada</div></div></div>'
+   +L.map(g=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><b style="flex:1;min-width:0">'+esc(g.b)+'</b><span style="white-space:nowrap"><b>'+rm(g.rm)+'</b> <span class="sub">'+Math.round(g.rm/tot*100)+'%</span></span></div>'
+     +'<div class="bar" style="height:8px"><i style="width:'+Math.round(g.rm/mx*100)+'%"></i></div>'
+     +'<span class="sub" style="font-size:12px">'+g.q+' naskhah terjual'+(g.uk?' · untung '+rm(g.untung):'')+' · stok '+g.s+' naskhah ('+g.ada+'/'+g.judul+' judul) bernilai '+rm(g.nilai)+'</span></div>').join('')+'</section>';
+}
+function stImpHtml(d){
+  const I=S.st.imp||{};
+  let h='';
+  if(I.done) return h+'<div class="note n-g" style="font-size:16px"><b>Stok dikemas kini ✓</b><br>'+I.done.produk+' produk · '+I.done.naskhah+' naskhah dalam stok · '+I.done.ditutup+' ditutup'+(I.done.bidangIsi||I.done.beratIsi?'<br>Katalog dilengkapkan: '+I.done.bidangIsi+' bidang, '+I.done.beratIsi+' berat (yang kosong sahaja).':'')+'</div><div class="row"><button class="btn p" data-act="stImpTutup">Lihat analisis stok</button></div>';
+  if(I.res){ const r=I.res;
+    h+='<section class="card" style="gap:12px"><h2>Semak sebelum simpan</h2><div class="sub" style="font-size:13px">Fail: '+esc(I.nama)+'</div><div class="grid">'
+     +'<div class="card"><span class="lbl">Produk</span><span class="val">'+r.produk+'</span></div>'
+     +'<div class="card"><span class="lbl">Ada stok</span><span class="val">'+r.adaStok+' judul</span><span class="sub" style="font-size:12px">'+r.naskhah+' naskhah</span></div>'
+     +'<div class="card"><span class="lbl">Ditutup (stok "-")</span><span class="val">'+r.ditutup+'</span></div>'
+     +'<div class="card"><span class="lbl">Sepadan Katalog</span><span class="val">'+r.padan+'</span></div></div>'
+     +'<div class="note n-n" style="font-size:13px">Katalog SAFINAH akan dilengkapkan <b>pada ruang yang kosong sahaja</b>: '+r.bidangIsi+' bidang, '+r.beratIsi+' berat. Harga jual &amp; kos dalam SAFINAH <b>tidak diubah</b>.</div>'
+     +(r.bilTiada?'<div class="note n-y" style="font-size:13px"><b>'+r.bilTiada+' kitab ada stok tapi belum ada dalam Katalog</b> — nilai stok tak dapat dikira. Isi kos selepas simpan:<br>'+r.tiada.slice(0,8).map(x=>esc(x.nama)+' ('+x.stok+')').join(' · ')+(r.bilTiada>8?' …':'')+'</div>':'')
+     +'<div class="row"><button class="btn p" style="flex:1" data-act="stSimpan">Simpan stok</button><button class="btn" data-act="stImpBatal">Batal</button></div></section>';
+    return h;
+  }
+  return h+(d.kosong?'<div class="note n-n" style="font-size:14px;line-height:1.7"><b>Cara guna (2 minit):</b><br>1. Dalam Wasep.me, muat turun senarai produk (fail <b>product_database.xlsx</b>).<br>2. Pilih fail tu di bawah.<br>3. SAFINAH tunjuk kitab yang perlu dibeli semula, stok mati, dan prestasi setiap kitab.</div>':'')
+   +'<label class="card" style="align-items:center;text-align:center;border:2px dashed #9CA3AF;padding:32px;cursor:pointer;gap:8px">'+ico('imp',36)+'<b>Pilih fail product_database.xlsx</b><span class="sub">Stok "-" dikira sebagai ditutup (habis)</span><input type="file" accept=".xlsx,.xls,.csv" data-in="stFile" style="max-width:260px"></label>'
+   +(d.kosong?'':'<button class="btn" data-act="stImpBatal">Batal</button>');
+}
+function stSalinTeks(){
+  const d=S.data.st, L=stKira(d).filter(r=>r.beli).sort((a,b)=>(b.q180-a.q180)||(b.w-a.w));
+  return 'Senarai beli semula — Hikmah Pendita Resources ('+tglTxt(d.today)+')\n\n'+L.map((r,i)=>(i+1)+'. '+(r.j||r.n)+' — '+(r.cad?r.cad+' naskhah':'(tentukan)')).join('\n');
+}
+async function stLoad(){ S.data.st=await call('api_stok',S.pin); }
 
 /* ---------- KATALOG ---------- */
 async function katReload(msg){ S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); toast(msg); repaint(); }
@@ -1170,6 +1324,7 @@ function katEditorHtml(d){
      +(c.pos?'<div class="sub">Kos pos: <b>RM'+c.pos.kos.toFixed(2)+'</b> ('+c.pos.kg+' kg × RM'+d.pos.perKg+' sekilo)</div>':'')
      +(c.err?'<div class="note n-r">'+esc(c.err)+'</div>':(!(c.kos>0)?'<div class="note n-n">Isi harga LE dan berat — kalkulator kira kos dan harga jual sendiri.</div>':'<div class="note n-n" style="font-size:15px;line-height:1.7">Kos kitab: <b>'+rm(c.kos)+'</b><br>'+rm(c.kos)+' × '+(1+d.markup/100).toFixed(2)+' = '+rm(mentah)+(cad>0?' → dibundar ke atas: <b style="font-size:18px">'+rm(cad)+'</b><br><span class="sub" style="font-size:13px">Ikut SOP M3: harga jual dibundar ke atas ke ringgit penuh</span>':'')+'</div>'))
      +'<label class="f">Harga jual (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" data-in="ke" data-k="hargaJual" value="'+esc(e.hargaJual)+'" placeholder="'+(cad?cad.toFixed(2):'')+'"></label><div class="sub" style="font-size:13px;margin-top:-6px">Biarkan kosong untuk guna harga dibundar '+(cad?rm(cad):'')+'</div>'
+     +'<label class="f">Bidang (pilihan)<input class="inp" data-in="ke" data-k="bidang" list="bidangList" value="'+esc(e.bidang||'')+'" placeholder="Contoh: Fiqh dan Usul Fiqh"></label><datalist id="bidangList">'+Array.from(new Set(d.rows.map(r=>r.bidang).filter(Boolean))).sort().map(b=>'<option value="'+esc(b)+'">').join('')+'</datalist>'
      +'<div class="row"><button class="btn p" style="flex:1" data-act="katSave" '+(c.err?'disabled':'')+'>Simpan</button><button class="btn" data-act="katCancel">Batal</button></div>'
      +(e.baru?'':'<div style="border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px"><b>Gabung kitab yang sama</b><div class="sub" style="font-size:13px">Pilih kitab lain yang sebenarnya kitab ini (ejaan lain). Ia akan dibuang dari Katalog dan namanya diingat untuk kitab ini.</div>'
        +'<div class="row"><select class="inp" data-in="kg" style="flex:1 1 220px"><option value="">— Pilih kitab —</option>'+d.rows.filter(r=>r.judul!==e.judulLama).sort((a,b)=>String(a.judul).localeCompare(String(b.judul))).map(r=>'<option value="'+esc(r.judul)+'" '+(e.gabung===r.judul?'selected':'')+'>'+esc(r.judul)+'</option>').join('')+'</select><button class="btn" data-act="katGabung" '+(e.gabung?'':'disabled')+'>'+(e.gConfirm?'Tekan lagi untuk sahkan':'Gabung')+'</button></div>'
@@ -1183,7 +1338,7 @@ async function katBuka(judul,harga,balik,balikNama){
   await go('katalog'); K.keep=false;
   const d=S.data.kat; if(!d) return;
   const n=normT(judul), r=d.rows.find(x=>normT(x.judul)===n||(x.lain||[]).some(l=>normT(l)===n));
-  K.edit=r?{judul:r.judul,judulLama:r.judul,lain:r.lain||[],le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos}:{baru:true,judul:judul,le:'',berat:'',hargaJual:harga||'',kos:0};
+  K.edit=r?{judul:r.judul,judulLama:r.judul,lain:r.lain||[],le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos,bidang:r.bidang||''}:{baru:true,judul:judul,le:'',berat:'',hargaJual:harga||'',kos:0,bidang:''};
   repaint(); window.scrollTo(0,0);
 }
 function katBalik(){ const K=S.kat, b=K.balik; K.balik=null; if(!b) return false; if(b==='imp'){ go('imp'); if(S.imp&&S.imp.preview&&!S.imp.done) impPreview(); } else go(b); return true; }
@@ -2115,7 +2270,7 @@ function doDoc(x){
 
 /* ---------- KALENDAR TUGAS (v1.5 · SOP Lampiran) ---------- */
 function tugasKey(){ return 'safinah:tugas:'+(S.user?S.user.name:'')+':'+((S.boot&&S.boot.today)||''); }
-function tugasDone(){ const d=S.data.dash; if(d&&d.tugasSelesai) return d.tugasSelesai; try{ return JSON.parse(localStorage.getItem(tugasKey())||'{}'); }catch(e){ return {}; } }
+function tugasDone(){ const d=S.data.dash; if(d&&d._lama) return {}; if(d&&d.tugasSelesai) return d.tugasSelesai; try{ return JSON.parse(localStorage.getItem(tugasKey())||'{}'); }catch(e){ return {}; } }
 function tugasList(d){
   const role=S.user.role, today=(S.boot&&S.boot.today)||'', p=today.split('-'), hari=+p[2], dow=new Date(+p[0],+p[1]-1,+p[2]).getDay(), T=(d&&d.tugas)||{};
   const L=[], soon=[];
@@ -2124,13 +2279,13 @@ function tugasList(d){
     if(hari===10||hari===25){ L.push(['imp','Import SalesReport Wasep.me ke SAFINAH','go','imp']); L.push(['agih','Buat agihan Profit First','go','agihan']); }
     if(hari===25) L.push(['padan','Padankan baki SAFINAH dengan 4 akaun bank','go','tunai']);
     if(hari===25&&[3,6,9,12].indexOf(+p[1])>-1) L.push(['bonus','Akhir suku: ambil bonus 50% baki Profit (OCBC → Bank Islam)','go','agihan']);
-    ((d&&d.opex&&d.opex.tetap)||[]).forEach(t=>L.push(['kt'+t.id,(t.status==='lewat'?'Lewat bayar: ':'Bayar sebelum '+t.hari+'hb: ')+t.nama+' ('+rm(t.jumlah)+')','go','opex']));
-    if(d&&d.opex&&d.opex.amaran.length) L.push(['oxa','OPEX: '+d.opex.amaran.map(a=>a.k+' '+a.pct+'%').join(', '),'go','opex']);
+    ((d&&d.opex&&d.opex.tetap)||[]).forEach(t=>L.push(['kt'+t.id,(t.status==='lewat'?'Lewat bayar: ':'Bayar sebelum '+t.hari+'hb: ')+t.nama+' ('+rm(t.jumlah)+')','go','opex',1]));
+    if(d&&d.opex&&d.opex.amaran.length) L.push(['oxa','OPEX: '+d.opex.amaran.map(a=>a.k+' '+a.pct+'%').join(', '),'go','opex',1]);
     if(hari===1) L.push(['gaji','Bayar gaji staf & jana slip gaji (Hong Leong)','go','gaji']);
     if(dow===0) L.push(['konten','Semak 14 posting Ketua Konten sebelum dijadualkan','','']);
-    if(T.susulan) L.push(['sus','Susulan bayaran institusi ('+T.susulan+' invois)','go','invois']);
-    (T.perluSemakEvent||[]).forEach(e=>L.push(['sev'+e.id,'Semak Laporan Event: '+e.nama,'go','kalendar']));
-    if(d&&(!d.semakKadar||(new Date(today)-new Date(d.semakKadar))/86400000>90)) L.push(['kadar','Semak kadar tukaran LE (setiap 3 bulan)','go','katalog']);
+    if(T.susulan) L.push(['sus','Susulan bayaran institusi ('+T.susulan+' invois)','go','invois',1]);
+    (T.perluSemakEvent||[]).forEach(e=>L.push(['sev'+e.id,'Semak Laporan Event: '+e.nama,'go','kalendar',1]));
+    if(d&&(!d.semakKadar||(new Date(today)-new Date(d.semakKadar))/86400000>90)) L.push(['kadar','Semak kadar tukaran LE (setiap 3 bulan)','go','katalog',1]);
     const nx=n=>{ for(let i=1;i<=3;i++){ const dt=new Date(+p[0],+p[1]-1,hari+i); if(n.indexOf(dt.getDate())>-1) return {i,dt}; } return null; };
     const a=nx([10,25]); if(a) soon.push((a.i===1?'Esok':'Dalam '+a.i+' hari')+': agihan Profit First &amp; import Wasep.me');
     const g=nx([1]); if(g) soon.push((g.i===1?'Esok':'Dalam '+g.i+' hari')+': bayar gaji staf');
@@ -2139,16 +2294,17 @@ function tugasList(d){
     L.push(['pos','Bungkus & pos pesanan "Baru" sebelum 3 petang','','']);
     L.push(['track','Hantar no. tracking kepada setiap pelanggan','go','templat']);
     L.push(['inbox','Jawab inbox & komen dalam 2 jam','go','templat']);
-    (T.perluTutup||[]).forEach(e=>L.push(['tt'+e.id,'Tutup event: '+e.nama+' — kira stok, tunai & import POS','go','kalendar']));
-    if(T.kargoSampai) L.push(['kargo',T.kargoSampai+' kargo dalam perjalanan — semak bila sampai','go','beli']);
+    (T.perluTutup||[]).forEach(e=>L.push(['tt'+e.id,'Tutup event: '+e.nama+' — kira stok, tunai & import POS','go','kalendar',1]));
+    if(T.kargoSampai) L.push(['kargo',T.kargoSampai+' kargo dalam perjalanan — semak bila sampai','go','beli',1]);
   }
   return {L,soon};
 }
 function tugasHtml(d){
   const t=tugasList(d); if(!t.L.length&&!t.soon.length) return '';
   const done=tugasDone(), n=t.L.filter(x=>done[x[0]]).length;
-  return '<section class="box"><div class="hd"><h2>Tugas hari ini</h2><span class="tag '+(n===t.L.length?'t-g':'t-n')+'">'+n+' / '+t.L.length+'</span></div>'
-   +t.L.map(x=>'<div class="li" style="gap:10px;min-height:52px"><label class="chk '+(done[x[0]]?'done':'')+'" style="flex:1;min-width:0;min-height:0"><input type="checkbox" data-in="tgs" data-k="'+esc(x[0])+'" '+(done[x[0]]?'checked':'')+'><span>'+esc(x[1])+'</span></label>'+(x[2]?'<button class="btn sm" data-act="'+x[2]+'" data-p="'+x[3]+'">Buka</button>':'')+'</div>').join('')
+  const lama=d&&d._lama;
+  return '<section class="box"><div class="hd"><h2>Tugas hari ini</h2>'+(lama?'<span class="tag t-n">Menyemak tanda terkini…</span>':'<span class="tag '+(n===t.L.length?'t-g':'t-n')+'">'+n+' / '+t.L.length+'</span>')+'</div>'
+   +t.L.map(x=>'<div class="li" style="gap:10px;min-height:52px"><label class="chk '+(done[x[0]]?'done':'')+'" style="flex:1;min-width:0;min-height:0"><input type="checkbox" data-in="tgs" data-k="'+esc(x[0])+'" '+(done[x[0]]?'checked':'')+(lama?' disabled':'')+'><span>'+esc(x[1])+(x[4]&&!done[x[0]]?'<small class="sub" style="display:block;font-size:12px;font-weight:400">Hilang sendiri bila selesai dalam SAFINAH</small>':'')+'</span></label>'+(x[2]?'<button class="btn sm" data-act="'+x[2]+'" data-p="'+x[3]+'">Buka</button>':'')+'</div>').join('')
    +(t.soon.length?'<div class="li sub" style="font-size:13px;flex-direction:column;align-items:flex-start;gap:2px"><b style="color:var(--ink)">Akan datang</b>'+t.soon.map(s=>'<span>'+s+'</span>').join('')+'</div>':'')+'</section>';
 }
 
@@ -2242,10 +2398,12 @@ const ACT = {
   async ckAsetDel(el){ const C=S.ck, id=el.dataset.id; if(C.delId!==id){ C.delId=id; rp(); return; } C.delId=null; try{ S.data.ck=await run(call('api_padamAset',S.pin,id,C.tahun)); ckInit(); toast('Aset dipadam'); rp(); }catch(e){ rp(); } },
   async impBuang(){ const I=S.imp; if(!I.bConfirm){ I.bConfirm=true; repaint(); return; } I.bConfirm=false; try{ I.buangRes=await run(call('api_buangBerulang',S.pin)); I.preview=await call('api_previewImport',S.pin,I.orders,I.includePos); repaint(); }catch(e){ repaint(); } },
   async impCommit(){ const I=S.imp; try{ I.done=await run(call('api_commitImport',S.pin,I.orders,I.includePos)); repaint(); }catch(e){} },
+  async emUji(){ try{ const r=await run(call('api_emelAgihan',S.pin,'uji')); S.data.ag.emel=r; toast('Email contoh dihantar ke '+r.kepada); openView('<article class="slip">'+r.html+'</article>',''); rp(); }catch(e){} },
+  async emTukar(el){ try{ S.data.ag.emel=await run(call('api_emelAgihan',S.pin,el.dataset.v)); toast(el.dataset.v==='hidup'?'Email automatik dihidupkan':'Email automatik dimatikan'); rp(); }catch(e){} },
   async agBonus(){ const A=S.ag; if(!A.bConfirm){ A.bConfirm=true; repaint(); return; } try{ A.bDone=await run(call('api_saveBonus',S.pin,A.bonus)); repaint(); }catch(e){ A.bConfirm=false; } },
   async agSave(){ const A=S.ag; if(!A.confirm){ A.confirm=true; repaint(); return; } try{ A.done=await run(call('api_saveAgihan',S.pin,A.untung)); repaint(); }catch(e){ A.confirm=false; } },
   katNew(){ S.kat.edit={baru:true,judul:'',le:'',berat:'',hargaJual:'',kos:0}; repaint(); window.scrollTo(0,0); },
-  katEdit(el){ const r=S.data.kat.rows.find(x=>x.judul===el.dataset.j); S.kat.edit={judul:r.judul,judulLama:r.judul,lain:r.lain||[],le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos}; repaint(); window.scrollTo(0,0); },
+  katEdit(el){ const r=S.data.kat.rows.find(x=>x.judul===el.dataset.j); S.kat.edit={judul:r.judul,judulLama:r.judul,lain:r.lain||[],le:r.le,berat:r.berat||'',hargaJual:r.hargaJual,kos:r.kos,bidang:r.bidang||''}; repaint(); window.scrollTo(0,0); },
   async katGabungPair(el){ const K=S.kat, a=el.dataset.a, b=el.dataset.b, key=a+'|'+b; if(K.gc!==key){ K.gc=key; repaint(); return; } K.gc=null; try{ const r=await run(call('api_gabungKatalog',S.pin,a,b)); await katReload('Digabung'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); }catch(e){ repaint(); } },
   async katGabung(){ const e=S.kat.edit; if(!e.gabung) return; if(!e.gConfirm){ e.gConfirm=true; repaint(); return; } try{ const r=await run(call('api_gabungKatalog',S.pin,e.judulLama,e.gabung)); S.kat.edit=null; await katReload('Digabung'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); }catch(x){ e.gConfirm=false; repaint(); } },
   async katPadam(){ const e=S.kat.edit; if(!e.pConfirm){ e.pConfirm=true; repaint(); return; } try{ await run(call('api_padamKatalog',S.pin,e.judulLama)); S.kat.edit=null; await katReload('Kitab dipadam'); }catch(x){ e.pConfirm=false; repaint(); } },
@@ -2257,7 +2415,7 @@ const ACT = {
     const d=S.data.kat, e=S.kat.edit;
     if(!String(e.judul).trim()) return toast('Isi judul');
     const c=kosCalc(e,d); if(c.err) return toast(c.err);
-    try{ const r=await run(call('api_saveKatalog',S.pin,{judul:e.judul,judulLama:e.judulLama||'',le:e.le,berat:e.berat,kos:c.kos,hargaJual:e.hargaJual||hargaBundar(c.kos,d.markup)})); toast('Disimpan'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); S.kat.edit=null; S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); if(!katBalik()) repaint(); }catch(e2){}
+    try{ const r=await run(call('api_saveKatalog',S.pin,{judul:e.judul,judulLama:e.judulLama||'',le:e.le,berat:e.berat,kos:c.kos,hargaJual:e.hargaJual||hargaBundar(c.kos,d.markup),bidang:e.bidang||''})); toast('Disimpan'+(r.dibetulkan?' · '+r.dibetulkan+' jualan dikemas kini':'')); S.kat.edit=null; S.data.kat=await call('api_katalog',S.pin); cacheSet('kat',S.data.kat); S.boot.katalog=S.data.kat.rows.map(k=>({judul:k.judul,harga:k.hargaJual})); if(!katBalik()) repaint(); }catch(e2){}
   },
   async kadarSave(){ const v=($('kadarIn')||{}).value; try{ S.data.kat=await run(call('api_saveKadar',S.pin,v)); cacheSet('kat',S.data.kat); toast('Kadar disimpan & ditanda disemak'); repaint(); }catch(e){} },
   async posSave(){ const d=S.data.kat; const P=S.kat.pos||d.pos; try{ d.pos=await run(call('api_savePos',S.pin,{perKg:P.perKg,step:P.step})); S.kat.pos=null; cacheSet('kat',d); toast('Kadar pos disimpan'); repaint(); }catch(e){} },
@@ -2280,7 +2438,18 @@ const ACT = {
   slipPrint(){ document.body.classList.add('printing-slip'); window.print(); setTimeout(()=>document.body.classList.remove('printing-slip'),500); },
   slipClose(){ const v=$('slipView'); if(v) v.style.display='none'; }
 };
-Object.assign(ACT, ACT13, ACT_SR, ACT_RS, ACT_HJ, ACT_BL, ACT_TT, ACT_TP);
+const ACT_ST = {
+  stTab(el){ S.st.tab=el.dataset.v; S.st.lim=40; rp(); },
+  stLiputan(el){ S.st.liputan=+el.dataset.v; rp(); },
+  stSort(el){ S.st.sort=el.dataset.v; S.st.lim=40; rp(); },
+  stLagi(){ S.st.lim+=40; rp(); },
+  async stSalin(){ const ok=await copyText(stSalinTeks()); toast(ok?'Senarai disalin ✓ Tampal dalam WhatsApp':'Tak dapat salin'); },
+  stImpBuka(){ S.st.imp={}; repaint(); window.scrollTo(0,0); },
+  stImpBatal(){ S.st.imp=null; repaint(); },
+  stImpTutup(){ S.st.imp=null; S.st.tab='beli'; go('stok'); },
+  async stSimpan(){ const I=S.st.imp; if(!I||!I.rows) return; try{ const r=await run(call('api_stokImport',S.pin,I.rows,true)); S.st.imp={done:r}; S.data.st=await call('api_stok',S.pin); cacheSet('st',S.data.st); S.data.kat=null; try{ localStorage.removeItem('safinah:c:kat'); }catch(e){} rp(); window.scrollTo(0,0); }catch(e){} }
+};
+Object.assign(ACT, ACT13, ACT_SR, ACT_RS, ACT_HJ, ACT_BL, ACT_TT, ACT_TP, ACT_ST);
 document.addEventListener('click',e=>{ const el=e.target.closest('[data-act]'); if(!el) return; const f=ACT[el.dataset.act]; if(f){ e.preventDefault(); f(el,e); } });
 document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.id==='pin') login(); });
 
@@ -2292,6 +2461,7 @@ const IN = {
   agU(el){ S.ag.untung=el.value; S.ag.confirm=false; agRefresh(); },
   agB(el){ S.ag.bonus=el.value; S.ag.bConfirm=false; const b=document.querySelector('[data-act="agBonus"]'), x=Number(el.value)||0, p=Number(S.data.ag.ocbc&&S.data.ag.ocbc.profit)||0; if(b){ b.disabled=!(x>0&&x<=p+0.01); b.textContent='Rekod bonus OCBC → Bank Islam'; } },
   plQ(el){ S.pl.q=el.value; S.pl.lim=50; S.pl.pk=null; plList(); },
+  stQ(el){ S.st.q=el.value; S.st.lim=40; refocus('[data-in="stQ"]',el); },
   plE(el){ S.pl.edit[el.dataset.k]=el.value; },
   oxB(el){ S.ox.f.bajet[el.dataset.k]=el.value; const t=$('oxTot'); if(t) t.textContent=rm(Object.keys(S.ox.f.bajet).reduce((a,k)=>a+(Number(S.ox.f.bajet[k])||0),0)); },
   oxT(el){ S.ox.f.tetap[+el.dataset.i][el.dataset.k]=el.value; },
@@ -2366,7 +2536,8 @@ document.addEventListener('change',async e=>{
   if(k==='oxMonth'){ S.ox.month=el.value; S.data.ox=null; S.ox.edit=false; go('opex'); }
   if(k==='ckTahun'){ S.ck.tahun=el.value; S.data.ck=null; S.ck.a=null; S.ck.stokRes=null; go('cukai'); }
   if(k==='ckA'&&(el.tagName==='SELECT'||el.type==='date')){ IN.ckA(el); }
-  if(k==='ckStokFile'){ const f=el.files[0]; if(!f) return; try{ busy(true); const items=parseStokFile(await f.text()); if(!items.length) throw new Error('Tiada stok dalam fail.'); S.ck.stokRes=await call('api_kiraStok',S.pin,items); busy(false); rp(); }catch(er){ busy(false); toast(er.message); } }
+  if(k==='stFile'){ const f=el.files[0]; if(!f) return; try{ busy(true); const rows=parseProduk(await bacaJadual(f)); if(!rows.length) throw new Error('Tiada produk dalam fail.'); const res=await call('api_stokImport',S.pin,rows,false); S.st.imp={rows:rows,res:res,nama:f.name}; busy(false); rp(); window.scrollTo(0,0); }catch(er){ busy(false); toast(er.message); } }
+  if(k==='ckStokFile'){ const f=el.files[0]; if(!f) return; try{ busy(true); const items=parseStokFile(await bacaJadual(f)); if(!items.length) throw new Error('Tiada stok dalam fail.'); S.ck.stokRes=await call('api_kiraStok',S.pin,items); busy(false); rp(); }catch(er){ busy(false); toast(er.message); } }
   if(k==='lapMonth'){ S.lap.month=el.value; S.data.lap=null; S.data.rk=null; go('laporan'); }
   if(k==='ke'&&el.tagName==='SELECT'){ IN.ke(el); }
   if(k==='impPos'){ S.imp.includePos=el.checked; impPreview(); }
