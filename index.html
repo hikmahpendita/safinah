@@ -212,7 +212,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['katalog','Katalog'],['pelanggan','Pelanggan']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='1.9.1';
+const APP_VERSI='1.9.2';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['pelanggan','Pelanggan']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -747,7 +747,7 @@ function importHtml(){
      +'<div class="note n-n"><b>Cara dapatkan fail:</b> Wasepme → Laporan Jualan → pilih tempoh → Eksport. Buat sebelum agihan 10hb &amp; 25hb.</div>';
   }
   if(I.done){
-    return h+'<div class="note n-g" style="font-size:16px"><b>'+I.done.diimport+' pesanan diimport ✓</b><br>Jualan kitab '+rm(I.done.jualan)+(I.done.kitabBaru?' · '+I.done.kitabBaru+' judul baru ditambah ke Katalog (isi kos)':'')+(I.done.tunai?'<br>Tunai '+rm(I.done.tunai)+' perlu dimasukkan ke Maybank.':'')+(I.done.pelangganBaru?'<br>'+I.done.pelangganBaru+' pelanggan baru didaftar dalam Pelanggan.':'')+'</div><div class="row"><button class="btn p" data-act="go" data-p="tunai">Lihat Aliran Tunai</button><button class="btn" data-act="impReset">Import fail lain</button>'+'</div>'+((I.done.kitabBaruList||[]).length?'<section class="box"><div class="hd"><div><h2>Kitab baru — isi kos</h2><div class="sub">Tekan untuk terus buka kalkulator kos kitab tu</div></div></div>'+I.done.kitabBaruList.map(k=>'<div class="li" style="justify-content:space-between;gap:8px"><span>'+esc(k.judul)+'</span><button class="btn sm p" data-act="katJ" data-j="'+esc(k.judul)+'" data-h="'+esc(k.harga||'')+'" data-b="imp" data-n="Import Wasepme">Isi kos</button></div>').join('')+'</section>':'');
+    return h+'<div class="note n-g" style="font-size:16px"><b>'+(I.done.diimport?I.done.diimport+' pesanan diimport ✓':'Padanan pelanggan selesai ✓')+'</b>'+(I.done.dipadankan?'<br>'+I.done.dipadankan+' jualan lama dipadankan dengan pelanggan.':'')+'<br>Jualan kitab '+rm(I.done.jualan)+(I.done.kitabBaru?' · '+I.done.kitabBaru+' judul baru ditambah ke Katalog (isi kos)':'')+(I.done.tunai?'<br>Tunai '+rm(I.done.tunai)+' perlu dimasukkan ke Maybank.':'')+(I.done.pelangganBaru?'<br>'+I.done.pelangganBaru+' pelanggan baru didaftar dalam Pelanggan.':'')+'</div><div class="row"><button class="btn p" data-act="go" data-p="tunai">Lihat Aliran Tunai</button><button class="btn" data-act="impReset">Import fail lain</button>'+'</div>'+((I.done.kitabBaruList||[]).length?'<section class="box"><div class="hd"><div><h2>Kitab baru — isi kos</h2><div class="sub">Tekan untuk terus buka kalkulator kos kitab tu</div></div></div>'+I.done.kitabBaruList.map(k=>'<div class="li" style="justify-content:space-between;gap:8px"><span>'+esc(k.judul)+'</span><button class="btn sm p" data-act="katJ" data-j="'+esc(k.judul)+'" data-h="'+esc(k.harga||'')+'" data-b="imp" data-n="Import Wasepme">Isi kos</button></div>').join('')+'</section>':'');
   }
   const p=I.preview, s=p.ringkasan;
   const posCount=I.orders.filter(o=>o.isPos).length;
@@ -765,7 +765,8 @@ function importHtml(){
    +'<section class="box tbl"><table><thead><tr><th>No.</th><th>Tarikh</th><th>Kitab</th><th style="text-align:right">Jualan</th><th>Bayaran</th><th>Status</th><th>Keputusan</th></tr></thead><tbody>'
    +p.rows.map(r=>{ const t=r.keputusan==='import'?['Import','t-g']:(r.keputusan==='ada'?['Sudah ada','t-n']:['Langkau','t-n']); return '<tr><td><b>'+esc(r.no)+'</b>'+(r.isPos?' <span class="tag t-y">POS</span>':'')+(r.programNama?'<div><span class="tag t-b">'+esc(r.programNama)+'</span></div>':'')+'</td><td>'+dateFmt((r.tarikh||'').slice(0,10))+'</td><td>'+esc(r.items.map(i=>i.q+'× '+i.judul).join(', '))+(r.bendera.length?'<br><span class="tag t-a">'+esc(r.bendera.join('; '))+'</span>':'')+((r.beza||[]).length?'<br><span class="tag t-y">Harga berbeza: '+r.beza.map(x=>esc(x.judul)+' Wasep.me '+rm(x.wasep)+' / Katalog '+rm(x.katalog)).join('; ')+'</span>':'')+(r.keputusan==='import'&&(r.bendera.some(f=>/Kos/.test(f))||(r.beza||[]).length)?'<div class="row" style="gap:4px;margin-top:4px">'+r.items.map(i=>'<button class="btn sm" data-act="katJ" data-j="'+esc(i.judul)+'" data-h="'+esc(i.q?Math.round(i.jumlah/i.q*100)/100:'')+'" data-b="imp" data-n="Import Wasepme">Ubah: '+esc(i.judul)+'</button>').join('')+'</div>':'')+'</td><td style="text-align:right">'+rm(r.subtotal)+'</td><td>'+esc(r.payment)+'</td><td>'+esc(r.status)+'</td><td><span class="tag '+t[1]+'">'+t[0]+'</span>'+(r.sebab?'<div class="sub" style="font-size:12px">'+esc(r.sebab)+'</div>':'')+'</td></tr>'; }).join('')
    +'</tbody></table></section>'
-   +'<div class="row"><button class="btn g" style="flex:1" data-act="impCommit" '+(s.import?'':'disabled')+'>Sahkan &amp; import '+s.import+' pesanan</button><button class="btn" data-act="impReset">Batal</button></div>';
+   +'<div class="row"><button class="btn g" style="flex:1" data-act="impCommit" '+(s.import||s.ada?'':'disabled')+'>'+(s.import?'Sahkan &amp; import '+s.import+' pesanan':'Padankan pelanggan dengan jualan dalam fail ini')+'</button><button class="btn" data-act="impReset">Batal</button></div>'
+   +(!s.import&&s.ada?'<div class="sub" style="font-size:12px">Tiada jualan baru akan ditambah. Butang ini hanya lengkapkan no. pembeli pada jualan yang sudah ada, supaya sejarah belian muncul dalam Pelanggan.</div>':'');
   return h;
 }
 async function impPreview(){
@@ -850,9 +851,16 @@ function pelangganHtml(){
   h+='<div class="grid"><div class="card"><span class="lbl">Jumlah pelanggan</span><span class="val">'+R.jumlah.toLocaleString('en-MY')+'</span><span class="sub" style="font-size:12px">'+R.pembeli+' pernah beli · '+R.belumBeli+' belum'+(R.peribadi?' · '+R.peribadi+' peribadi disembunyi':'')+'</span></div>'
    +'<div class="card"><span class="lbl">Pembeli baru bulan ini</span><span class="val" style="color:var(--g)">'+R.baruBulan+'</span></div>'
    +'<div class="card"><span class="lbl">Beli semula</span><span class="val" style="color:var(--b)">'+pctU+'%</span><span class="sub" style="font-size:12px">'+R.ulang+' daripada '+R.pembeli+' pembeli beli 2 kali atau lebih</span></div></div>';
+  h+=plCustHtml();
   h+='<input class="inp" type="search" placeholder="Cari nama, no. telefon atau negeri…" data-in="plQ" value="'+esc(P.q)+'" aria-label="Cari pelanggan">'
    +'<div class="row" style="gap:6px">'+PL_F.map(x=>'<button class="chip '+(P.f===x[0]?'on':'')+'" data-act="plF" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
   return h+plListHtml();
+}
+function plCustHtml(){
+  const C=S.pl.cust;
+  if(!C) return '<details class="card" style="gap:8px"><summary style="cursor:pointer;font-weight:600">Guna tanda "Cust" untuk asingkan kenalan peribadi</summary><div class="sub" style="font-size:13px;margin-top:8px">Untuk kenalan dari Google Contacts: nama yang bermula dengan <b>Cust</b> (contoh "Cust- Ustaz Azman") dikira pelanggan dan tanda "Cust-" dibuang dari nama. Kenalan lain yang <b>tak pernah beli</b> ditanda Peribadi (disembunyi, boleh dikembalikan). Buat padanan jualan di Import Wasepme dahulu.</div><button class="btn sm" style="margin-top:8px" data-act="plCust">Semak dahulu</button></details>';
+  if(C.done) return '<div class="note n-g">'+C.done.bersih+' nama dibersihkan · '+C.done.peribadi+' kenalan ditanda Peribadi ✓</div>';
+  return '<section class="card" style="gap:8px;border-color:#93C5FD"><b>Semakan tanda "Cust"</b><div>'+C.bersih+' nama akan dibuang tanda "Cust-" · <b>'+C.peribadi+'</b> kenalan tanpa "Cust" dan tak pernah beli akan ditanda Peribadi</div>'+(C.bersih||C.peribadi?'':'<div class="note n-y" style="font-size:13px">Tiada kenalan bertanda "Cust" dijumpai — tiada apa akan disembunyikan.</div>')+'<div class="row"><button class="btn p" data-act="plCustSah" '+(C.bersih||C.peribadi?'':'disabled')+'>Sahkan</button><button class="btn" data-act="plCustBatal">Batal</button></div></section>';
 }
 function plListHtml(){
   const P=S.pl, rows=plFilter(S.data.pl.rows), L=rows.slice(0,P.lim), n=Object.keys(P.sel||{}).length;
@@ -2197,6 +2205,9 @@ const ACT = {
   async fixDone(el){ try{ await run(call('api_completeTx',S.pin,el.dataset.id,{selesai:true})); toast('Ditanda selesai'); go('tunai'); }catch(e){} },
   impReset(){ S.imp=null; repaint(); },
   plF(el){ S.pl.f=el.dataset.v; S.pl.lim=50; S.pl.sel={}; S.pl.pk=null; rp(); },
+  async plCust(){ try{ S.pl.cust=await run(call('api_custPelanggan',S.pin,false)); rp(); }catch(e){} },
+  plCustBatal(){ S.pl.cust=null; rp(); },
+  async plCustSah(){ try{ const r=await run(call('api_custPelanggan',S.pin,true)); S.pl.cust={done:r}; S.data.pl=await call('api_pelanggan',S.pin); cacheSet('pl',S.data.pl); rp(); }catch(e){} },
   plPilih(){ const P=S.pl; P.pilih=!P.pilih; P.sel={}; P.pk=null; plList(); },
   plTick(el){ const P=S.pl, id=el.dataset.id; if(P.sel[id]) delete P.sel[id]; else P.sel[id]=true; P.pk=null; plList(); },
   plPilihSemua(){ const P=S.pl; plFilter(S.data.pl.rows).forEach(r=>{ P.sel[r[0]]=true; }); P.pk=null; plList(); },
@@ -2371,4 +2382,3 @@ if(S.pin) login();
 </script>
 </body>
 </html>
-
