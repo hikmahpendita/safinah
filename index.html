@@ -157,6 +157,9 @@ label.f{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:60
 .oxrm{display:flex;align-items:center;gap:6px;flex:0 0 150px}
 .oxrm i{font-style:normal;font-size:13px;color:var(--mut)}
 .oxrm .inp{text-align:right;font-weight:500;padding:10px 12px;min-height:44px}
+.tyi{padding:14px 16px;border-top:1px solid var(--line)}.tyf{display:flex;flex-direction:column;gap:8px;margin-top:10px;padding:12px;border-radius:10px;background:var(--soft)}
+.tys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}.tys>div{background:#fff;padding:12px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}.tys b{font-size:17px}.tys .lbl{font-size:12px}
+@media (max-width:520px){.tys{grid-template-columns:1fr 1fr}.tys>div:last-child{grid-column:1/-1}}
 .oxcard{display:flex;flex-direction:column;gap:10px;margin:12px 16px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
 .oxcard .inp{background:#fff;font-weight:500}
 .oxdua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -216,7 +219,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='2.5';
+const APP_VERSI='2.6';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -253,7 +256,7 @@ function rolePages(){ return S.user.role==='pemilik'?PAGES_OWNER:(S.user.role===
 function roleNama(){ return S.user.role==='pemilik'?'Pengurus Utama':(S.user.role==='operasi'?'Pengurus Operasi':'Staf'); }
 const SHORT = {utama:'Utama',tunai:'Tunai',rekod:'Rekod',imp:'Import',agihan:'Agihan',opex:'OPEX',pulang:'Modal',pelanggan:'Pelanggan',katalog:'Katalog',stok:'Stok',blast:'Blast',diri:'Diri',laporan:'Laporan',cukai:'Cukai',lagi:'Lagi',gaji:'Gaji',pekerja:'Pekerja',kalendar:'Kalendar',invois:'Invois',surat:'Surat',hajat:'Hajat',beli:'Beli',templat:'Templat'};
 
-const S = { pin:'', user:null, boot:null, page:'utama', data:{}, R:null, tx:{filter:'semua', open:null, month:''}, imp:null, ag:null, kat:{q:'', edit:null, pos:null}, lap:{month:''}, ox:{month:'', edit:false, f:null, bc:null}, dr:{tab:'ringkas', ym:'', gAlbum:'', gQ:'', gLim:24, up:null, lihat:null, gEdit:null, gPc:false, thumbs:{}, full:{}, f:null, hf:null, bayar:null, jf:null, bj:null, pf:null, rs:{bahasa:'BM',tujuan:'kerja',sasaran:'',iklan:'',ai:true,hasil:null,pdf:null}, kunci:'', km:''}, bs:{open:null, baru:null, seg:null, stopC:null}, st:{tab:'beli', q:'', sort:'laris', lim:40, liputan:12, imp:null}, pl:{q:'', f:'semua', sort:'belanja', lim:50, open:null, det:null, edit:null, imp:null, pc:false, pilih:false, sel:{}, pk:null}, ck:{tahun:'', f:{}, p:{}, a:null, stokRes:null, delId:null}, pk:{filter:'semua', edit:null}, gj:{month:'', rows:null, slip:null, payDate:''}, kal:{month:'', sel:'', edit:null, open:null}, iv:{filter:'belum', open:null, edit:null, q:'', pay:''}, sr:{q:'', f:'Semua', open:null, edit:null, del:null}, bl:{tab:'pesanan', open:null, edit:null, kedit:null, sampai:null, res:null}, tp:{edit:null, q:'', del:null}, hj:{f:'aktif', q:'', open:null, edit:null, kitab:null, form:{kitab:'',pelanggan:'',telefon:'',q:1,catatan:''}}, slipView:null, outbox:[], lastSub:{} };
+const S = { pin:'', user:null, boot:null, page:'utama', data:{}, R:null, tx:{filter:'semua', open:null, month:''}, imp:null, ag:null, kat:{q:'', edit:null, pos:null}, lap:{month:''}, ox:{month:'', edit:false, f:null, bc:null}, dr:{tab:'ringkas', ym:'', gAlbum:'', gQ:'', gLim:24, up:null, lihat:null, gEdit:null, gPc:false, thumbs:{}, full:{}, f:null, hf:null, bayar:null, jf:null, bj:null, ty:null, pf:null, rs:{bahasa:'BM',tujuan:'kerja',sasaran:'',iklan:'',ai:true,hasil:null,pdf:null}, kunci:'', km:''}, bs:{open:null, baru:null, seg:null, stopC:null}, st:{tab:'beli', q:'', sort:'laris', lim:40, liputan:12, imp:null}, pl:{q:'', f:'semua', sort:'belanja', lim:50, open:null, det:null, edit:null, imp:null, pc:false, pilih:false, sel:{}, pk:null}, ck:{tahun:'', f:{}, p:{}, a:null, stokRes:null, delId:null}, pk:{filter:'semua', edit:null}, gj:{month:'', rows:null, slip:null, payDate:''}, kal:{month:'', sel:'', edit:null, open:null}, iv:{filter:'belum', open:null, edit:null, q:'', pay:''}, sr:{q:'', f:'Semua', open:null, edit:null, del:null}, bl:{tab:'pesanan', open:null, edit:null, kedit:null, sampai:null, res:null}, tp:{edit:null, q:'', del:null}, hj:{f:'aktif', q:'', open:null, edit:null, kitab:null, form:{kitab:'',pelanggan:'',telefon:'',q:1,catatan:''}}, yf:null, slipView:null, outbox:[], lastSub:{} };
 try { S.outbox = JSON.parse(localStorage.getItem('safinah:outbox')||'[]'); } catch(e) { S.outbox=[]; }
 function cacheGet(k){ try{ const v=localStorage.getItem('safinah:c:'+k); return v?JSON.parse(v):null; }catch(e){ return null; } }
 function cacheSet(k,v){ try{ localStorage.setItem('safinah:c:'+k, JSON.stringify(v)); }catch(e){} }
@@ -412,12 +415,12 @@ function autoOk(p){
   switch(p){
     case 'utama': case 'laporan': return true;
     case 'tunai': return !S.tx.sah;
-    case 'opex': return !S.ox.edit;
+    case 'opex': return !S.ox.edit&&!S.yf;
     case 'pelanggan': return !S.pl.edit&&!S.pl.imp;
     case 'katalog': return !S.kat.edit;
     case 'stok': return !S.st.imp;
     case 'blast': return !S.bs.baru;
-    case 'diri': return !S.dr.f&&!S.dr.hf&&!S.dr.bayar&&!S.dr.jf&&!S.dr.pf&&!S.dr.bj&&!S.dr.up&&!S.dr.lihat;
+    case 'diri': return !S.dr.f&&!S.dr.hf&&!S.dr.bayar&&!S.dr.jf&&!S.dr.pf&&!S.dr.bj&&!S.dr.up&&!S.dr.lihat&&!S.dr.ty&&!S.yf;
     case 'kalendar': return !S.kal.edit;
     case 'invois': return !S.iv.edit;
     case 'hajat': return !S.hj.edit;
@@ -979,12 +982,13 @@ function opexHtml(){
    +'<div class="card"><span class="lbl">OPEX '+esc(d.label)+'</span><span class="val">'+rm(d.jumlah)+'</span>'+(d.jumBajet?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,tp)+'%;background:'+opexWarna(tp)+'"></i></div><span class="sub" style="font-size:12px">'+tp+'% daripada bajet '+rm(d.jumBajet)+'</span>':'<span class="sub" style="font-size:12px">Bajet belum ditetapkan</span>')+'</div>'
    +'<div class="card"><span class="lbl">Masuk ke Hong Leong</span><span class="val" style="color:var(--g)">'+rm(d.hl.masuk)+'</span><span class="sub" style="font-size:12px">Dari agihan Profit First bulan ini</span></div>'
    +'<div class="card"><span class="lbl">Keluar dari Hong Leong</span><span class="val amt-out">'+rm(d.hl.keluar)+'</span><span class="sub" style="font-size:12px">'+(d.hl.keluar>d.hl.masuk?'<b style="color:var(--r)">Lebih '+rm(d.hl.keluar-d.hl.masuk)+' daripada yang masuk</b>':'Dalam had duit opex ✓')+'</span></div>'
-   +'<div class="card" style="background:var(--bs)"><span class="lbl">Baki Hong Leong sekarang</span><span class="val" style="color:var(--b)">'+rm(d.hl.baki)+'</span></div></div>';
+   +'<div class="card" style="background:var(--bs)"><span class="lbl">Baki Hong Leong sekarang</span><span class="val" style="color:var(--b)">'+rm(d.hl.baki)+'</span>'+(d.hl.terkunci?'<span class="sub" style="font-size:12px">'+rm(d.hl.terkunci)+' terkunci untuk kos tahunan<br><b style="color:'+(d.hl.bolehGuna<0?'var(--r)':'var(--ink)')+'">Boleh guna: '+rm(d.hl.bolehGuna)+'</b></span>':'')+'</div></div>';
   if(d.amaran.length) h+='<div class="note n-y">'+d.amaran.map(a=>'<b>'+esc(a.k)+'</b> '+(a.pct>100?'terlebih bajet ('+a.pct+'%)':'dah guna '+a.pct+'% bajet')).join(' · ')+'</div>';
   // kos tetap
   const ST={dibayar:['Dibayar','t-g'],lewat:['Lewat','t-r'],hampir:['Hampir tiba','t-a'],belum:['Belum','t-n']};
   h+='<section class="box"><div class="hd"><div><h2>Kos tetap bulanan</h2><div class="sub">Tekan "Rekod bayar" selepas bayar dalam app Hong Leong — SAFINAH rekod Duit Keluar sendiri</div></div></div>'
    +(d.tetap.length?d.tetap.map(t=>{ const s=ST[t.status]; return '<div class="li" style="justify-content:space-between;gap:10px"><div style="flex:1 1 180px;min-width:0"><b style="font-size:14px">'+esc(t.nama)+'</b> <span class="tag '+s[1]+'">'+s[0]+(t.dibayar?' '+esc(dateFmt(t.dibayar)):'')+'</span><div class="sub">'+rm(t.jumlah)+' · '+esc(t.kat)+' · setiap '+t.hari+'hb</div></div>'+(t.dibayar?'':'<button class="btn sm '+(t.status==='lewat'?'p':'')+'" data-act="oxBayar" data-id="'+esc(t.id)+'">'+(O.bc===t.id?'Tekan lagi untuk sahkan':'Rekod bayar')+'</button>')+'</div>'; }).join(''):'<div class="li sub">Belum ada kos tetap. Tekan "Ubah bajet" untuk tambah (contoh: internet, sewa, ansuran, langganan Wasep.me).</div>')+'</section>';
+  h+=tySeksyen(d.tahunan,'ox');
   // bajet ikut kategori
   h+='<div class="row" style="align-items:stretch"><section class="box" style="flex:2 1 340px"><div class="hd"><h2>Bajet ikut kategori</h2></div>'
    +d.rows.filter(r=>r.bajet||r.guna).map(r=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span>'+esc(r.k)+'</span><span style="white-space:nowrap"><b>'+rm(r.guna)+'</b>'+(r.bajet?' <span class="sub">/ '+rm(r.bajet)+'</span>':' <span class="sub">tiada bajet</span>')+'</span></div>'
@@ -1011,8 +1015,61 @@ function opexEditHtml(d){
      +'<div class="oxdua"><label class="f">Jumlah (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="oxT" data-i="'+i+'" data-k="jumlah" value="'+esc(t.jumlah||'')+'"></label>'
      +'<label class="f">Hari bayar (1–28)<input class="inp" type="number" inputmode="numeric" min="1" max="28" data-in="oxT" data-i="'+i+'" data-k="hari" value="'+esc(t.hari||'')+'"></label></div></div>').join('')
    +'<div style="padding:12px 16px 16px"><button class="btn" data-act="oxTAdd" style="width:100%;border-style:dashed">+ Tambah kos tetap</button></div></section>'
+   +'<section class="box"><div class="hd"><div><h2>Kos tahunan (dana terkumpul)</h2><div class="sub">Bayaran setahun sekali. SAFINAH kira berapa perlu diasingkan setiap bulan &amp; ingatkan 30 hari sebelum tarikh.</div></div></div>'+tyEditHtml(E.tahunan||[],d.kats,'ox')+'</section>'
    +'<div class="oxbar"><button class="btn p" style="flex:1" data-act="oxSave">Simpan</button><button class="btn" data-act="oxEdit">Batal</button></div>';
   return h;
+}
+/* ---------- v2.6 KOS TAHUNAN (dana terkumpul) ---------- */
+const TY_ULANG=['Setiap tahun','Ikut tahun Hijrah','Sekali sahaja'];
+const TY_ST={cukup:['Dana cukup ✓','t-g'],lewat:['Lewat','t-r'],hampir:['Hampir tiba','t-a'],ok:['Sedang kumpul','t-b']};
+const TY_CADANG={ox:[['Insurans & cukai jalan van','Kenderaan & minyak',''],['Bonus Hari Raya staf','Gaji staf','Ikut tahun Hijrah'],['Langganan tahunan (domain, Canva)','Lain-lain (keluar)',''],['Lesen perniagaan / PBT','Lain-lain (keluar)','']],
+  dr:[['Takaful & cukai jalan kereta','Pengangkutan',''],['Persiapan Hari Raya','Keluarga','Ikut tahun Hijrah'],['Yuran & persekolahan anak','Pendidikan & buku',''],['Zakat tahunan','Zakat & sedekah',''],['Cukai pintu & tanah','Rumah & utiliti','']]};
+function tyHari(t){ return t.hari<0?'lewat '+(-t.hari)+' hari':t.hari===0?'hari ini':'lagi '+t.hari+' hari'; }
+function tyTgl(s){ const B=['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'], p=String(s||'').split('-'); return p.length<3?'':(+p[2])+' '+B[(+p[1]||1)-1]+' '+p[0]; }
+function tyItem(t,s){
+  const st=TY_ST[t.status], F=S.yf&&S.yf.s===s&&S.yf.id===t.id?S.yf:null;
+  let h='<div class="tyi"><div class="row between" style="flex-wrap:nowrap;gap:10px;align-items:flex-start"><div style="min-width:0"><b style="font-size:15px">'+esc(t.nama)+'</b> <span class="tag '+st[1]+'">'+st[0]+'</span>'
+   +'<div class="sub" style="font-size:12px;margin-top:2px">Bayar '+esc(tyTgl(t.tarikh))+' · '+tyHari(t)+(t.ulang==='Ikut tahun Hijrah'?' · ikut tahun Hijrah':t.ulang==='Sekali sahaja'?' · sekali sahaja':'')+'</div></div>'
+   +'<div style="text-align:right;white-space:nowrap"><b style="font-size:15px">'+rm(t.terkumpul)+'</b><div class="sub" style="font-size:12px">daripada '+rm(t.jumlah)+'</div></div></div>'
+   +'<div class="bar" style="height:10px;margin:10px 0 8px"><i style="width:'+t.pct+'%;background:'+(t.status==='cukup'?'var(--g)':t.status==='lewat'?'var(--r)':t.status==='hampir'?'#B45309':'var(--b)')+'"></i></div>'
+   +'<div style="font-size:13px;color:var(--mut)">'+(t.baki<=0?'Dana dah cukup — bayar bila sampai tarikh.':t.sudah?'Dah asingkan bulan ini ✓ · bulan depan '+rm(t.sebulan):'Asingkan <b style="color:var(--ink)">'+rm(t.sebulan)+'</b> bulan ini'+(t.bulanLagi>1?' · '+t.bulanLagi+' bulan lagi sebelum bayar':t.bulanLagi===1?' · bulan terakhir sebelum bayar':' · baki penuh perlu sekarang'))+'</div>';
+  if(F){ const asing=F.m==='asing', nota=asing?(s==='ox'?'Duit kekal dalam Hong Leong. SAFINAH tandakan sebagai <b>terkunci</b> supaya tak terguna untuk belanja lain.':'Pindahkan dulu ke akaun simpanan anda (cth. akaun kedua / Tabung Haji), kemudian tekan Simpan.')
+      :(s==='ox'?'SAFINAH rekod Duit Keluar dari Hong Leong (tidak dikira dalam bajet bulanan). ':'Direkod sebagai belanja Diri. ')+(t.ulang==='Sekali sahaja'?'Item ini dibuang selepas dibayar.':'Tarikh dianjak ke '+(t.ulang==='Ikut tahun Hijrah'?'tahun Hijrah depan (~11 hari lebih awal).':'tahun depan.'));
+    h+='<div class="tyf"><div class="row" style="align-items:flex-end;gap:8px"><label class="f" style="flex:1 1 130px">'+(asing?'Jumlah diasingkan (RM)':'Jumlah sebenar dibayar (RM)')+'<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="tyF" data-k="j" value="'+esc(F.j)+'"></label>'
+     +(asing?'':'<label class="f" style="flex:1 1 140px">Tarikh bayar<input class="inp" type="date" data-in="tyF" data-k="t" value="'+esc(F.t)+'"></label>')+'</div>'
+     +'<div class="sub" style="font-size:12px;line-height:1.5">'+nota+'</div><div class="row" style="gap:8px"><button class="btn sm p" data-act="tySah">'+(asing?'Simpan':'Rekod bayar')+'</button><button class="btn sm" data-act="tyBatal">Batal</button></div></div>';
+  } else h+='<div class="row" style="gap:8px;margin-top:10px">'+(t.baki>0?'<button class="btn sm'+(t.sudah?'':' p')+'" data-act="tyForm" data-s="'+s+'" data-id="'+esc(t.id)+'" data-m="asing">'+(t.sudah?'Tambah simpanan':'Asingkan '+rm(t.sebulan))+'</button>':'')
+     +'<button class="btn sm'+(t.baki<=0&&t.hari<=30?' p':'')+'" data-act="tyForm" data-s="'+s+'" data-id="'+esc(t.id)+'" data-m="bayar">Rekod bayar</button></div>';
+  return h+'</div>';
+}
+function tyRingkas(T,s){
+  const c=(l,v,w,sub)=>'<div><span class="lbl">'+l+'</span><b style="color:'+w+'">'+v+'</b>'+(sub?'<span class="sub" style="font-size:11px">'+sub+'</span>':'')+'</div>';
+  return '<div class="tys">'+c('Asingkan bulan ini',rm(T.asingBulanIni),T.asingBulanIni>0?'var(--b)':'var(--g)',T.asingBulanIni>0?(s==='ox'?'kunci dalam Hong Leong':'ke akaun simpanan'):'semua dah diasing ✓')
+   +c('Dana terkumpul',rm(T.terkumpul),'var(--ink)','daripada '+rm(T.sasaran))+c('Setara sebulan',rm(T.bulanan),'var(--mut)','kos tahunan ÷ 12')+'</div>';
+}
+function tyList(T,s){ return T&&T.list.length?tyRingkas(T,s)+T.list.map(t=>tyItem(t,s)).join(''):''; }
+function tySeksyen(T,s){
+  return '<section class="box"><div class="hd"><div><h2>Kos tahunan (dana terkumpul)</h2><div class="sub">Bayaran setahun sekali — kumpul sikit-sikit setiap bulan supaya tak terkejut</div></div>'+(T&&T.list.length?'':'<button class="btn sm" data-act="oxEdit">+ Tambah</button>')+'</div>'
+   +(T&&T.list.length?tyList(T,s):'<div class="li sub">Belum ada kos tahunan. Contoh: insurans van, bonus Hari Raya staf, langganan domain, lesen PBT.</div>')+'</section>';
+}
+function tyEditHtml(E,kats,s){
+  return '<div class="li" style="flex-direction:column;align-items:stretch;gap:8px"><span class="sub" style="font-size:13px">Tambah cepat:</span><div class="row" style="gap:6px">'+TY_CADANG[s].map((c,i)=>'<button class="chip" data-act="tyAdd" data-s="'+s+'" data-i="'+i+'">+ '+esc(c[0])+'</button>').join('')+'</div></div>'
+   +E.map((t,i)=>'<div class="oxcard"><div class="row between" style="flex-wrap:nowrap"><b style="font-size:14px">Kos tahunan '+(i+1)+'</b><button class="btn sm" data-act="tyDel" data-s="'+s+'" data-i="'+i+'" style="color:var(--r)">Buang</button></div>'
+     +'<label class="f">Nama<input class="inp" data-in="tyE" data-s="'+s+'" data-i="'+i+'" data-k="nama" value="'+esc(t.nama||'')+'" placeholder="Contoh: Insurans kereta"></label>'
+     +'<label class="f">Kategori<select class="inp" data-in="tyE" data-s="'+s+'" data-i="'+i+'" data-k="kat">'+kats.map(k=>'<option '+(t.kat===k?'selected':'')+'>'+esc(k)+'</option>').join('')+'</select></label>'
+     +'<div class="oxdua"><label class="f">Jumlah setahun (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="tyE" data-s="'+s+'" data-i="'+i+'" data-k="jumlah" value="'+esc(t.jumlah||'')+'"></label>'
+     +'<label class="f">Tarikh perlu bayar<input class="inp" type="date" data-in="tyE" data-s="'+s+'" data-i="'+i+'" data-k="tarikh" value="'+esc(t.tarikh||'')+'"></label></div>'
+     +'<div class="oxdua"><label class="f">Berulang<select class="inp" data-in="tyE" data-s="'+s+'" data-i="'+i+'" data-k="ulang">'+TY_ULANG.map(u=>'<option '+((t.ulang||TY_ULANG[0])===u?'selected':'')+'>'+u+'</option>').join('')+'</select></label>'
+     +'<label class="f">Dah terkumpul (RM)<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="tyE" data-s="'+s+'" data-i="'+i+'" data-k="terkumpul" value="'+esc(t.terkumpul||'')+'" placeholder="0"></label></div>'
+     +(t.ulang==='Ikut tahun Hijrah'?'<div class="sub" style="font-size:12px;line-height:1.5">Hari Raya Aidilfitri 2027 dijangka sekitar <b>10 Mac 2027</b> (semak tarikh rasmi). Letak tarikh bayar seminggu lebih awal. Selepas dibayar, SAFINAH anjak 354 hari (Raya datang ~11 hari lebih awal setiap tahun).</div>':'')+'</div>').join('')
+   +'<div style="padding:12px 16px 16px"><button class="btn" data-act="tyAdd" data-s="'+s+'" style="width:100%;border-style:dashed">+ Tambah kos tahunan</button></div>';
+}
+function drTyHtml(d){
+  const D=S.dr, T=d.tahunan;
+  let h='<div class="cd">'+drCh('Kos tahunan','Dana terkumpul peribadi','<button class="lk" data-act="drTy">'+(D.ty?'Tutup':(T&&T.list.length?'Ubah':'+ Tambah'))+'</button>');
+  if(D.ty) h+=tyEditHtml(D.ty,d.kat.keluar,'dr')+'<div class="row" style="gap:8px;padding:0 16px 16px"><button class="btn p" style="flex:1" data-act="drTySimpan">Simpan</button><button class="btn" data-act="drTy">Batal</button></div>';
+  else h+=(T&&T.list.length?tyList(T,'dr'):'<div class="em">Belum ada. Contoh: takaful kereta, persiapan Hari Raya, yuran sekolah anak, zakat tahunan.</div>');
+  return h+'</div>';
 }
 async function oxLoad(){ S.data.ox=await call('api_opex',S.pin,S.ox.month||''); if(!S.ox.month) S.ox.month=S.data.ox.ym; if(S.data.ox.ym===((S.boot&&S.boot.today)||'').slice(0,7)) cacheSet('ox',S.data.ox); }
 
@@ -1253,6 +1310,7 @@ function drWangHtml(d){
   let h='<div class="tb"><input class="inp" type="month" data-in="drYm" value="'+esc(d.ym)+'" aria-label="Bulan" style="width:auto"><button class="add" data-act="drTxBaru">+ Rekod</button></div>';
   if(D.f) h+=drTxForm(d);
   h+='<div class="kpis k3">'+drKpi('Masuk',rm(d.masuk),'','#15803D')+drKpi('Keluar',rm(d.keluar),'','#B91C1C')+drKpi('Baki',rm(baki),kadar===null?'':kadar+'% disimpan',baki>=0?'#0E4470':'#B91C1C')+'</div>';
+  h+=drTyHtml(d);
   h+='<div class="cols"><div class="cd">'+drCh('Belanja ikut kategori',esc(d.label),'<button class="lk" data-act="drBajet">'+(D.bj?'Tutup':'Tetapkan bajet')+'</button>');
   if(D.bj) h+='<div style="padding:4px 18px 18px;display:flex;flex-direction:column;gap:8px">'+d.kat.keluar.map(k=>'<label class="li oxrow" style="padding:0;border:0"><span class="oxlbl">'+esc(k)+'</span><span class="oxrm"><i>RM</i><input class="inp" type="number" inputmode="decimal" min="0" step="1" data-in="drB" data-k="'+esc(k)+'" value="'+esc(D.bj[k]||'')+'" placeholder="0"></span></label>').join('')+'<button class="add" data-act="drBajetSimpan">Simpan bajet</button></div>';
   else h+=(d.kats.length?d.kats.map(x=>{ const p=x.bajet?Math.round(x.v/x.bajet*100):null, c=drWarna(x.k,d.kat.keluar);
@@ -2772,6 +2830,7 @@ function tugasList(d){
     if(hari===25&&[3,6,9,12].indexOf(+p[1])>-1) L.push(['bonus','Akhir suku: ambil bonus 50% baki Profit (OCBC → Bank Islam)','go','agihan']);
     ((d&&d.opex&&d.opex.tetap)||[]).forEach(t=>L.push(['kt'+t.id,(t.status==='lewat'?'Lewat bayar: ':'Bayar sebelum '+t.hari+'hb: ')+t.nama+' ('+rm(t.jumlah)+')','go','opex',1]));
     if(d&&d.opex&&d.opex.amaran.length) L.push(['oxa','OPEX: '+d.opex.amaran.map(a=>a.k+' '+a.pct+'%').join(', '),'go','opex',1]);
+    const ty=d&&d.opex&&d.opex.tahunan; if(ty){ ty.perlu.forEach(t=>L.push(['ky'+t.id+t.tarikh,(t.hari<0?'Lewat bayar: ':t.hari===0?'Bayar hari ini: ':'Dalam '+t.hari+' hari: ')+t.nama+' ('+rm(t.jumlah)+') · dana '+t.pct+'%','go','opex',1])); if(ty.asing>0&&hari>=10) L.push(['kya'+today.slice(0,7),'Asingkan '+rm(ty.asing)+' untuk dana kos tahunan (kunci dalam Hong Leong)','go','opex',1]); }
     if(hari===1) L.push(['gaji','Bayar gaji staf & jana slip gaji (Hong Leong)','go','gaji']);
     if(dow===0) L.push(['konten','Semak 14 posting Ketua Konten sebelum dijadualkan','','']);
     if(T.susulan) L.push(['sus','Susulan bayaran institusi ('+T.susulan+' invois)','go','invois',1]);
@@ -2874,9 +2933,19 @@ const ACT = {
   plImp(){ S.pl.imp={rows:null,pilih:{},semak:null,done:null}; rp(); window.scrollTo(0,0); },
   plImpTutup(){ const done=S.pl.imp&&S.pl.imp.done; S.pl.imp=null; if(done) go('pelanggan'); else rp(); },
   async plImpSimpan(){ const I=S.pl.imp; try{ I.done=await run(call('api_importPelanggan',S.pin,plImpPilihan(),true)); S.data.pl=null; rp(); }catch(e){} },
-  oxEdit(){ const O=S.ox, d=S.data.ox; O.edit=!O.edit; if(O.edit) O.f={bajet:Object.assign({},d.set.bajet),tetap:d.set.tetap.map(t=>Object.assign({},t))}; rp(); },
+  oxEdit(){ const O=S.ox, d=S.data.ox; O.edit=!O.edit; if(O.edit) O.f={bajet:Object.assign({},d.set.bajet),tetap:d.set.tetap.map(t=>Object.assign({},t)),tahunan:(d.set.tahunan||[]).map(t=>Object.assign({},t))}; S.yf=null; rp(); },
   oxTAdd(){ S.ox.f.tetap.push({nama:'',kat:S.data.ox.kats[0],jumlah:'',hari:1}); rp(); },
   oxTDel(el){ S.ox.f.tetap.splice(+el.dataset.i,1); rp(); },
+  tyForm(el){ const s=el.dataset.s, T=(s==='ox'?S.data.ox:S.data.dr).tahunan, t=T.list.find(x=>x.id===el.dataset.id); if(!t) return; const m=el.dataset.m; S.yf={s:s,id:t.id,m:m,j:m==='asing'?(t.sebulan||''):t.jumlah,t:(S.boot&&S.boot.today)||''}; rp(); },
+  tyBatal(){ S.yf=null; rp(); },
+  async tySah(){ const F=S.yf; if(!F) return; const asing=F.m==='asing'; try{
+    if(F.s==='ox') S.data.ox=await run(asing?call('api_asingTahunan',S.pin,F.id,F.j,S.ox.month):call('api_bayarTahunan',S.pin,F.id,S.ox.month,F.t,F.j));
+    else S.data.dr=await run(asing?call('api_diriAsingTahunan',S.pin,F.id,F.j,S.dr.ym):call('api_diriBayarTahunan',S.pin,F.id,F.j,F.t,S.dr.ym));
+    S.yf=null; toast(asing?'Simpanan direkod ✓':(F.s==='ox'?'Direkod sebagai Duit Keluar (Hong Leong) ✓':'Bayaran direkod ✓')); rp(); }catch(e){} },
+  tyAdd(el){ const s=el.dataset.s, L=s==='ox'?S.ox.f.tahunan:S.dr.ty, c=el.dataset.i!==undefined?TY_CADANG[s][+el.dataset.i]:null; L.push({nama:c?c[0]:'',kat:c?c[1]:(s==='ox'?S.data.ox.kats[0]:S.data.dr.kat.keluar[0]),jumlah:'',tarikh:c&&c[2]?'2027-03-01':'',ulang:c&&c[2]?c[2]:TY_ULANG[0],terkumpul:''}); rp(); },
+  tyDel(el){ (el.dataset.s==='ox'?S.ox.f.tahunan:S.dr.ty).splice(+el.dataset.i,1); rp(); },
+  drTy(){ const T=S.data.dr.tahunan; S.yf=null; S.dr.ty=S.dr.ty?null:((T&&T.list)||[]).map(t=>({id:t.id,nama:t.nama,kat:t.kat,jumlah:t.jumlah,tarikh:t.tarikh,ulang:t.ulang,terkumpul:t.terkumpul})); rp(); },
+  async drTySimpan(){ try{ S.data.dr=await run(call('api_diriSaveTahunan',S.pin,S.dr.ty,S.dr.ym)); S.dr.ty=null; toast('Kos tahunan disimpan ✓'); rp(); }catch(e){} },
   async oxSave(){ const O=S.ox; try{ S.data.ox=await run(call('api_saveOpex',S.pin,O.f,O.month)); O.edit=false; toast('Bajet disimpan'); rp(); }catch(e){} },
   async oxBayar(el){ const O=S.ox, id=el.dataset.id; if(O.bc!==id){ O.bc=id; rp(); return; } O.bc=null; try{ S.data.ox=await run(call('api_bayarTetap',S.pin,id,O.month,S.boot.today)); toast('Direkod sebagai Duit Keluar (Hong Leong)'); rp(); }catch(e){ rp(); } },
   muatSemula(){ muatSemula(false); },
@@ -3060,6 +3129,8 @@ const IN = {
   plE(el){ S.pl.edit[el.dataset.k]=el.value; },
   oxB(el){ S.ox.f.bajet[el.dataset.k]=el.value; const t=$('oxTot'); if(t) t.textContent=rm(Object.keys(S.ox.f.bajet).reduce((a,k)=>a+(Number(S.ox.f.bajet[k])||0),0)); },
   oxT(el){ S.ox.f.tetap[+el.dataset.i][el.dataset.k]=el.value; },
+  tyE(el){ const L=el.dataset.s==='ox'?S.ox.f.tahunan:S.dr.ty; L[+el.dataset.i][el.dataset.k]=el.value; },
+  tyF(el){ if(S.yf) S.yf[el.dataset.k]=el.value; },
   sahSebab(el){ S.tx.sahSebab=el.value; },
   ckF(el){ S.ck.f[el.dataset.k]=el.value; },
   ckP(el){ S.ck.p[el.dataset.k]=el.value; },
@@ -3129,6 +3200,7 @@ document.addEventListener('change',async e=>{
   if(k==='plImpFile'){ const f=el.files[0]; if(!f) return; try{ busy(true); const rows=parseKenalan(await f.text()); if(!rows.length) throw new Error('Tiada kenalan dalam fail.'); S.pl.imp={rows:rows,pilih:{},semak:null,done:null,nama:f.name}; busy(false); plImpSemak(); }catch(er){ busy(false); toast(er.message); } }
   if(k==='sahBukti'){ const f=el.files[0]; if(!f) return; try{ busy(true); S.tx.sahBukti=await readReceipt(f); S.tx.sahBuktiNama=f.name; }catch(er){ toast(er.message); } finally{ busy(false); } rp(); }
   if(k==='oxT'&&el.tagName==='SELECT'){ IN.oxT(el); }
+  if(k==='tyE'&&el.tagName==='SELECT'){ IN.tyE(el); rp(); }
   if(k==='oxMonth'){ S.ox.month=el.value; S.data.ox=null; S.ox.edit=false; go('opex'); }
   if(k==='ckTahun'){ S.ck.tahun=el.value; S.data.ck=null; S.ck.a=null; S.ck.stokRes=null; go('cukai'); }
   if(k==='ckA'&&(el.tagName==='SELECT'||el.type==='date')){ IN.ckA(el); }
