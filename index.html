@@ -208,7 +208,9 @@ kbd{display:inline-block;font:600 11px Poppins,system-ui,sans-serif;border:1px s
 .tabbar{margin-bottom:-6px}
 .tog{position:relative;flex:none;width:46px;height:26px;border-radius:999px;background:#CBD5E1;transition:background .15s}.tog.on{background:var(--g)}.tog input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}.tog i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:left .15s}.tog.on i{left:23px}.tog i{pointer-events:none}
 .two{align-items:stretch}
-@media (max-width:760px){.grid>:last-child:nth-child(odd),.kpis>:last-child:nth-child(odd),.gpf>:last-child:nth-child(odd){grid-column:1/-1}.grid .val,.kpis .val,.t1 .val{font-size:clamp(15px,4.8vw,20px);white-space:nowrap}.antbl td{white-space:nowrap;font-size:12.5px}.antbl th{font-size:12px;white-space:normal}.antbl td,.antbl th{padding:8px 7px!important}.antbl td:first-child{white-space:normal;min-width:70px}.antbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.chkr{flex-direction:column;align-items:flex-start!important;gap:4px!important}.chkr>span:last-child{text-align:left!important}}
+@media (max-width:760px){.grid>:last-child:nth-child(odd),.kpis>:last-child:nth-child(odd),.gpf>:last-child:nth-child(odd){grid-column:1/-1}.grid .val,.kpis .val,.t1 .val{font-size:clamp(15px,4.8vw,20px);white-space:nowrap;display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis}.kbtn .val{white-space:normal;font-size:16px}.antbl td{white-space:nowrap;font-size:12.5px}.antbl th{font-size:12px;white-space:normal}.antbl td,.antbl th{padding:8px 7px!important}.antbl td:first-child{white-space:normal;min-width:70px}.antbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}.chkr{flex-direction:column;align-items:flex-start!important;gap:4px!important}.chkr>span:last-child{text-align:left!important}}
+.bpair{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}.bpair .btn{width:100%;justify-content:center;text-align:center;padding-left:8px;padding-right:8px;white-space:nowrap;font-size:14px}
+@media (max-width:760px){.tag{white-space:nowrap}}
 .evsvg{width:100%;max-width:560px;height:auto;display:block;overflow:visible;font-family:inherit}.evj{display:grid;grid-template-columns:92px 1fr auto;gap:8px;align-items:center;font-size:12px}.evj .bar{height:8px}.evk{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--line)}.evk i{display:block;height:100%}.evdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
 .evnow{display:flex;flex-direction:column;gap:2px;padding:12px 14px;background:var(--bs);border-bottom:1px solid var(--line)}.evnow b{font-size:18px;color:var(--b)}.evnow span:last-child{font-size:12px;color:var(--mut)}
 .tyi{padding:14px 16px;border-top:1px solid var(--line)}.tyf{display:flex;flex-direction:column;gap:8px;margin-top:10px;padding:12px;border-radius:10px;background:var(--soft)}
@@ -276,7 +278,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='3.0';
+const APP_VERSI='3.1';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -1416,7 +1418,7 @@ function bajetBlock(p){
   const pct=matlamat?Math.round(p.jualan/matlamat*100):0, lebih=kosB&&kosS>kosB, kosU=p.tutup?kosS:kosAsas, bersih=Math.round((p.untung-kosU)*100)/100;
   const semasa=today>=p.mula&&today<=p.akhir, hariKe=semasa?Math.round((dd(today)-dd(p.mula))/864e5)+1:0, hariLagi=semasa?hari-hariKe+1:0;
   const row=(l,v,s,w)=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:4px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span>'+l+'</span><b style="white-space:nowrap'+(w?';color:'+w:'')+'">'+v+'</b></div>'+(s?'<span class="sub" style="font-size:12px">'+s+'</span>':'')+'</div>';
-  let h='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft)" class="row between"><b>Bajet &amp; untung rugi event</b><div class="row" style="gap:6px"><button class="btn sm" data-act="kalBj" data-id="'+esc(p.id)+'">Ubah bajet</button>'+btn+'</div></div>';
+  let h='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft);display:flex;flex-direction:column;gap:8px"><b>Bajet &amp; untung rugi event</b><div class="bpair"><button class="btn sm" data-act="kalBj" data-id="'+esc(p.id)+'">Ubah bajet</button>'+btn+'</div></div>';
   if(semasa&&matlamat) h+='<div class="evnow"><span class="klbl">Hari '+hariKe+' / '+hari+' · sedang berlangsung</span><b>'+(p.jualan>=matlamat?'Sasaran dicapai ✓':'Perlu '+rm((matlamat-p.jualan)/hariLagi)+' sehari lagi')+'</b><span>'+(sas?'untuk capai sasaran untung '+rm(sas):'untuk pulang modal')+' · jualan setakat ini '+rm(p.jualan)+'</span></div>';
   h+=row('Kos event'+(kosB?' (bajet '+rm(kosB)+')':''),rm(kosS),'Bayaran awal '+rm(p.kosAwal||0)+' · semasa tutup '+rm(kosEvent(p.tutup))+(lebih?' · <b style="color:var(--r)">lebih bajet '+rm(kosS-kosB)+'</b>':''),lebih?'var(--r)':'')
    +row('Margin digunakan',mg+'%',mgNota)
@@ -1427,6 +1429,73 @@ function bajetBlock(p){
    +evCarta(p,matlamat/hari,kosU)
    +(dep?'<div class="li" style="justify-content:space-between;gap:8px"><span>Deposit '+rm(dep)+'</span>'+(B.depositBalik?'<span class="tag t-g">Dah dikembalikan</span>':'<button class="btn sm" data-act="kalDep" data-id="'+esc(p.id)+'">Tanda dah dapat balik</button>')+'</div>':'')
    +((p.kosAwalList||[]).length?'<div class="li" style="flex-direction:column;align-items:flex-start;gap:2px">'+p.kosAwalList.map(k=>'<span class="sub" style="font-size:12px">'+esc(tglTxt(k.tarikh))+' · '+esc(k.kat)+' · '+rm(k.jumlah)+'</span>').join('')+'</div>':'');
+  return h+'</div>';
+}
+function evSemak(p){
+  const E=p.evHarian, today=(S.boot&&S.boot.today)||''; if(!E) return null;
+  const H=p.harianEv||{}, hh=H.hari||{}, fl=Number(H.float)||0, days=Object.keys(E).sort();
+  let cum=fl, last=0, bL=0, bB=0, sm=0, n=0; const rows=[];
+  days.forEach((d,i)=>{ const x=E[d]; cum+=x.tunai-x.belanja-x.bankIn; const e=hh[d]||{}; let bl=null, bb=null;
+    if(e.laci!=null){ const bk=e.laci-cum; bl=Math.round((bk-last)*100)/100; last=bk; bL+=bl; }
+    if(e.bank!=null){ bb=Math.round((e.bank-x.mb)*100)/100; bB+=bb; }
+    const lalu=d<=today; if(lalu) n++; if(lalu&&(e.laci!=null||e.bank!=null)) sm++;
+    rows.push({d:d,i:i,x:x,e:e,jangka:Math.round(cum*100)/100,bl:bl,bb:bb,lalu:lalu}); });
+  const belanja=days.reduce((a,d)=>a+E[d].belanja,0);
+  return {rows:rows,fl:fl,adaFl:H.float!=null,tunggu:Math.max(0,Math.round((cum-fl)*100)/100),bezaLaci:Math.round(bL*100)/100,bezaBank:Math.round(bB*100)/100,disemak:sm,hari:n,belanja:Math.round(belanja*100)/100};
+}
+function hargaPurata(p){ const q=(p.kitab||[]).reduce((a,k)=>a+k.q,0); return q?p.jualan/q:0; }
+const LACI_K=['Makan & minum','Parking & tol','Elaun part-timer','Plastik & alat booth','Lain-lain'];
+function harianBlock(p){
+  const V=evSemak(p), today=(S.boot&&S.boot.today)||''; if(!V||today<p.mula||S.user.role==='staf') return '';
+  const K=S.kal, F=K.hv&&K.hv.id===p.id?K.hv:null, B=K.bl&&K.bl.id===p.id?K.bl:null, lalu=V.rows.filter(r=>r.lalu), own=isOwner();
+  if(!lalu.length) return '';
+  const kini=lalu[lalu.length-1], ekini=kini.e, siapKini=ekini.laci!=null;
+  const kurang=lalu.reduce((a,r)=>a+(r.bl!=null&&r.bl<=-1?-r.bl:0),0), lebih=lalu.reduce((a,r)=>a+(r.bl!=null&&r.bl>=1?r.bl:0),0);
+  const bankKurang=own?lalu.reduce((a,r)=>a+(r.bb!=null&&r.bb<=-1?-r.bb:0),0):0;
+  let h='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft)"><b>Semakan duit setiap malam</b><div class="sub" style="font-size:12px">Lepas import Wasep.me → kira duit dalam laci → isi satu angka</div></div>';
+  // 1. status besar
+  let st, warna;
+  if(!siapKini){ st='Belum kira duit laci '+(kini.d===today?'malam ini':'Hari '+(kini.i+1)); warna='#B45309'; }
+  else if(kurang>=1||bankKurang>=1){ st='Duit kurang '+rm(kurang+bankKurang)+' — perlu semak'; warna='var(--r)'; }
+  else { st='Duit cukup ✓'; warna='var(--g)'; }
+  h+='<div class="evnow" style="background:'+(warna==='var(--g)'?'var(--gs, #ECFDF5)':warna==='var(--r)'?'var(--rs, #FEE2E2)':'var(--as, #FFF7ED)')+'"><b style="color:'+warna+'">'+st+'</b>'
+   +'<span class="row between" style="flex-wrap:nowrap;gap:8px"><span>Tunai perlu dibank-in ke Maybank</span><b style="font-size:15px;color:var(--ink);white-space:nowrap">'+rm(V.tunggu)+'</b></span>'
+   +(lebih>=1?'<span>Laci terlebih '+rm(lebih)+' — mungkin ada jualan belum dimasukkan dalam Wasep.me</span>':'')+'</div>';
+  // 2. butang utama
+  if(!F&&!B) h+='<div class="li"><div class="bpair"><button class="btn'+(siapKini?'':' p')+'" data-act="kalHv" data-id="'+esc(p.id)+'" data-d="'+kini.d+'">'+(siapKini?'Ubah kiraan':'Kira duit laci')+'</button><button class="btn" data-act="kalBl" data-id="'+esc(p.id)+'">Duit laci dipakai</button></div></div>';
+  // borang kira laci
+  if(F){
+    const r=V.rows.find(x=>x.d===F.d)||kini;
+    h+='<div class="li" style="flex-direction:column;align-items:stretch;gap:12px;background:var(--soft)"><b>Kira duit laci · Hari '+(r.i+1)+' ('+esc(tglTxt(r.d))+')</b>'
+     +(r.i===0||!V.adaFl?'<label class="f">Duit tukar yang dibawa pada hari pertama (RM)<input class="inp" type="number" inputmode="decimal" min="0" step="0.01" data-in="kalHvF" data-k="float" value="'+esc(F.float)+'" placeholder="Cth: 100"><small class="sub" style="font-size:12px;font-weight:400">Duit kecil untuk beri baki kepada pelanggan</small></label>':'')
+     +'<label class="f">Jumlah duit dalam laci sekarang (RM)<input class="inp" type="number" inputmode="decimal" min="0" step="0.01" data-in="kalHvF" data-k="laci" value="'+esc(F.laci)+'"><small class="sub" style="font-size:12px;font-weight:400">Kira semua: duit kertas + syiling + duit tukar</small></label>'
+     +(own?'<label class="f">Duit masuk Maybank hari ini (RM) — <span class="sub" style="font-weight:400">pilihan, untuk tuan sahaja</span><input class="inp" type="number" inputmode="decimal" min="0" step="0.01" data-in="kalHvF" data-k="bank" value="'+esc(F.bank)+'"><small class="sub" style="font-size:12px;font-weight:400">Dari app Maybank: campur semua duit masuk hari ini</small></label>':'')
+     +'<div class="bpair"><button class="btn p" data-act="kalHvSimpan">Simpan</button><button class="btn" data-act="kalHvBatal">Batal</button></div></div>';
+  }
+  // borang belanja laci
+  if(B){
+    h+='<div class="li" style="flex-direction:column;align-items:stretch;gap:12px;background:var(--soft)"><b>Duit laci dipakai</b><span class="sub" style="font-size:12px;margin-top:-6px">Contoh: beli makanan, bayar parking, beri elaun. Simpan resit.</span>'
+     +'<div class="row" style="gap:10px"><label class="f" style="flex:1 1 160px">Untuk apa<select class="inp" data-in="kalBlS" data-k="kat">'+LACI_K.map(k=>'<option'+(k===B.kat?' selected':'')+'>'+k+'</option>').join('')+'</select></label>'
+     +'<label class="f" style="flex:1 1 120px">Berapa (RM)<input class="inp" type="number" inputmode="decimal" min="0" step="0.01" data-in="kalBlF" data-k="jumlah" value="'+esc(B.jumlah)+'"></label></div>'
+     +(lalu.length>1?'<label class="f">Hari<select class="inp" data-in="kalBlS" data-k="tarikh">'+lalu.map(r=>'<option value="'+r.d+'"'+(r.d===B.tarikh?' selected':'')+'>Hari '+(r.i+1)+' · '+esc(tglTxt(r.d))+'</option>').join('')+'</select></label>':'')
+     +'<label class="f">Nota (pilihan)<input class="inp" data-in="kalBlF" data-k="ket" value="'+esc(B.ket)+'" placeholder="Cth: nasi bungkus 3 orang"></label>'
+     +'<div class="bpair"><button class="btn p" data-act="kalBlSimpan">Simpan</button><button class="btn" data-act="kalBlBatal">Batal</button></div></div>';
+  }
+  // 3. senarai hari — ringkas
+  lalu.slice().reverse().forEach(r=>{
+    const x=r.x, e=r.e, ada=e.laci!=null;
+    let msg;
+    if(!ada) msg='<span class="tag t-y">Belum kira</span>';
+    else if(r.bl!=null&&r.bl<=-1) msg='<span class="tag t-r">Kurang '+rm(-r.bl)+'</span>';
+    else if(r.bl!=null&&r.bl>=1) msg='<span class="tag t-y">Lebih '+rm(r.bl)+'</span>';
+    else msg='<span class="tag t-g">Cukup ✓</span>';
+    const kira=(r.i===0?'Duit tukar '+rm(V.fl):'Baki semalam '+rm(V.rows[r.i-1].jangka))+' + jualan tunai '+rm(x.tunai)+(x.belanja?' − dipakai '+rm(x.belanja):'')+(x.bankIn?' − bank-in '+rm(x.bankIn):'')+' = <b>'+rm(r.jangka)+'</b>';
+    h+='<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="gap:8px;flex-wrap:nowrap"><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start"><b>Hari '+(r.i+1)+' · '+esc(tglTxt(r.d))+'</b>'+msg+'</div><div class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn sm" data-act="kalHv" data-id="'+esc(p.id)+'" data-d="'+r.d+'">'+(ada?'Ubah':'Kira')+'</button></div></div>'
+     +'<span style="font-size:13px">Sepatutnya dalam laci: '+kira+(ada?' · dikira <b>'+rm(e.laci)+'</b>':'')+'</span>'
+     +(own&&e.bank!=null?'<span class="sub" style="font-size:12px">Maybank: masuk '+rm(e.bank)+', rekod '+rm(x.mb)+(r.bb<=-1?' · <b style="color:var(--r)">kurang '+rm(-r.bb)+' — semak resit QR</b>':r.bb>=1?' · <b style="color:#B45309">lebih '+rm(r.bb)+' — ada duit masuk belum direkod</b>':' · cukup ✓')+'</span>':'')
+     +'</div>';
+  });
+  if(kurang>=1) h+='<div class="li sub" style="font-size:12px">Kalau laci kurang: kira semula, semak duit laci yang dipakai tapi belum direkod, dan semak jualan tunai dalam Wasep.me.</div>';
   return h+'</div>';
 }
 function evCarta(p,tgtHari,kos){
@@ -2604,7 +2673,7 @@ function progCard(p){
     h+='<div style="display:flex;flex-direction:column;gap:6px"><div class="row between"><b>Jualan program</b><span class="tag '+st[1]+'">'+st[0]+'</span></div><div class="row" style="align-items:baseline;gap:8px"><b style="font-size:20px">'+rm(p.jualan)+'</b><span class="sub">'+(p.target?'daripada target '+rm(p.target)+' ('+pct+'%)':'tiada target')+' · '+p.bilJualan+' jualan</span></div>'+(p.target?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,pct)+'%"></i></div>':'')+'</div>';
   }
   if(n) h+='<div><div class="row between"><b>Senarai semak persiapan</b><span class="sub">'+done+' / '+n+' siap</span></div>'+p.semak.map((x,i)=>'<label class="chk '+(x.ok?'done':'')+'"><input type="checkbox" data-in="kalChk" data-id="'+esc(p.id)+'" data-i="'+i+'" '+(x.ok?'checked':'')+'><span>'+esc(x.t)+'</span></label>').join('')+'</div>';
-  if(!inst) h+=bajetBlock(p);
+  if(!inst) h+=harianBlock(p)+bajetBlock(p);
   if(!inst){
     const qTot=p.kitab.reduce((a,k)=>a+k.q,0), lr=p.laras||[];
     h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft)" class="row between"><div><b>Kitab terjual di program ini</b><div class="sub" style="font-size:12px">Dari Wasep.me POS (selepas import) &amp; Rekod SAFINAH</div></div>'+(p.kitab.length?'<span class="sub">'+qTot+' naskhah</span>':'')+'</div>'
@@ -3250,28 +3319,34 @@ function tutupForm(p,T){
   return '<div class="card" style="gap:12px;border:2px solid var(--b)"><b>Tutup event · '+esc(p.nama)+'</b><div class="sub" style="font-size:13px">SOP M7 langkah 6: kira kitab yang tinggal, kira tunai, isi kos, kemudian import jualan Wasep.me POS.</div>'
    +'<div class="row">'+n('tunaiKira','Tunai dikira (RM)')+'<div class="f" style="flex:1 1 160px;font-size:14px;font-weight:600">Tunai dalam rekod<div style="min-height:48px;display:flex;align-items:center;font-size:18px">'+rm(p.tunaiRekod)+'</div></div></div>'
    +'<label class="chk"><input type="checkbox" data-in="kalTC" data-k="stokOk" '+(T.stokOk?'checked':'')+'><span>Kitab yang tinggal dah dikira &amp; sepadan dengan senarai dibawa</span></label>'
-   +(T.stokOk?'':'<label class="f">Nota beza stok<input class="inp" data-in="kalTS" data-k="stokNota" value="'+esc(T.stokNota||'')+'" placeholder="Contoh: kurang 1 Fathul Muin"></label>')
-   +'<b style="font-size:14px">Kos event</b><div class="row">'+n('sewa','Sewa tapak')+n('minyak','Minyak / tol')+n('elaun','Elaun part-timer')+n('lain','Lain-lain')+'</div>'
+   +(T.stokOk?'':'<label class="f">Nota beza stok<input class="inp" data-in="kalTS" data-k="stokNota" value="'+esc(T.stokNota||'')+'" placeholder="Contoh: kurang 1 Fathul Muin"></label><label class="f">Bilangan naskhah kurang<input class="inp" type="number" inputmode="numeric" min="0" step="1" data-in="kalT" data-k="stokKurang" value="'+esc(T.stokKurang==null?'':T.stokKurang)+'"><small class="sub" style="font-size:12px;font-weight:400">Kira kitab yang tinggal, banding dengan baki stok di Wasep.me. SAFINAH kira nilainya dalam RM.</small></label>')
+   +(((evSemak(p)||{}).belanja)?'<div class="note n-y">Duit laci dipakai '+rm(evSemak(p).belanja)+' dah dikira sebagai kos event — jangan isi lagi di bawah.</div>':'')+'<b style="font-size:14px">Kos event</b><div class="row">'+n('sewa','Sewa tapak')+n('minyak','Minyak / tol')+n('elaun','Elaun part-timer')+n('lain','Lain-lain')+'</div>'
    +'<div class="row">'+n('hadirin','Anggaran hadirin',' step="1"')+n('parttimer','Bilangan part-timer',' step="1"')+'</div><div class="sub" style="font-size:12px;margin-top:-6px">SOP: program kecil 1 part-timer · lebih 300 hadirin 2 part-timer.</div>'
    +'<label class="f">Catatan<input class="inp" data-in="kalTS" data-k="catatan" value="'+esc(T.catatan||'')+'"></label>'
    +'<label class="chk"><input type="checkbox" data-in="kalTC" data-k="rekodKos" '+(T.rekodKos?'checked':'')+'><span>Rekod kos sebagai Duit Keluar (Hong Leong)</span></label>'
    +'<div class="row"><button class="btn p" style="flex:1" data-act="kalTSave">Simpan Laporan Event</button><button class="btn" data-act="kalTX">Batal</button></div></div>';
 }
 function laporanDoc(p){
-  const t=p.tutup||{}, co=(S.boot&&S.boot.syarikat)||{nama:'HIKMAH PENDITA RESOURCES',noDaftar:'',alamat:'',telefon:''}, kos=kosEvent(t), beza=t.tunaiKira==null?null:t.tunaiKira-p.tunaiRekod;
+  const t=p.tutup||{}, co=(S.boot&&S.boot.syarikat)||{nama:'HIKMAH PENDITA RESOURCES',noDaftar:'',alamat:'',telefon:''}, kos=kosEvent(t)+(p.kosAwal||0), beza=t.tunaiKira==null?null:t.tunaiKira-p.tunaiRekod;
   const row=(a,b)=>'<tr><td style="text-align:left">'+a+'</td><td>'+b+'</td></tr>';
   return '<article class="slip"><div style="display:flex;justify-content:space-between;gap:14px;padding-bottom:12px;border-bottom:2px solid #064C7D;flex-wrap:wrap"><div style="display:flex;gap:12px;align-items:center"><img src="'+LOGO+'" alt="Logo" style="width:48px;height:51px;object-fit:contain"><div><div style="font-weight:700;font-size:15px">'+esc(co.nama)+'</div><div style="font-size:11px;color:#4B5563">'+esc(co.alamat)+'</div></div></div><div style="text-align:right"><div style="font-size:17px;font-weight:700;color:#064C7D;letter-spacing:1px">LAPORAN EVENT</div><div style="color:#4B5563">'+esc(tarikhJulat(p.mula,p.akhir))+'</div></div></div>'
    +'<table>'+row('Program','<b>'+esc(p.nama)+'</b>')+row('Lokasi',esc(p.lokasi||'—'))+row('Bertugas',esc(p.bertugas.join(', ')||'—'))+row('Anggaran hadirin',t.hadirin===''||t.hadirin==null?'—':String(t.hadirin))+row('Part-timer',t.parttimer===''||t.parttimer==null?'—':String(t.parttimer))+'</table>'
    +'<table><tr class="hdrow"><td style="text-align:left">JUALAN</td><td>RM</td></tr>'+row('Jumlah jualan ('+p.bilJualan+' transaksi)',r2(p.jualan).toFixed(2))+row('Sasaran',p.target?r2(p.target).toFixed(2):'—')+row('Untung sebenar jualan',r2(p.untung).toFixed(2))+'</table>'
-   +'<table><tr class="hdrow"><td style="text-align:left">KOS EVENT</td><td>RM</td></tr>'+row('Sewa tapak',r2(t.sewa||0).toFixed(2))+row('Minyak / tol',r2(t.minyak||0).toFixed(2))+row('Elaun part-timer',r2(t.elaun||0).toFixed(2))+row('Lain-lain',r2(t.lain||0).toFixed(2))+row('<b>Jumlah kos</b>','<b>'+r2(kos).toFixed(2)+'</b>')+'</table>'
+   +'<table><tr class="hdrow"><td style="text-align:left">KOS EVENT</td><td>RM</td></tr>'+row('Sewa tapak',r2(t.sewa||0).toFixed(2))+row('Minyak / tol',r2(t.minyak||0).toFixed(2))+row('Elaun part-timer',r2(t.elaun||0).toFixed(2))+row('Lain-lain',r2(t.lain||0).toFixed(2))+(p.kosAwal?row('Kos direkod lebih awal &amp; belanja laci',r2(p.kosAwal).toFixed(2)):'')+row('<b>Jumlah kos</b>','<b>'+r2(kos).toFixed(2)+'</b>')+'</table>'
    +'<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:6px;background:#064C7D;color:#fff"><span style="font-weight:600">UNTUNG BERSIH EVENT</span><span style="font-size:20px;font-weight:700">RM '+r2(p.untung-kos).toFixed(2)+'</span></div>'
-   +'<table><tr class="hdrow"><td style="text-align:left">KIRAAN TUTUP</td><td></td></tr>'+row('Tunai dikira / dalam rekod',(t.tunaiKira==null?'—':'RM'+r2(t.tunaiKira).toFixed(2))+' / RM'+r2(p.tunaiRekod).toFixed(2)+(beza!=null&&Math.abs(beza)>=0.01?' (beza RM'+r2(beza).toFixed(2)+')':''))+row('Kiraan stok',t.stokOk?'Sepadan':esc(t.stokNota||'Ada beza'))+'</table>'
+   +'<table><tr class="hdrow"><td style="text-align:left">KIRAAN TUTUP</td><td></td></tr>'+row('Tunai dikira / dalam rekod',(t.tunaiKira==null?'—':'RM'+r2(t.tunaiKira).toFixed(2))+' / RM'+r2(p.tunaiRekod).toFixed(2)+(beza!=null&&Math.abs(beza)>=0.01?' (beza RM'+r2(beza).toFixed(2)+')':''))+row('Kiraan stok',t.stokOk?'Sepadan':esc(t.stokNota||'Ada beza')+(t.stokKurang>0?' · kurang '+t.stokKurang+' naskhah ≈ RM'+r2(t.stokKurang*hargaPurata(p)).toFixed(2):''))+(function(){ const V=evSemak(p); return V?row('Semakan harian',V.disemak+' / '+V.hari+' hari')+row('Beza duit laci','RM'+r2(V.bezaLaci).toFixed(2))+row('Beza duit masuk Maybank','RM'+r2(V.bezaBank).toFixed(2))+row('Duit laci dipakai','RM'+r2(V.belanja).toFixed(2)):''; })()+'</table>'
    +(p.kitab.length?'<table><tr class="hdrow"><td style="text-align:left">KITAB PALING LAKU</td><td>Naskhah</td></tr>'+p.kitab.slice(0,5).map(k=>row(esc(k.judul),String(k.q))).join('')+'</table>':'')
    +(t.catatan?'<div style="font-size:12px"><b>Catatan:</b> '+esc(t.catatan)+'</div>':'')
    +'<div style="display:flex;justify-content:space-between;gap:16px;font-size:12px;padding-top:10px;border-top:1px solid #E5E7EB;flex-wrap:wrap"><span>Disediakan oleh: <b>'+esc(t.oleh||'')+'</b> · '+esc(tglTxt(t.tarikh))+'</span><span>Disemak: '+(p.disemak?'<b>'+esc(p.disemak)+'</b>':'________________')+'</span></div></article>';
 }
 const ACT_TT = {
-  kalTutup(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), t=p.tutup||{}; S.kal.tutup={id:p.id,tunaiKira:t.tunaiKira==null?'':t.tunaiKira,stokOk:t.stokOk!=null?t.stokOk:true,stokNota:t.stokNota||'',sewa:t.sewa||'',minyak:t.minyak||'',elaun:t.elaun||'',lain:t.lain||'',hadirin:t.hadirin==null?'':t.hadirin,parttimer:t.parttimer==null?'':t.parttimer,catatan:t.catatan||'',rekodKos:true}; rp(); },
+  kalHv(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), H=p.harianEv||{}, e=(H.hari||{})[el.dataset.d]||{}; S.kal.bl=null; S.kal.hv={id:p.id,d:el.dataset.d,laci:e.laci==null?'':e.laci,bank:e.bank==null?'':e.bank,float:H.float==null?'':H.float}; rp(); },
+  kalHvBatal(){ S.kal.hv=null; rp(); },
+  async kalHvSimpan(){ const F=S.kal.hv; if(F.laci===''&&F.bank===''){ toast('Isi duit laci atau duit masuk Maybank'); return; } try{ setKal(await run(call('api_saveHarianEv',S.pin,F.id,{tarikh:F.d,laci:F.laci,bank:F.bank,float:F.float},S.kal.month))); S.kal.hv=null; toast('Semakan disimpan ✓'); rp(); }catch(e){} },
+  kalBl(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), t=(S.boot&&S.boot.today)||p.mula; S.kal.hv=null; S.kal.bl={id:p.id,tarikh:t>p.akhir?p.akhir:t,kat:LACI_K[0],jumlah:'',ket:''}; rp(); },
+  kalBlBatal(){ S.kal.bl=null; rp(); },
+  async kalBlSimpan(){ const B=S.kal.bl; if(!(Number(B.jumlah)>0)){ toast('Isi jumlah'); return; } try{ setKal(await run(call('api_belanjaLaci',S.pin,B.id,B,S.kal.month))); S.kal.bl=null; toast('Belanja laci direkod ✓'); rp(); }catch(e){} },
+  kalTutup(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), t=p.tutup||{}; S.kal.tutup={id:p.id,tunaiKira:t.tunaiKira==null?'':t.tunaiKira,stokOk:t.stokOk!=null?t.stokOk:true,stokNota:t.stokNota||'',stokKurang:t.stokKurang||'',sewa:t.sewa||'',minyak:t.minyak||'',elaun:t.elaun||'',lain:t.lain||'',hadirin:t.hadirin==null?'':t.hadirin,parttimer:t.parttimer==null?'':t.parttimer,catatan:t.catatan||'',rekodKos:true}; rp(); },
   kalTX(){ S.kal.tutup=null; rp(); },
   async kalTSave(){ const T=S.kal.tutup; try{ const r=await run(call('api_tutupEvent',S.pin,T.id,T,S.kal.month)); setKal(r); S.kal.tutup=null; toast('Laporan Event disimpan ✓'); rp(); }catch(er){} },
   async kalSemakEv(el){ try{ const r=await run(call('api_semakEvent',S.pin,el.dataset.id,S.kal.month)); setKal(r); toast('Ditanda disemak'); rp(); }catch(er){} },
@@ -3666,6 +3741,8 @@ const IN = {
   pbF(el){ if(S.pb.form) S.pb.form[el.dataset.k]=el.value; },
   pbKata(el){ S.pb.kata=el.value; },
   kalBjF(el){ if(S.kal.bj) S.kal.bj.f[el.dataset.k]=el.value; },
+  kalHvF(el){ if(S.kal.hv) S.kal.hv[el.dataset.k]=el.value; },
+  kalBlF(el){ if(S.kal.bl) S.kal.bl[el.dataset.k]=el.value; },
   tyE(el){ const L=el.dataset.s==='ox'?S.ox.f.tahunan:S.dr.ty; L[+el.dataset.i][el.dataset.k]=el.value; },
   tyF(el){ if(S.yf) S.yf[el.dataset.k]=el.value; },
   sahSebab(el){ S.tx.sahSebab=el.value; },
@@ -3703,6 +3780,7 @@ document.addEventListener('change',async e=>{
   if(k==='resit'){ try{ busy(true); S.R.resit=await readReceipt(el.files[0]); S.R.resitName=el.files[0]?el.files[0].name:''; }catch(er){ toast(er.message); } finally{ busy(false); } repaint(); }
   if(k==='fixResit'){ try{ const r=await readReceipt(el.files[0]); await run(call('api_completeTx',S.pin,el.dataset.id,{resit:r})); toast('Resit disimpan'); go('tunai'); }catch(er){} }
   if(k==='month'){ S.tx.month=el.value; go('tunai'); }
+  if(k==='kalBlS'&&S.kal.bl){ S.kal.bl[el.dataset.k]=el.value; }
   if(k==='pkSel'){ S.pk.edit[el.dataset.k]=el.value; if(el.dataset.k==='jenis'){ S.pk.edit.unit=el.value==='Tetap'?'bulan':'hari'; } repaint(); }
   if(k==='pkChk'){ S.pk.edit[el.dataset.k]=el.checked; }
   if(k==='pkDok'){ const e=S.pk.edit; try{ const f=await readReceipt(el.files[0]); S.data.pk=await run(call('api_savePekerja',S.pin,Object.assign({},e,{dokBaru:{nama:($('dokNama')||{}).value||el.files[0].name,file:f}}))); S.pk.edit=JSON.parse(JSON.stringify(S.data.pk.rows.find(x=>x.id===e.id))); toast('Dokumen disimpan'); repaint(); }catch(er){} }
