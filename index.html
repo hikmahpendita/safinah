@@ -278,7 +278,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='3.1.1';
+const APP_VERSI='3.2';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -889,8 +889,28 @@ function tunaiHtml(){
   const vis=rows.filter(r=>f==='semua'||(f==='semak'?r.status==='Perlu semak':r.jenis===f));
   h+='<section class="box"><div class="hd"><div class="row" role="group" aria-label="Tapis">'+chips.map(c=>'<button class="chip '+(f===c[0]?'on':'')+'" data-act="txf" data-v="'+c[0]+'">'+c[1]+'</button>').join('')+'</div></div>'
    +(vis.length?vis.slice(0,S.tx.lim||40).map(r=>txRowHtml(r)).join('')+(vis.length>(S.tx.lim||40)?'<button class="tgmore" data-act="txLagi">Tunjuk lagi '+Math.min(40,vis.length-(S.tx.lim||40))+' daripada '+(vis.length-(S.tx.lim||40))+' rekod ↓</button>':''):'<div class="li sub">Tiada rekod.</div>')+'</section>';
+  h+=batalHtml(d);
   h+=semakBakiHtml(d);
   return h;
+}
+function batalHtml(d){
+  const B=d.batal||[]; if(!B.length) return '';
+  return '<details class="box" style="padding:0"><summary style="cursor:pointer;padding:12px 16px;font-weight:600">Rekod dibatalkan bulan ini ('+B.length+')</summary>'
+   +B.map(r=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:3px;opacity:.75"><div class="row between" style="flex-wrap:nowrap;gap:10px"><span style="text-decoration:line-through">'+esc(r.kategori)+' · '+esc(String(r.keterangan||'').slice(0,60))+'</span><b style="white-space:nowrap;text-decoration:line-through">'+rm(r.jumlah)+'</b></div><span class="sub" style="font-size:12px">'+esc(tglTxt(r.tarikh))+' · '+esc(r.bank||'')+' · '+esc(r.bendera||'')+'</span></div>').join('')
+   +'</details>';
+}
+function batalBox(r){
+  if(!isOwner()) return '';
+  const ok=['Manual','Laci Event','Tutup Event','Wasepme','Penyata bank'].indexOf(r.sumber)>-1&&!/^(GAJI|TAHUN)-/.test(r.ruj||'');
+  if(!ok) return '<div class="sub" style="font-size:12px">Rekod ini dicipta oleh bahagian '+esc(r.sumber)+' — betulkan dari bahagian itu.</div>';
+  if(S.tx.batal!==r.id) return '<button class="btn sm" style="align-self:flex-start;color:var(--r)" data-act="txBatal" data-id="'+esc(r.id)+'">Batal rekod ini</button>';
+  const sebab=['Transaksi tak berjaya','Tersilap jumlah','Rekod berganda','Belum dibayar'];
+  return '<div class="card" style="gap:10px;padding:14px;border-color:var(--r)"><b style="color:var(--r)">Batalkan rekod '+rm(r.jumlah)+'?</b>'
+   +'<span class="sub" style="font-size:13px">Rekod akan dipotong garis dan <b>tak dikira lagi</b> dalam baki bank, agihan, laporan dan event. Ia tak dipadam — masih boleh dilihat di bawah "Rekod dibatalkan".</span>'
+   +'<div class="bpair">'+sebab.map(s=>'<button class="chip'+(S.tx.batalSebab===s?' on':'')+'" style="width:100%;justify-content:center;font-size:13px;padding-left:6px;padding-right:6px" data-act="txBatalS" data-v="'+esc(s)+'">'+s+'</button>').join('')+'</div>'
+   +'<label class="f">Sebab<input class="inp" data-in="batalSebab" value="'+esc(S.tx.batalSebab||'')+'" placeholder="Pilih di atas atau tulis sendiri"></label>'
+   +'<span class="sub" style="font-size:12px">Kalau jumlah tersilap: batalkan dahulu, kemudian rekod semula dengan jumlah yang betul.</span>'
+   +'<div class="bpair"><button class="btn" style="background:var(--r);color:#fff;border-color:var(--r)" data-act="txBatalYa" data-id="'+esc(r.id)+'">Ya, batalkan</button><button class="btn" data-act="txBatalTak">Tak jadi</button></div></div>';
 }
 function txRowHtml(r){
   const sign=r.jenis==='Masuk'?'+ ':(r.jenis==='Keluar'?'− ':'');
@@ -909,6 +929,7 @@ function txRowHtml(r){
      +(/Kos nampak/i.test(fl)?'<button class="btn sm" data-act="fixKat" data-id="'+esc(r.id)+'">Guna kos dari Katalog</button>':'')
      +(/Tunai belum|Kos nampak|Sahkan deposit/i.test(fl)?'<button class="btn sm" data-act="fixDone" data-id="'+esc(r.id)+'">'+(/Sahkan deposit/.test(fl)?'Sahkan: deposit dah masuk Maybank':'Tandakan sudah disemak')+'</button>':'')
      +(/Kos kitab tiada|Kos nampak/i.test(fl)&&(r.items||[]).length?'<div class="row" style="gap:6px">'+r.items.map(i=>'<button class="btn sm" data-act="katJ" data-j="'+esc(i.judul)+'" data-h="'+esc(i.harga||'')+'" data-b="tunai" data-n="Aliran Tunai">Ubah kos: '+esc(i.judul)+'</button>').join('')+'</div>':'')
+     +batalBox(r)
      +'<div class="sub" style="font-size:12px">Direkod oleh '+esc(r.oleh)+' · '+esc(r.sumber)+(r.ruj?' #'+esc(r.ruj):'')+'</div></div>';
   }
   return h;
@@ -3366,6 +3387,10 @@ function laporanDoc(p){
    +'<div style="display:flex;justify-content:space-between;gap:16px;font-size:12px;padding-top:10px;border-top:1px solid #E5E7EB;flex-wrap:wrap"><span>Disediakan oleh: <b>'+esc(t.oleh||'')+'</b> · '+esc(tglTxt(t.tarikh))+'</span><span>Disemak: '+(p.disemak?'<b>'+esc(p.disemak)+'</b>':'________________')+'</span></div></article>';
 }
 const ACT_TT = {
+  txBatal(el){ S.tx.batal=el.dataset.id; S.tx.batalSebab=''; rp(); },
+  txBatalTak(){ S.tx.batal=null; rp(); },
+  txBatalS(el){ S.tx.batalSebab=el.dataset.v; rp(); },
+  async txBatalYa(el){ if(String(S.tx.batalSebab||'').trim().length<3){ toast('Pilih atau tulis sebab'); return; } try{ await run(call('api_batalTx',S.pin,el.dataset.id,S.tx.batalSebab)); S.tx.batal=null; S.tx.open=null; toast('Rekod dibatalkan ✓'); go('tunai'); }catch(e){} },
   async kalTandaKos(el){ try{ setKal(await run(call('api_tandaKosEvent',S.pin,el.dataset.tx,el.dataset.id,S.kal.month))); toast('Kos dimasukkan ke event ✓'); rp(); }catch(e){} },
   kalHv(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), H=p.harianEv||{}, e=(H.hari||{})[el.dataset.d]||{}; S.kal.bl=null; S.kal.hv={id:p.id,d:el.dataset.d,laci:e.laci==null?'':e.laci,bank:e.bank==null?'':e.bank,float:H.float==null?'':H.float}; rp(); },
   kalHvBatal(){ S.kal.hv=null; rp(); },
@@ -3773,6 +3798,7 @@ const IN = {
   tyE(el){ const L=el.dataset.s==='ox'?S.ox.f.tahunan:S.dr.ty; L[+el.dataset.i][el.dataset.k]=el.value; },
   tyF(el){ if(S.yf) S.yf[el.dataset.k]=el.value; },
   sahSebab(el){ S.tx.sahSebab=el.value; },
+  batalSebab(el){ S.tx.batalSebab=el.value; },
   ckF(el){ S.ck.f[el.dataset.k]=el.value; },
   ckP(el){ S.ck.p[el.dataset.k]=el.value; },
   ckA(el){ S.ck.a[el.dataset.k]=el.value; },
@@ -3875,3 +3901,4 @@ if(S.pin) login();
 </script>
 </body>
 </html>
+
