@@ -278,7 +278,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='3.1';
+const APP_VERSI='3.1.1';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -878,7 +878,7 @@ function diskaunWarn(items,R){ const sub=items.reduce((a,i)=>a+i.q*i.harga,0), q
 /* ---------- ALIRAN TUNAI ---------- */
 function tunaiHtml(){
   const d=S.data.tx;
-  let h='<div class="row between"><div><h1>Aliran Tunai</h1><div class="sub">Setiap ringgit masuk &amp; keluar</div></div><div class="row"><input class="inp" type="month" data-in="month" value="'+esc(S.tx.month)+'" aria-label="Bulan" style="width:auto"><button class="btn p" data-act="go" data-p="rekod">+ Rekod</button><button class="btn" data-act="go" data-p="imp">Import Wasepme</button></div></div>';
+  let h='<div class="row between"><div><h1>Aliran Tunai</h1><div class="sub">Setiap ringgit masuk &amp; keluar</div></div><div class="row"><input class="inp" type="month" data-in="month" value="'+esc(S.tx.month)+'" aria-label="Bulan" style="width:auto"><div class="bpair" style="width:auto;min-width:260px;flex:1 1 260px"><button class="btn p" data-act="go" data-p="rekod">+ Rekod</button><button class="btn" data-act="go" data-p="imp">Import Wasepme</button></div></div></div>';
   if(!d) return h+'<div class="sub">Memuatkan…</div>';
   const rows=d.rows;
   const inSum=rows.filter(r=>r.jenis==='Masuk').reduce((a,r)=>a+r.jumlah,0), outSum=rows.filter(r=>r.jenis==='Keluar').reduce((a,r)=>a+r.jumlah,0);
@@ -1428,7 +1428,7 @@ function bajetBlock(p){
    +row(p.tutup?'Untung bersih event':'Untung bersih setakat ini (anggaran)',rm(bersih),'Untung jualan '+rm(p.untung)+' − kos event '+rm(kosU)+(p.tutup?'':' (ikut bajet sehingga event ditutup)')+(kosMasa?' · selepas nilai masa tuan: <b>'+rm(bersih-kosMasa)+'</b>':''),bersih>=0?'var(--g)':'var(--r)')
    +evCarta(p,matlamat/hari,kosU)
    +(dep?'<div class="li" style="justify-content:space-between;gap:8px"><span>Deposit '+rm(dep)+'</span>'+(B.depositBalik?'<span class="tag t-g">Dah dikembalikan</span>':'<button class="btn sm" data-act="kalDep" data-id="'+esc(p.id)+'">Tanda dah dapat balik</button>')+'</div>':'')
-   +((p.kosAwalList||[]).length?'<div class="li" style="flex-direction:column;align-items:flex-start;gap:2px">'+p.kosAwalList.map(k=>'<span class="sub" style="font-size:12px">'+esc(tglTxt(k.tarikh))+' · '+esc(k.kat)+' · '+rm(k.jumlah)+'</span>').join('')+'</div>':'');
+   +'';
   return h+'</div>';
 }
 function evSemak(p){
@@ -1445,6 +1445,32 @@ function evSemak(p){
 }
 function hargaPurata(p){ const q=(p.kitab||[]).reduce((a,k)=>a+k.q,0); return q?p.jualan/q:0; }
 const LACI_K=['Makan & minum','Parking & tol','Elaun part-timer','Plastik & alat booth','Lain-lain'];
+function kosBlock(p){
+  if(S.user.role==='staf') return '';
+  const L=(p.kosList||[]).slice().sort((a,b)=>a.tarikh<b.tarikh?-1:1), T=p.kosTinggal||[], B=p.bajet||{};
+  if(!L.length&&!T.length) return '';
+  const kosB=EV_KOS.filter(x=>x[0]!=='deposit').reduce((a,x)=>a+(Number(B[x[0]])||0),0), jum=L.reduce((a,k)=>a+k.jumlah,0);
+  const kunci=k=>k.kat+'|'+k.jumlah, kira={}; L.forEach(k=>{kira[kunci(k)]=(kira[kunci(k)]||0)+1;});
+  const ganda=L.filter(k=>kira[kunci(k)]>1).length;
+  const lbl=k=>k.sumber==='Laci Event'?'<span class="tag t-y">Duit laci</span>':k.sumber==='Tutup Event'?'<span class="tag">Semasa tutup</span>':'';
+  let h='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft)" class="row between"><div><b>Senarai kos event</b><div class="sub" style="font-size:12px">Semua duit keluar yang dikira untuk event ini</div></div><div style="text-align:right"><b style="font-size:16px;white-space:nowrap">'+rm(jum)+'</b>'+(kosB?'<div class="sub" style="font-size:12px;white-space:nowrap">bajet '+rm(kosB)+'</div>':'')+'</div></div>';
+  if(kosB&&jum>kosB) h+='<div class="li" style="background:var(--rs, #FEE2E2);color:var(--r);font-size:13px"><b>Kos melebihi bajet '+rm(jum-kosB)+'</b></div>';
+  if(ganda) h+='<div class="li" style="flex-direction:column;align-items:stretch;gap:2px;background:var(--as, #FFF7ED)"><b style="color:#B45309;font-size:13px">⚠ '+ganda+' kos mungkin berganda</b><span class="sub" style="font-size:12px">Kos bertanda "Mungkin berganda?" ada jumlah &amp; kategori yang sama. Semak keterangan. Kalau betul berganda, beritahu pemilik untuk padam satu dalam Google Sheet (tab Transaksi).</span></div>';
+  if(!L.length) h+='<div class="li sub" style="font-size:13px">Belum ada kos direkod untuk event ini.</div>';
+  const nm=k=>{ const t=k.ket||k.kat, i=t.indexOf(' (laci event)'); if(i<0) return t; const j=t.indexOf(': ',i); return t.slice(0,i)+(j>-1?' — '+t.slice(j+2):''); };
+  L.forEach(k=>{
+    h+='<div class="li" style="flex-direction:column;align-items:stretch;gap:3px"><div class="row between" style="flex-wrap:nowrap;gap:10px"><span style="font-size:14px">'+esc(nm(k))+'</span><b style="white-space:nowrap">'+rm(k.jumlah)+'</b></div>'
+     +'<div class="row" style="gap:6px;flex-wrap:wrap;align-items:center"><span class="sub" style="font-size:12px">'+esc(tglTxt(k.tarikh))+' · '+esc(k.kat)+' · '+esc(k.bank||'-')+(k.oleh?' · '+esc(k.oleh):'')+'</span>'+lbl(k)+(kira[kunci(k)]>1?'<span class="tag t-r">Mungkin berganda?</span>':'')+'</div></div>';
+  });
+  if(T.length){
+    h+='<div style="padding:10px 14px;background:var(--as, #FFF7ED);border-top:1px solid var(--line)"><b style="color:#B45309">Kos mungkin tertinggal ('+T.length+')</b><div class="sub" style="font-size:12px">Duit keluar dalam tempoh event yang <b>tak ditanda</b> kepada mana-mana event. Kalau ia memang untuk event ini, tekan "Masukkan".</div></div>';
+    T.forEach(k=>{
+      h+='<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="flex-wrap:nowrap;gap:10px"><span style="font-size:14px">'+esc(k.ket||k.kat)+'</span><b style="white-space:nowrap">'+rm(k.jumlah)+'</b></div>'
+       +'<div class="row between" style="gap:8px;flex-wrap:nowrap"><span class="sub" style="font-size:12px">'+esc(tglTxt(k.tarikh))+' · '+esc(k.kat)+' · '+esc(k.bank||'-')+'</span><button class="btn sm" data-act="kalTandaKos" data-tx="'+esc(k.id)+'" data-id="'+esc(p.id)+'" style="white-space:nowrap">Masukkan</button></div></div>';
+    });
+  }
+  return h+'</div>';
+}
 function harianBlock(p){
   const V=evSemak(p), today=(S.boot&&S.boot.today)||''; if(!V||today<p.mula||S.user.role==='staf') return '';
   const K=S.kal, F=K.hv&&K.hv.id===p.id?K.hv:null, B=K.bl&&K.bl.id===p.id?K.bl:null, lalu=V.rows.filter(r=>r.lalu), own=isOwner();
@@ -2673,7 +2699,7 @@ function progCard(p){
     h+='<div style="display:flex;flex-direction:column;gap:6px"><div class="row between"><b>Jualan program</b><span class="tag '+st[1]+'">'+st[0]+'</span></div><div class="row" style="align-items:baseline;gap:8px"><b style="font-size:20px">'+rm(p.jualan)+'</b><span class="sub">'+(p.target?'daripada target '+rm(p.target)+' ('+pct+'%)':'tiada target')+' · '+p.bilJualan+' jualan</span></div>'+(p.target?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,pct)+'%"></i></div>':'')+'</div>';
   }
   if(n) h+='<div><div class="row between"><b>Senarai semak persiapan</b><span class="sub">'+done+' / '+n+' siap</span></div>'+p.semak.map((x,i)=>'<label class="chk '+(x.ok?'done':'')+'"><input type="checkbox" data-in="kalChk" data-id="'+esc(p.id)+'" data-i="'+i+'" '+(x.ok?'checked':'')+'><span>'+esc(x.t)+'</span></label>').join('')+'</div>';
-  if(!inst) h+=harianBlock(p)+bajetBlock(p);
+  if(!inst) h+=harianBlock(p)+bajetBlock(p)+kosBlock(p);
   if(!inst){
     const qTot=p.kitab.reduce((a,k)=>a+k.q,0), lr=p.laras||[];
     h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft)" class="row between"><div><b>Kitab terjual di program ini</b><div class="sub" style="font-size:12px">Dari Wasep.me POS (selepas import) &amp; Rekod SAFINAH</div></div>'+(p.kitab.length?'<span class="sub">'+qTot+' naskhah</span>':'')+'</div>'
@@ -2681,7 +2707,7 @@ function progCard(p){
     if(lr.length){
       h+='<div style="border:1px solid #FDBA74;border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--as)"><b style="color:var(--a)">Direkod di SAFINAH sahaja</b><div class="sub" style="font-size:12px">Kalau kitab ini ada dalam Wasep.me, laras stoknya di sana</div></div>'
        +lr.map(k=>'<div class="li" style="justify-content:space-between"><span style="flex:1;min-width:0">'+esc(k.judul)+'</span><b class="amt-out">− '+k.q+' naskhah</b></div>').join('')
-       +'<div class="li" style="gap:8px"><button class="btn sm" data-act="kalCopy" data-id="'+esc(p.id)+'">Salin senarai</button>'+(p.stokDilaras?'<span class="tag t-g">✓ Stok Wasepme dah dilaras</span><button class="btn sm" data-act="kalStok" data-id="'+esc(p.id)+'" data-v="0">Batal tanda</button>':'<button class="btn sm g" data-act="kalStok" data-id="'+esc(p.id)+'" data-v="1">Tanda: stok Wasepme dah dilaras</button>')+'</div></div>';
+       +'<div class="li" style="gap:8px;flex-direction:column;align-items:stretch"><button class="btn sm" data-act="kalCopy" data-id="'+esc(p.id)+'">Salin senarai</button>'+(p.stokDilaras?'<span class="tag t-g">✓ Stok Wasepme dah dilaras</span><button class="btn sm" data-act="kalStok" data-id="'+esc(p.id)+'" data-v="0">Batal tanda</button>':'<button class="btn sm g" data-act="kalStok" data-id="'+esc(p.id)+'" data-v="1">Tanda: stok Wasepme dah dilaras</button>')+'</div></div>';
     } else if(p.kitab.length) h+='<div class="note n-g">Stok Wasep.me berkurang sendiri — semua jualan dari Wasep.me POS.</div>';
     h+='<button class="btn" data-act="kalRekod" data-id="'+esc(p.id)+'">+ Rekod di SAFINAH (kitab tiada dalam Wasep.me)</button>';
     if(S.user.role!=='staf') h+=tutupBlock(p);
@@ -3340,6 +3366,7 @@ function laporanDoc(p){
    +'<div style="display:flex;justify-content:space-between;gap:16px;font-size:12px;padding-top:10px;border-top:1px solid #E5E7EB;flex-wrap:wrap"><span>Disediakan oleh: <b>'+esc(t.oleh||'')+'</b> · '+esc(tglTxt(t.tarikh))+'</span><span>Disemak: '+(p.disemak?'<b>'+esc(p.disemak)+'</b>':'________________')+'</span></div></article>';
 }
 const ACT_TT = {
+  async kalTandaKos(el){ try{ setKal(await run(call('api_tandaKosEvent',S.pin,el.dataset.tx,el.dataset.id,S.kal.month))); toast('Kos dimasukkan ke event ✓'); rp(); }catch(e){} },
   kalHv(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), H=p.harianEv||{}, e=(H.hari||{})[el.dataset.d]||{}; S.kal.bl=null; S.kal.hv={id:p.id,d:el.dataset.d,laci:e.laci==null?'':e.laci,bank:e.bank==null?'':e.bank,float:H.float==null?'':H.float}; rp(); },
   kalHvBatal(){ S.kal.hv=null; rp(); },
   async kalHvSimpan(){ const F=S.kal.hv; if(F.laci===''&&F.bank===''){ toast('Isi duit laci atau duit masuk Maybank'); return; } try{ setKal(await run(call('api_saveHarianEv',S.pin,F.id,{tarikh:F.d,laci:F.laci,bank:F.bank,float:F.float},S.kal.month))); S.kal.hv=null; toast('Semakan disimpan ✓'); rp(); }catch(e){} },
