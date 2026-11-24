@@ -288,11 +288,11 @@ const ICON = {
   templat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
   sop:'<path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/>'
 };
-const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
+const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasep.me'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='3.5';
+const APP_VERSI='3.5.1';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
-const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
+const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasep.me'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
 /* ---------- v2.7 CARI PANTAS (Ctrl+K / ikon kanta) & tindakan pantas ---------- */
 const CARI_KATA={modul:'tetapan modul hidup mati sorok menu ringkas',padan:'padanan penyata bank pdf maybank tercicir reconcile bocor ambilan',analisis:'analisis bulanan laporan ai profit first skor cashflow aliran tunai nasihat langkah',tunai:'baki bank transaksi aliran duit masuk keluar maybank hong leong ocbc bank islam semak',agihan:'profit first agihan bahagi 10hb 25hb bonus',opex:'opex belanja bajet bil tetap kos tahunan insurans raya hong leong',pulang:'breakeven pulang modal sasaran event seminar',laporan:'untung rugi p&l laporan graf ringkasan pengasas',cukai:'cukai lhdn borang b tahunan',rekod:'rekod jualan belanja resit',imp:'import wasep salesreport',pelanggan:'pelanggan crm customer whatsapp',blast:'blast whatsapp mesej pukal',invois:'invois hutang sebut harga zakat majlis agama institusi',hajat:'hajat pre-order tempahan',po:'pre-order po kaherah maarad pesta buku pbakl musim tempahan deposit baki refund bagasi kargo senarai beli',templat:'jawapan pantas templat whatsapp',katalog:'katalog harga kos kitab',stok:'stok kitab laris mati',beli:'beli kargo mesir pembelian',kalendar:'kalendar program event pameran kuliah',gaji:'gaji slip payroll',pekerja:'pekerja staf',surat:'surat rasmi',diri:'peribadi diri resume galeri jadual hutang'};
@@ -1437,7 +1437,7 @@ function bajetBlock(p){
     +'<div style="padding:10px 14px;background:var(--soft);border-top:1px solid var(--line)"><b>Sasaran &amp; andaian</b></div>'
     +extra.map(x=>'<label class="li oxrow"><span class="oxlbl">'+x[1]+'<small class="sub" style="display:block;font-size:11px">'+x[2]+'</small></span><span class="oxrm"><i>'+(x[0]==='diskaun'?'%':'RM')+'</i><input class="inp" type="number" inputmode="decimal" min="0" step="1" data-in="kalBjF" data-k="'+x[0]+'" value="'+esc(E.f[x[0]]||'')+'" placeholder="0"></span></label>').join('')
     +'<div class="li" style="gap:8px"><button class="btn sm p" data-act="kalBjSimpan">Simpan bajet</button><button class="btn sm" data-act="kalBjBatal">Batal</button></div></div>';
-  const kosB=EV_KOS.filter(x=>x[0]!=='deposit').reduce((a,x)=>a+(Number(B[x[0]])||0),0), dep=Number(B.deposit)||0, kosS=(p.kosAwal||0)+kosEvent(p.tutup);
+  const kosB=bjJum(B), dep=Number(B.deposit)||0, kosS=(p.kosAwal||0)+kosEvent(p.tutup);
   const btn='<button class="btn sm" data-act="kalKos" data-id="'+esc(p.id)+'">+ Rekod kos program</button>';
   if(!kosB&&!dep&&!p.kosAwal) return '<div class="row" style="gap:8px"><button class="btn" data-act="kalBj" data-id="'+esc(p.id)+'">Tetapkan bajet kos event</button>'+btn+'<span class="sub" style="font-size:12px">Sewa booth, penginapan, minyak… SAFINAH kira jualan minimum untuk pulang modal</span></div>'+(p.jualan?'<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:10px">'+evCarta(p,0,0)+'</div>':'');
   // margin: sebenar (jika jualan cukup) → pelan selepas diskaun → pelan
@@ -1480,7 +1480,7 @@ function kosBlock(p){
   if(S.user.role==='staf') return '';
   const L=(p.kosList||[]).slice().sort((a,b)=>a.tarikh<b.tarikh?-1:1), T=p.kosTinggal||[], B=p.bajet||{};
   if(!L.length&&!T.length) return '';
-  const kosB=EV_KOS.filter(x=>x[0]!=='deposit').reduce((a,x)=>a+(Number(B[x[0]])||0),0), jum=L.reduce((a,k)=>a+k.jumlah,0);
+  const kosB=bjJum(B), jum=L.reduce((a,k)=>a+k.jumlah,0);
   const kunci=k=>k.kat+'|'+k.jumlah, kira={}; L.forEach(k=>{kira[kunci(k)]=(kira[kunci(k)]||0)+1;});
   const ganda=L.filter(k=>kira[kunci(k)]>1).length;
   const lbl=k=>k.sumber==='Laci Event'?'<span class="tag t-y">Duit laci</span>':k.sumber==='Tutup Event'?'<span class="tag">Semasa tutup</span>':'';
@@ -2726,13 +2726,13 @@ function progCard(p){
    +(p.catatan?'<div class="sub">'+esc(p.catatan)+'</div>':'');
   if(inst){
     h+=p.invois?'<div class="note n-n row between"><span>Invois <b>'+esc(p.invois.no)+'</b> · '+esc(p.invois.pelanggan)+' · '+rm(p.invois.jumlah)+'</span><span class="tag '+(p.invois.status==='Dibayar'?'t-g':'t-a')+'">'+esc(p.invois.status)+'</span></div>':'<div class="note n-y">Belum dipautkan dengan invois. Tekan "Ubah" untuk pilih invois.</div>';
-  } else {
+  } else if(!isTrip(p)) {
     const st=targetStatus(p.jualan,p.target), pct=p.target?Math.round(p.jualan/p.target*100):0;
     h+='<div style="display:flex;flex-direction:column;gap:6px"><div class="row between"><b>Jualan program</b><span class="tag '+st[1]+'">'+st[0]+'</span></div><div class="row" style="align-items:baseline;gap:8px"><b style="font-size:20px">'+rm(p.jualan)+'</b><span class="sub">'+(p.target?'daripada target '+rm(p.target)+' ('+pct+'%)':'tiada target')+' · '+p.bilJualan+' jualan</span></div>'+(p.target?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,pct)+'%"></i></div>':'')+'</div>';
   }
   if(n) h+='<div><div class="row between"><b>Senarai semak persiapan</b><span class="sub">'+done+' / '+n+' siap</span></div>'+p.semak.map((x,i)=>'<label class="chk '+(x.ok?'done':'')+'"><input type="checkbox" data-in="kalChk" data-id="'+esc(p.id)+'" data-i="'+i+'" '+(x.ok?'checked':'')+'><span>'+esc(x.t)+'</span></label>').join('')+'</div>';
   if(!inst) h+=harianBlock(p)+bajetBlock(p)+kosBlock(p);
-  if(!inst){
+  if(!inst&&!isTrip(p)){
     const qTot=p.kitab.reduce((a,k)=>a+k.q,0), lr=p.laras||[];
     h+='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft)" class="row between"><div><b>Kitab terjual di program ini</b><div class="sub" style="font-size:12px">Dari Wasep.me POS (selepas import) &amp; Rekod SAFINAH</div></div>'+(p.kitab.length?'<span class="sub">'+qTot+' naskhah</span>':'')+'</div>'
      +(p.kitab.length?p.kitab.map(k=>'<div class="li" style="justify-content:space-between"><span style="flex:1;min-width:0">'+esc(k.judul)+'</span><b>'+k.q+' naskhah</b></div>').join(''):'<div class="li sub">Belum ada. Rekod jualan di Wasep.me POS semasa event, kemudian <b>Import Wasepme</b> — jualan pada tarikh program masuk ke sini sendiri.</div>')+'</div>';
@@ -4729,7 +4729,130 @@ function kosJadual(p){
 /* grid tergantung sendirian di telefon: kotak terakhir ambil lebar penuh */
 document.head.insertAdjacentHTML('beforeend','<style>@media (max-width:600px){.kpis>:last-child:nth-child(odd):not(:first-child),.grid>:last-child:nth-child(odd):not(:first-child){grid-column:1/-1}}</style>');
 
-Object.assign(ACT, ACT_35, ACT_MUH, ACT_34, ACT_PO, ACT_NT, ACT13, ACT_SR, ACT_RS, ACT_HJ, ACT_BL, ACT_TT, ACT_TP, ACT_ST, ACT_WA, ACT_DR, ACT_DG, ACT_PM);
+/* ---------- v3.5 BAJET BOLEH TAMBAH ITEM SENDIRI · JENIS "TRIP BELIAN LUAR NEGARA" ---------- */
+const TRIP='Trip belian luar negara';
+function isTrip(p){ return !!p&&p.jenis===TRIP; }
+function bjJum(B){ B=B||{}; return EV_KOS.filter(x=>x[0]!=='deposit').reduce((a,x)=>a+(Number(B[x[0]])||0),0)+(B.extra||[]).reduce((a,x)=>a+(Number(x.v)||0),0); }
+const BJX_TRIP=['Tiket penerbangan','Visa','Insurans perjalanan','Internet / SIM','Pengangkutan tempatan','Lebihan bagasi','Upah runner / penterjemah'];
+const BJX_EV=['Tiket penerbangan','Internet / SIM','Sewa kenderaan','Hadiah / cenderahati'];
+const TRIP_HIDE=['sewa','deposit','cetak','elaun'];
+Object.assign(ICON,{
+  x_tiket:'<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
+  x_wifi:'<path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M2 9a15 15 0 0 1 20 0"/><path d="M12 19.5h.01"/>'
+});
+/* Rekod mudah: tambah tiket & internet */
+JB35.splice(3,0,['tiket','x_tiket','Tiket & perjalanan','Lain-lain (keluar)','Hong Leong','cth: tiket KUL–CAI pergi balik','Lain-lain',1],['internet','x_wifi','Internet & SIM','Lain-lain (keluar)','Hong Leong','cth: SIM Vodafone Mesir 2 minggu','Lain-lain',1]);
+/* kategori kos: tambah tiket, internet, visa (diletak sebelum pengangkutan) */
+(function(){ const at=KKAT.findIndex(c=>c[0]==='jalan');
+  KKAT.splice(at,0,['tiket','Tiket & perjalanan luar negara',/tiket|flight|penerbangan|airasia|egyptair|qatar|emirates|saudia|bagasi|airport/i],['visa','Visa & insurans',/visa|insurans/i],['net','Internet & telefon',/internet|\bsim\b|data|wifi|roaming|top ?up|prepaid/i]);
+  KKAT.find(c=>c[0]==='jalan')[2]=/minyak|petrol|tol\b|parking|grab|teksi|uber|kenderaan|ets|bas\b|pengangkutan|transport/i; })();
+const BJ_KKAT={sewa:'sewa',inap:'inap',makan:'makan',minyak:'jalan',cetak:'cetak',kurier:'kurier',elaun:'upah',lain:'lain'};
+function bjxKata(n){ return String(n||'').toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>=4); }
+/* kosSusun versi baharu: item bajet sendiri jadi kategori sendiri + lajur bajet */
+(function(){
+  const _ks=kosSusun; kosSusun=function(p){
+    const X=((p.bajet||{}).extra||[]), R=_ks(p);
+    if(X.length){
+      const dyn=X.map(x=>({k:'x:'+x.n,nama:x.n,j:0,n:0,item:[],kata:bjxKata(x.n)}));
+      R.A.forEach(c=>{ c.item=c.item.filter(i=>{ const t=String(i.ket||'').toLowerCase(), d=dyn.find(d=>t.indexOf(d.nama.toLowerCase())>-1||d.kata.some(w=>t.indexOf(w)>-1)); if(d){ d.j+=i.j; d.n++; d.item.push(i); c.j-=i.j; c.n--; return false; } return true; }); c.j=Math.round(c.j*100)/100; });
+      R.A=R.A.filter(c=>c.n>0).concat(dyn.filter(d=>d.n>0));
+    }
+    const B=p.bajet||{}, bj={}; Object.keys(BJ_KKAT).forEach(k=>{ if(Number(B[k])>0) bj[BJ_KKAT[k]]=(bj[BJ_KKAT[k]]||0)+Number(B[k]); }); X.forEach(x=>{ bj['x:'+x.n]=(bj['x:'+x.n]||0)+Number(x.v); });
+    R.A.forEach(c=>{ c.bajet=bj[c.k]||0; delete bj[c.k]; c.j=Math.round(c.j*100)/100; });
+    Object.keys(bj).forEach(k=>{ const c=KKAT.find(x=>x[0]===k); R.A.push({k:k,nama:c?c[1]:k.replace(/^x:/,''),j:0,n:0,item:[],bajet:bj[k]}); });
+    R.A.sort((a,b)=>Math.max(b.j,b.bajet)-Math.max(a.j,a.bajet)); R.bajet=bjJum(B);
+    return R;
+  };
+})();
+/* jadual Laporan: Bajet vs Sebenar */
+kosJadual=function(p){
+  const K=kosSusun(p), f=v=>(Math.round(v*100)/100).toFixed(2), hari=Math.max(1,Math.round((new Date(p.akhir)-new Date(p.mula))/864e5)+1), adaB=K.bajet>0;
+  let h='<table><tr class="hdrow"><td style="text-align:left">'+(isTrip(p)?'KOS TRIP':'KOS EVENT')+' · IKUT KATEGORI</td>'+(adaB?'<td>Bajet</td>':'')+'<td>Sebenar</td></tr>';
+  if(!K.A.length) h+='<tr><td style="text-align:left">Tiada kos direkod</td>'+(adaB?'<td></td>':'')+'<td>0.00</td></tr>';
+  K.A.forEach(c=>{ const lb=c.bajet&&c.j>c.bajet; h+='<tr><td style="text-align:left">'+esc(c.nama)+(c.n?' <span style="color:#6B7280;font-size:11px">('+c.n+' rekod)</span>':'')+'</td>'+(adaB?'<td style="color:#6B7280">'+(c.bajet?f(c.bajet):'—')+'</td>':'')+'<td'+(lb?' style="color:#B91C1C;font-weight:600"':'')+'>'+f(c.j)+'</td></tr>'; });
+  h+='<tr><td style="text-align:left"><b>Jumlah</b> <span style="color:#6B7280;font-size:11px">(purata RM'+f(K.tot/hari)+' sehari · '+hari+' hari)</span></td>'+(adaB?'<td style="color:#6B7280">'+f(K.bajet)+'</td>':'')+'<td><b'+(adaB&&K.tot>K.bajet?' style="color:#B91C1C"':'')+'>'+f(K.tot)+'</b></td></tr></table>';
+  const D=K.A.filter(c=>c.item.length);
+  if(D.length) h+='<details class="kkd"><summary style="cursor:pointer;font-size:12px;color:#064C7D;font-weight:600;padding:4px 0">Butiran setiap kos</summary><table style="font-size:11.5px">'
+    +D.map(c=>'<tr class="hdrow"><td style="text-align:left">'+esc(c.nama)+'</td><td>'+f(c.j)+'</td></tr>'+c.item.map(i=>'<tr><td style="text-align:left">'+esc(tglTxt(i.tarikh))+' · '+esc(String(i.ket).slice(0,70))+(i.bank?' <span style="color:#6B7280">('+esc(i.bank)+')</span>':'')+'</td><td>'+f(i.j)+'</td></tr>').join('')).join('')+'</table></details>';
+  return h;
+};
+function bjBanding(p){
+  const K=kosSusun(p); if(!K.bajet&&!K.A.length) return '';
+  return '<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="font-size:12px;color:var(--mut)"><span>Ikut kategori</span><span>sebenar / bajet</span></div>'
+   +K.A.map(c=>{ const pc=c.bajet?Math.min(100,Math.round(c.j/c.bajet*100)):100, lb=c.bajet&&c.j>c.bajet;
+     return '<div style="display:flex;flex-direction:column;gap:3px"><div class="row between" style="font-size:13px;flex-wrap:nowrap;gap:8px"><span style="min-width:0">'+esc(c.nama)+'</span><span style="white-space:nowrap'+(lb?';color:var(--r);font-weight:600':'')+'">'+rm(c.j)+(c.bajet?' <span class="sub">/ '+rm(c.bajet)+'</span>':'')+'</span></div><div class="bar" style="height:4px"><i style="width:'+(c.bajet?pc:0)+'%;background:'+(lb?'var(--r)':'var(--b)')+'"></i></div></div>'; }).join('')+'</div>';
+}
+/* kad bajet untuk trip belian */
+function tripBlock(p){
+  const B=p.bajet||{}, kosB=bjJum(B), kosS=(p.kosAwal||0)+kosEvent(p.tutup), b=p.belian||{bil:0,rm:0,le:0,naskhah:0,tajuk:0}, today=(S.boot&&S.boot.today)||'';
+  const row=(l,v,s,w)=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:4px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span>'+l+'</span><b style="white-space:nowrap'+(w?';color:'+w:'')+'">'+v+'</b></div>'+(s?'<span class="sub" style="font-size:12px">'+s+'</span>':'')+'</div>';
+  const kos=Math.max(kosS,0), perN=b.naskhah?kos/b.naskhah:0, per100=b.rm?kos/b.rm*100:0, sN=Number(B.naskhah)||0, sB=Number(B.belian)||0;
+  let h='<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div style="padding:10px 14px;background:var(--soft);display:flex;flex-direction:column;gap:8px"><b>Bajet &amp; kos trip</b><div class="bpair"><button class="btn sm" data-act="kalBj" data-id="'+esc(p.id)+'">'+(kosB?'Ubah bajet':'Tetapkan bajet')+'</button><button class="btn sm" data-act="kalKos" data-id="'+esc(p.id)+'">+ Rekod kos trip</button></div></div>';
+  h+=row('Kos trip'+(kosB?' (bajet '+rm(kosB)+')':''),rm(kosS),kosB&&kosS>kosB?'<b style="color:var(--r)">Lebih bajet '+rm(kosS-kosB)+'</b>':(kosB?'Baki bajet '+rm(kosB-kosS):'Tetapkan bajet: tiket, visa, penginapan, internet…'),kosB&&kosS>kosB?'var(--r)':'')
+   +row('Belian kitab sepanjang trip',rm(b.rm),b.bil?b.bil+' pesanan · '+b.naskhah+' naskhah · '+b.tajuk+' tajuk · LE '+Number(b.le).toLocaleString('en-MY')+(sB?' · sasaran '+rm(sB)+' ('+Math.round(b.rm/sB*100)+'%)':''):'Belian di Kitab → Pembelian &amp; Kargo dalam tarikh trip dikira di sini');
+  if(b.naskhah) h+=row('Kos trip setiap naskhah',rm(perN),'Setiap RM100 kitab dibeli, kos trip '+rm(per100)+'. Masukkan dalam harga jual supaya trip tak makan untung.',per100>25?'var(--r)':'var(--b)');
+  else if(sN&&kosB) h+=row('Anggaran kos setiap naskhah',rm(kosB/sN),'Bajet '+rm(kosB)+' ÷ sasaran '+sN+' naskhah');
+  h+=bjBanding(p);
+  if(p.akhir<=today||p.tutup) h+='<div class="li" style="gap:8px"><button class="btn sm" data-act="kalLap" data-id="'+esc(p.id)+'">Laporan trip</button><span class="sub" style="font-size:12px">Kos ikut kategori, belian &amp; kos setiap naskhah</span></div>';
+  return h+'</div>';
+}
+/* sambungan */
+(function(){
+  const _bb4=bajetBlock; bajetBlock=function(p){
+    const E=S.kal.bj&&S.kal.bj.id===p.id?S.kal.bj:null, trip=isTrip(p);
+    if(!E){ if(trip){ if(!S.data.muh) muhMuat(); return muhPelajaran(p)+tripBlock(p); } let h=_bb4(p); const bb=bjBanding(p); if(bb&&h.slice(-6)==='</div>'&&h.indexOf('Bajet &amp; untung rugi event')>-1) h=h.slice(0,-6)+bb+'</div>'; return h; }
+    let h=_bb4(p);
+    if(trip){ TRIP_HIDE.forEach(k=>{ h=h.replace(new RegExp('<label class="li oxrow"><span class="oxlbl">[^<]*</span><span class="oxrm"><i>RM</i><input class="inp" type="number" inputmode="decimal" min="0" step="1" data-in="kalBjF" data-k="'+k+'"[^>]*></span></label>'),''); });
+      h=h.replace('Anggaran kos sebelum event. Deposit tidak dikira sebagai kos.','Anggaran kos trip. Tambah item sendiri seperti tiket penerbangan, visa &amp; internet.'); }
+    const X=E.f.extra||[], pre=(trip?BJX_TRIP:BJX_EV).filter(n=>!X.some(x=>x.n.toLowerCase()===n.toLowerCase()));
+    const ex='<div style="padding:10px 14px;background:var(--soft);border-top:1px solid var(--line)"><b>Item tambahan</b><div class="sub" style="font-size:12px">Tambah kos yang tiada dalam senarai di atas.</div></div>'
+      +X.map((x,i)=>'<div class="li" style="gap:8px;flex-wrap:nowrap"><input class="inp" style="flex:1;min-width:0" data-in="bjXN" data-i="'+i+'" value="'+esc(x.n)+'" placeholder="Nama item" maxlength="40"><input class="inp" style="flex:0 0 84px;min-width:0;text-align:right" type="number" inputmode="decimal" min="0" step="1" data-in="bjXV" data-i="'+i+'" value="'+esc(x.v||'')+'" placeholder="RM" aria-label="Jumlah RM"><button class="btn sm" style="flex:none;min-width:40px" data-act="bjXBuang" data-i="'+i+'" aria-label="Buang">✕</button></div>').join('')
+      +'<div class="li" style="flex-wrap:wrap;gap:6px">'+pre.map(n=>'<button class="chip" data-act="bjXTambah" data-v="'+esc(n)+'">+ '+esc(n)+'</button>').join('')+'<button class="chip" data-act="bjXTambah" data-v="">+ Item lain</button></div>';
+    const mk='<div style="padding:10px 14px;background:var(--soft);border-top:1px solid var(--line)"><b>Sasaran &amp; andaian</b></div>';
+    const a=h.indexOf(mk);
+    if(a>-1){ if(trip){ const b2=h.indexOf('<div class="li" style="gap:8px"><button class="btn sm p" data-act="kalBjSimpan">',a);
+        const tf=[['belian','Anggaran nilai belian kitab (RM)','Untuk kira kos trip setiap RM100 kitab'],['naskhah','Sasaran naskhah dibeli','Untuk kira kos trip setiap naskhah']];
+        h=h.slice(0,a)+ex+'<div style="padding:10px 14px;background:var(--soft);border-top:1px solid var(--line)"><b>Sasaran belian</b></div>'+tf.map(x=>'<label class="li oxrow"><span class="oxlbl">'+x[1]+'<small class="sub" style="display:block;font-size:11px">'+x[2]+'</small></span><span class="oxrm"><i>'+(x[0]==='naskhah'?'naskhah':'RM')+'</i><input class="inp" type="number" inputmode="numeric" min="0" step="1" data-in="kalBjF" data-k="'+x[0]+'" value="'+esc(E.f[x[0]]||'')+'" placeholder="0"></span></label>').join('')+h.slice(b2); }
+      else h=h.slice(0,a)+ex+h.slice(a); }
+    return h;
+  };
+  const _tb4=tutupBlock; tutupBlock=function(p){ return isTrip(p)?muhBlock(p):_tb4(p); };
+  const _ld4=laporanDoc; laporanDoc=function(p){
+    let h=_ld4(p); if(!isTrip(p)) return h;
+    const b=p.belian||{}, kos=kosSusun(p).tot, f=v=>(Math.round(v*100)/100).toFixed(2);
+    h=h.replace('LAPORAN EVENT','LAPORAN TRIP BELIAN').replace(/<tr><td style="text-align:left">(Anggaran hadirin|Part-timer)<\/td><td>[^<]*<\/td><\/tr>/g,'');
+    const a=h.indexOf('<table><tr class="hdrow"><td style="text-align:left">JUALAN</td>'), e=a>-1?h.indexOf('</table>',a)+8:-1;
+    if(a>-1) h=h.slice(0,a)+'<table><tr class="hdrow"><td style="text-align:left">BELIAN KITAB</td><td></td></tr><tr><td style="text-align:left">Pesanan pembelian</td><td>'+(b.bil||0)+'</td></tr><tr><td style="text-align:left">Naskhah / tajuk</td><td>'+(b.naskhah||0)+' / '+(b.tajuk||0)+'</td></tr><tr><td style="text-align:left">Nilai belian</td><td>LE '+f(b.le||0)+' · RM '+f(b.rm||0)+'</td></tr></table>'+h.slice(e);
+    h=h.replace(/<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:6px;background:#064C7D;color:#fff"><span style="font-weight:600">UNTUNG BERSIH EVENT<\/span><span style="font-size:20px;font-weight:700">.*?<\/span><\/div>/,
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-radius:6px;background:#064C7D;color:#fff;flex-wrap:wrap"><span style="font-weight:600">KOS TRIP SETIAP NASKHAH</span><span style="font-size:20px;font-weight:700">RM '+f(b.naskhah?kos/b.naskhah:0)+'</span></div><div style="font-size:12px;color:#4B5563">Jumlah kos trip RM '+f(kos)+(b.rm?' · setiap RM100 kitab dibeli, kos trip RM '+f(kos/b.rm*100):'')+'</div>');
+    const k=h.indexOf('<table><tr class="hdrow"><td style="text-align:left">KIRAAN TUTUP</td>'); if(k>-1){ const k2=h.indexOf('</table>',k)+8; h=h.slice(0,k)+h.slice(k2); }
+    return h;
+  };
+  /* muhasabah trip: angka belian */
+  const _ms=muhSnap; muhSnap=function(p){ const s=_ms(p); s.bajet=bjJum(p.bajet); if(isTrip(p)){ const b=p.belian||{}; s.trip=1; s.belian=b.rm||0; s.naskhah=b.naskhah||0; s.jualan=0; s.untung=0; s.bersih=-s.kos; } return s; };
+  const _mk=muhKpi; muhKpi=function(sn){ if(!sn.trip) return _mk(sn);
+    const L=[['Belian kitab',rm(sn.belian)],['Kos trip',rm(sn.kos)+(sn.bajet?'<small>bajet '+rm(sn.bajet)+'</small>':'')],['Naskhah dibeli',String(sn.naskhah||0)],['Kos setiap naskhah',rm(sn.naskhah?sn.kos/sn.naskhah:0)]];
+    return '<div class="mh-k">'+L.map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('')+'</div>'; };
+  /* Mode Event → Mode Trip */
+  const _ek=evKokpit35; evKokpit35=function(){ const ev=evKini35(); if(!ev||!isTrip(ev)) return _ek();
+    const hk=hariKe35(ev), Q=[['mBukaBayar','','x_bayar','Rekod perbelanjaan']];
+    if(bolehP35('beli')) Q.push(['go','beli','x_kitab','Pembelian kitab']); if(bolehP35('po')) Q.push(['go','po','x_resit','Pre-order']); if(bolehP35('invois')) Q.push(['go','invois','x_inst','Tempahan institusi']);
+    return '<style>'+UX35_CSS+'</style><section class="ux-ev"><div class="ux-evh"><small>Mode Trip · Hari '+hk[0]+' daripada '+hk[1]+'</small><b>'+esc(ev.nama)+'</b><span>'+esc(tarikhJulat(ev.mula,ev.akhir))+'</span></div><div class="ux-evb"><div class="ux-q">'+Q.map(q=>'<button data-act="'+q[0]+'"'+(q[1]?' data-p="'+q[1]+'"':'')+'>'+ic35(q[2],18)+'<span>'+q[3]+'</span></button>').join('')+'</div><div class="sub" style="font-size:12.5px">Kos trip direkod dari Hong Leong dan dikira dalam kad trip di Kalendar. Jualan di Malaysia tidak dikira sebagai jualan trip.</div></div></section>'; };
+  const _lo=laciOk35; laciOk35=function(){ const ev=evKini35(); return _lo()&&!(ev&&isTrip(ev)); };
+})();
+const ACT_TRIP={
+  kalBj(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id); S.kal.bj={id:p.id,f:JSON.parse(JSON.stringify(p.bajet||{}))}; rp(); },
+  bjXTambah(el){ const E=S.kal.bj; if(!E) return; E.f.extra=(E.f.extra||[]).concat([{n:el.dataset.v||'',v:''}]); rp(); },
+  bjXBuang(el){ const E=S.kal.bj; if(!E) return; E.f.extra=(E.f.extra||[]).filter((x,i)=>i!==Number(el.dataset.i)); rp(); }
+};
+const IN_TRIP={
+  bjXN(el){ const E=S.kal.bj; if(E&&E.f.extra&&E.f.extra[el.dataset.i]) E.f.extra[el.dataset.i].n=el.value; },
+  bjXV(el){ const E=S.kal.bj; if(E&&E.f.extra&&E.f.extra[el.dataset.i]) E.f.extra[el.dataset.i].v=el.value; }
+};
+
+document.head.insertAdjacentHTML('beforeend','<style>.ty-Trip{background:#DCFCE7;color:#166534}</style>');
+
+Object.assign(ACT, ACT_35, ACT_MUH, ACT_34, ACT_PO, ACT_NT, ACT13, ACT_SR, ACT_RS, ACT_HJ, ACT_BL, ACT_TT, ACT_TP, ACT_ST, ACT_WA, ACT_DR, ACT_DG, ACT_PM, ACT_TRIP);
 document.addEventListener('click',e=>{ const el=e.target.closest('[data-act]'); if(!el) return; const f=ACT[el.dataset.act]; if(f){ e.preventDefault(); f(el,e); } });
 document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.id==='pin') login(); });
 
@@ -4737,6 +4860,7 @@ function refocus(sel,el){ let pos=null; try{ pos=el.selectionStart; }catch(e){} 
 const IN = {
   ...IN_35,
   ...IN_MUH,
+  ...IN_TRIP,
   ...IN_34,
   ...IN_PO,
   rq(el){ S.R.q=el.value; refocus('[data-in="rq"]',el); },
