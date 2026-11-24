@@ -290,7 +290,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasepme'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='3.4';
+const APP_VERSI='3.5';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasepme'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -693,7 +693,7 @@ function utamaOwner(){
   if(d.hutang&&d.hutang.lewat) aksi.push(arow('go','invois',d.hutang.lewat+' invois lepas hari 30','Invois','#B91C1C'));
   if(d.programSeterusnya&&!cdTunjuk(d.programSeterusnya)) aksi.push(arow('go','kalendar',esc(d.programSeterusnya.nama),esc(tarikhJulat(d.programSeterusnya.mula,d.programSeterusnya.akhir)),'#064C7D'));
   return outboxBanner()
-   +'<div class="row between"><div><h1>Ringkasan '+esc(d.bulan)+'</h1><div class="sub">Assalamualaikum. Ini keadaan bisnes setakat hari ini.</div></div></div>'+qaHtml()+bocorHtml(d)+rutinHtml(d)
+   +'<div class="row between"><div><h1>Ringkasan '+esc(d.bulan)+'</h1><div class="sub">Ini keadaan bisnes setakat hari ini.</div></div></div>'+qaHtml()+bocorHtml(d)+rutinHtml(d)
    +'<section class="card" style="gap:10px;padding:20px"><div class="row between"><span class="klbl">Jualan bulan ini</span><span class="tag '+st[1]+'">'+st[0]+'</span></div>'
    +'<div class="row" style="align-items:baseline;gap:10px"><span class="big">'+rm(d.jualan)+'</span>'+(t?'<span class="sub">/ '+rm(t)+' · '+pct+'%</span>':'')+'</div>'
    +(t?'<div class="bar" style="height:6px"><i style="width:'+Math.min(100,pct)+'%"></i></div><div class="row between sub" style="font-size:13px"><span>'+(kurang>0?'Perlu '+rm(kurang/Math.max(1,d.hariLagi))+' sehari':'Lebih '+rm(-kurang))+'</span><span>'+d.hariLagi+' hari lagi</span></div>':'')+'</section>'
@@ -732,7 +732,7 @@ function utamaOwner1Lama(){
   const bk=Object.keys(d.baki), bmax=Math.max(1,...bk.map(k=>Math.abs(d.baki[k])));
   const aksi=uAksi(d);
   return outboxBanner()
-   +'<div class="row between"><div><h1>Ringkasan '+esc(d.bulan)+'</h1><div class="sub">Assalamualaikum. Ini keadaan bisnes setakat hari ini.</div></div></div>'+qaHtml()+bocorHtml(d)+rutinHtml(d)
+   +'<div class="row between"><div><h1>Ringkasan '+esc(d.bulan)+'</h1><div class="sub">Ini keadaan bisnes setakat hari ini.</div></div></div>'+qaHtml()+bocorHtml(d)+rutinHtml(d)
    +ceoHtml(d,U)
    +(S.user.role==='pemilik'?'':rutinHtml(d)+tugasHtml(d))
    +'<div class="two">'
@@ -802,7 +802,7 @@ function rekodHtml(){
   let h=(R.tab==='keluar'&&R.program?'<div class="note n-n" style="font-size:13px">Kos untuk program: <b>'+esc(R.progNama||'')+'</b> <button class="lkb" data-act="rkProgBuang">buang pautan</button></div>':'')+'<div><h1>Rekod Baru</h1></div><div class="row" role="tablist">'+tabs.map(t=>'<button class="chip '+(R.tab===t[0]?'on':'')+'" role="tab" aria-selected="'+(R.tab===t[0])+'" data-act="rekodTab" data-t="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>';
   if(R.done){
     const d=R.done;
-    const rb=(d.items&&d.items.length)?'<button class="btn g" data-act="resitDone">🧾 Lihat / hantar resit pelanggan</button>':'';
+    const rb=(d.items&&d.items.length)?'<button class="btn g" data-act="resitDone">'+ic35('x_resit',16)+' Lihat / hantar resit pelanggan</button>':'';
     if(d.offline) return h+'<div class="form"><div class="note n-y" style="font-size:16px"><b>Disimpan dalam telefon</b><br>Tiada internet sekarang. Rekod akan dihantar sendiri bila internet ada.</div>'+rb+'<button class="btn p" data-act="rekodAgain">Rekod lagi</button></div>';
     return h+'<div class="form"><div class="note n-g" style="font-size:16px"><b>Disimpan ✓</b><br>'+esc(d.kategori)+' · '+rm(d.jumlah)+'</div>'+(d.bendera?'<div class="note n-y">Perlu disemak: '+esc(d.bendera)+'</div>':'')+rb+'<button class="btn p" data-act="rekodAgain">Rekod lagi</button></div>';
   }
@@ -810,7 +810,7 @@ function rekodHtml(){
   h+='<div class="form"><div class="sub">Langkah '+R.step+' daripada 3 · <b style="color:var(--ink)">'+titles[R.step-1]+'</b></div><div class="steps">'+[1,2,3].map(i=>'<i class="'+(i<=R.step?'on':'')+'"></i>').join('')+'</div>';
   if(R.tab==='jualan'){
     if(R.step===1){
-      h+='<h2>Di mana jualan ini?</h2><div class="tiles">'+[['Kedai','Pelanggan datang'],['Event','Pameran, kuliah'],['Online','Bukan dari Wasepme'],['Institusi','Dengan LO / PO']].map(c=>'<button class="tile '+(R.saluran===c[0]?'on':'')+'" data-act="setR" data-k="saluran" data-v="'+c[0]+'"><b>'+c[0]+'</b><small>'+c[1]+'</small></button>').join('')+'</div>'
+      h+='<h2>Di mana jualan ini?</h2><div class="tiles">'+[['Kedai','Pelanggan datang'],['Event','Pameran, kuliah'],['Online','Bukan dari Wasep.me'],['Institusi','Dengan LO / PO']].map(c=>'<button class="tile '+(R.saluran===c[0]?'on':'')+'" data-act="setR" data-k="saluran" data-v="'+c[0]+'"><b>'+c[0]+'</b><small>'+c[1]+'</small></button>').join('')+'</div>'
        +progPicker(R)
        +'<div class="note n-y"><b>Biasanya jualan kedai &amp; event direkod di Wasep.me POS</b> (stok berkurang sendiri), kemudian diimport. Rekod di sini hanya untuk jualan yang <b>tiada dalam Wasep.me</b>. Jangan rekod di kedua-duanya.</div>';
     }
@@ -927,7 +927,7 @@ function txRowHtml(r){
   if(open){
     const fl=r.bendera||'';
     h+='<div class="li" style="background:var(--bs);flex-direction:column;align-items:stretch">'
-     +(r.items&&r.items.length&&r.jenis==='Masuk'?'<button class="btn sm g" style="align-self:flex-start" data-act="resitTx" data-id="'+esc(r.id)+'">🧾 Resit pelanggan</button>':'')
+     +(r.items&&r.items.length&&r.jenis==='Masuk'?'<button class="btn sm g" style="align-self:flex-start" data-act="resitTx" data-id="'+esc(r.id)+'">'+ic35('x_resit',16)+' Resit pelanggan</button>':'')
      +(r.resit?'<a href="'+esc(r.resit)+'" target="_blank" rel="noopener">Lihat bukti bayaran / resit belanja</a>':'')
      +(r.sah?'<div class="note n-g" style="font-size:13px;display:flex;flex-direction:column;gap:6px"><span><b>✓ Disahkan Pengurus Utama</b> · '+esc(r.sah.no)+' · '+esc(tglTxt(r.sah.tarikh))+'</span><span>Sebab tiada resit: '+esc(r.sah.sebab)+'</span>'+(r.sah.bukti?'<a href="'+esc(r.sah.bukti)+'" target="_blank" rel="noopener">Lihat bukti lain</a>':'')+'<button class="btn sm" style="align-self:flex-start" data-act="baucar" data-id="'+esc(r.id)+'">Lihat baucar</button></div>':'')
      +(!r.sah&&isOwner()&&/resit|bukti/i.test(fl)?(S.tx.sah===r.id?'<div class="card" style="gap:10px;padding:14px"><b>Sahkan tanpa resit</b><label class="f">Sebab tiada resit (wajib)<textarea class="inp" rows="3" style="font:inherit;font-size:15px;resize:vertical" data-in="sahSebab" placeholder="Contoh: Bayar tunai kepada pemandu lori, penjual tiada resit">'+esc(S.tx.sahSebab||'')+'</textarea></label><label class="f">Bukti lain (pilihan) — screenshot WhatsApp / slip bank<input class="inp" type="file" accept="image/*,application/pdf" data-in="sahBukti" style="padding-top:10px"></label>'+(S.tx.sahBuktiNama?'<span class="sub" style="font-size:12px">Dilampirkan: '+esc(S.tx.sahBuktiNama)+'</span>':'')+'<div class="row"><button class="btn p" data-act="sahkan" data-id="'+esc(r.id)+'">Sahkan &amp; jana baucar</button><button class="btn" data-act="sahBatal">Batal</button></div></div>':'<button class="btn sm" style="align-self:flex-start" data-act="sahBuka" data-id="'+esc(r.id)+'">Sahkan tanpa resit (Pengurus Utama)</button>'):'')
@@ -1181,7 +1181,7 @@ function opexHtml(){
   // bajet ikut kategori
   h+='<div class="row" style="align-items:stretch"><section class="box" style="flex:2 1 340px"><div class="hd"><h2>Bajet ikut kategori</h2></div>'
    +d.rows.filter(r=>r.bajet||r.guna).map(r=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span>'+esc(r.k)+'</span><span style="white-space:nowrap"><b>'+rm(r.guna)+'</b>'+(r.bajet?' <span class="sub">/ '+rm(r.bajet)+'</span>':' <span class="sub">tiada bajet</span>')+'</span></div>'
-     +(r.bajet?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,r.pct)+'%;background:'+opexWarna(r.pct)+'"></i></div><span class="sub" style="font-size:12px;color:'+opexWarna(r.pct)+'">'+(r.pct>100?'Terlebih '+rm(r.guna-r.bajet)+' ⚠️':'Baki '+rm(r.bajet-r.guna)+' · '+r.pct+'%')+'</span>':'')+'</div>').join('')
+     +(r.bajet?'<div class="bar" style="height:8px"><i style="width:'+Math.min(100,r.pct)+'%;background:'+opexWarna(r.pct)+'"></i></div><span class="sub" style="font-size:12px;color:'+opexWarna(r.pct)+'">'+(r.pct>100?'Terlebih '+rm(r.guna-r.bajet):'Baki '+rm(r.bajet-r.guna)+' · '+r.pct+'%')+'</span>':'')+'</div>').join('')
    +(d.rows.some(r=>r.bajet||r.guna)?'':'<div class="li sub">Tiada belanja operasi bulan ini.</div>')+'</section>';
   // trend
   const mx=Math.max(1,d.jumBajet,...d.trend.map(t=>t.v));
@@ -1379,7 +1379,7 @@ function pbRowHtml(r,d){
   let h='<div class="pbr"><div class="pbh"><div class="pbd"><b>'+esc(tglTxt(r.tarikh))+'</b><span class="tag '+st[1]+'">'+st[0]+'</span></div><div class="pbk">'+esc(r.ket||'—')+'</div><b class="pba '+(masuk?'amt-in':'amt-out')+'">'+(masuk?'+':'−')+rm(r.jumlah)+'</b></div>';
   if(r.txi) h+='<div class="pbtx">↔ SAFINAH: '+esc(tglTxt(r.txi.tarikh))+' · '+esc(r.txi.kat)+' · '+esc(r.txi.ket)+(r.manual?' <button class="lkb" data-act="pbT" data-k="'+esc(r.kunci)+'" data-m="batal">batal</button>':'')+'</div>';
   if(r.status==='Abaikan') h+='<div class="pbtx">Sebab: '+esc(r.nota||'')+' <button class="lkb" data-act="pbT" data-k="'+esc(r.kunci)+'" data-m="batal">batal</button></div>';
-  if(r.status==='Belum'&&!F&&r.cadang) h+='<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:#F0FDF4;color:#14532D;font-size:13px;display:flex;flex-direction:column;gap:6px"><span>💡 Biasanya: <b>'+esc(pbCadTxt(r.cadang))+'</b> <span style="opacity:.8">(diingat dari '+r.cadang.n+'× rekod “'+esc(r.cadang.nama)+'”)</span></span><button class="btn sm g" style="align-self:flex-start" data-act="pbIkut" data-k="'+esc(r.kunci)+'">Rekod ikut cadangan</button></div>';
+  if(r.status==='Belum'&&!F&&r.cadang) h+='<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:#F0FDF4;color:#14532D;font-size:13px;display:flex;flex-direction:column;gap:6px"><span>'+ic35('x_lampu',16)+' Biasanya: <b>'+esc(pbCadTxt(r.cadang))+'</b> <span style="opacity:.8">(diingat dari '+r.cadang.n+'× rekod “'+esc(r.cadang.nama)+'”)</span></span><button class="btn sm g" style="align-self:flex-start" data-act="pbIkut" data-k="'+esc(r.kunci)+'">Rekod ikut cadangan</button></div>';
   if(r.status==='Belum'&&!F) h+='<div class="row" style="gap:6px;margin-top:8px"><button class="btn sm p" data-act="pbB" data-k="'+esc(r.kunci)+'" data-m="rekod">Rekod</button>'+((r.calon||[]).length?'<button class="btn sm" data-act="pbB" data-k="'+esc(r.kunci)+'" data-m="padan">Padankan ('+r.calon.length+')</button>':'')+'<button class="btn sm" data-act="pbB" data-k="'+esc(r.kunci)+'" data-m="abaikan">Abaikan</button></div>';
   if(F){ h+='<div class="tyf">';
     if(F.m==='rekod'){ const J=masuk?[['jualan','Jualan (tanpa butiran kitab)'],['masuk','Duit masuk lain'],['pindahan','Dari bank sendiri']]:[['keluar','Belanja / duit keluar'],['pindahan','Ke bank sendiri']];
@@ -1399,7 +1399,7 @@ function padanHtml(){
   let h='<div><h1>Padanan Bank</h1><div class="sub">Banding penyata Maybank (PDF bulanan atau fail Maybank2u mingguan) dengan SAFINAH — cari duit tercicir</div></div>';
   h+='<section class="box"><div class="li" style="flex-direction:column;align-items:stretch;gap:10px"><label class="btn p" style="cursor:pointer;align-self:flex-start">'+(P?'Pilih penyata lain':'Pilih fail bank (PDF / CSV / Excel)')+'<input type="file" accept="application/pdf,.pdf,.csv,.txt,.xlsx,.xls" data-in="pbFail" style="display:none"></label>'
    +(S.pb.kataPerlu?'<div class="row" style="gap:8px;align-items:flex-end"><label class="f" style="flex:1 1 200px">PDF ini berkata laluan<input class="inp" type="password" data-in="pbKata" value="'+esc(S.pb.kata||'')+'"></label><button class="btn" data-act="pbBuka">Buka</button></div>':'')
-   +'<div class="sub" style="font-size:12px;line-height:1.5">🔒 PDF dibaca dalam peranti ini sahaja dan tidak dimuat naik. Hanya tarikh, jumlah & keterangan ringkas dihantar ke Sheet tuan untuk dipadankan. Tiada apa disimpan kecuali baris yang tuan rekod, padankan atau abaikan.</div>'+(window.PB_CONTOH?'<button class="btn sm" data-act="pbContoh" style="align-self:flex-start">Cuba dengan penyata contoh (demo)</button>':'')+(window.PB_M2U?'<button class="btn sm" data-act="pbM2U" style="align-self:flex-start">Cuba fail Maybank2u contoh (demo)</button>':'')+'</div></section>';
+   +'<div class="sub" style="font-size:12px;line-height:1.5">'+ic35('x_kunci',14)+' PDF dibaca dalam peranti ini sahaja dan tidak dimuat naik. Hanya tarikh, jumlah & keterangan ringkas dihantar ke Sheet tuan untuk dipadankan. Tiada apa disimpan kecuali baris yang tuan rekod, padankan atau abaikan.</div>'+(window.PB_CONTOH?'<button class="btn sm" data-act="pbContoh" style="align-self:flex-start">Cuba dengan penyata contoh (demo)</button>':'')+(window.PB_M2U?'<button class="btn sm" data-act="pbM2U" style="align-self:flex-start">Cuba fail Maybank2u contoh (demo)</button>':'')+'</div></section>';
   if(!P) return h+'<div class="note n-n" style="font-size:13px"><b>Cara guna:</b><br>• <b>Setiap minggu:</b> Maybank2u (web) → akaun bisnes → sejarah transaksi → muat turun (CSV / Excel) → pilih di sini.<br>• <b>Setiap bulan (selepas 18hb):</b> penyata PDF rasmi bulan lepas sebagai semakan akhir.<br>Baris yang dah direkod minggu lepas akan dipadankan sendiri — tak perlu tanda dua kali.</div>';
   const S2=P.semak;
   if(P.tanpaBaki) h+='<div class="note n-n" style="font-size:13px"><b>✓ '+P.tx.length+' urus niaga dibaca</b> dari '+esc(P.fail||'fail')+' ('+esc(tglTxt(P.dari))+' – '+esc(tglTxt(P.hingga))+'). Fail ini tiada lajur baki, jadi semakan baki dilangkau — penyata PDF bulanan jadi semakan akhir.</div>'; else
@@ -1412,7 +1412,7 @@ function padanHtml(){
   h+='<div class="subtabs">'+ch.map(c=>'<button class="chip '+(f===c[0]?'on':'')+'" data-act="pbFil" data-v="'+c[0]+'">'+c[1]+' <span class="cnt">'+c[2]+'</span></button>').join('')+'</div>';
   if(f==='lebih') h+='<section class="box"><div class="li sub" style="font-size:13px">Rekod ini ada dalam SAFINAH tetapi tiada dalam penyata Maybank '+esc(tglTxt(d.mula))+' – '+esc(tglTxt(d.akhir))+'. Kemungkinan: rekod berganda, bank salah, atau tunai belum di-bank-in.</div>'+(d.lebih.length?d.lebih.map(x=>'<div class="pbr"><div class="pbh"><div class="pbd"><b>'+esc(tglTxt(x.tarikh))+'</b><span class="tag t-a">'+esc(x.kat)+'</span></div><div class="pbk">'+esc(x.ket)+'</div><b class="pba '+(x.arah==='+'?'amt-in':'amt-out')+'">'+(x.arah==='+'?'+':'−')+rm(x.jumlah)+'</b></div></div>').join('')+'<div class="li"><button class="btn sm" data-act="go" data-p="tunai">Semak di Aliran Tunai</button></div>':'<div class="li sub">Tiada. ✓</div>')+'</section>';
   else { const L=d.rows.filter(r=>f==='semua'||(f==='belum'&&r.status==='Belum')||(f==='padan'&&(r.status==='Padan'||r.status==='Direkod'))||(f==='abaikan'&&r.status==='Abaikan'));
-    const C=d.rows.filter(r=>r.status==='Belum'&&r.cadang); if(f==='belum'&&C.length) h+='<div class="note n-g" style="font-size:13px;display:flex;flex-direction:column;gap:8px"><span>💡 <b>'+C.length+' baris</b> dikenali dari rekod lepas (penerima sama). Semak cadangan, kemudian rekod sekali gus.</span><button class="btn sm p" style="align-self:flex-start" data-act="pbPukal">'+(S.pb.sure?'Tekan lagi: rekod '+C.length+' baris':'Rekod semua ikut cadangan')+'</button></div>';
+    const C=d.rows.filter(r=>r.status==='Belum'&&r.cadang); if(f==='belum'&&C.length) h+='<div class="note n-g" style="font-size:13px;display:flex;flex-direction:column;gap:8px"><span>'+ic35('x_lampu',16)+' <b>'+C.length+' baris</b> dikenali dari rekod lepas (penerima sama). Semak cadangan, kemudian rekod sekali gus.</span><button class="btn sm p" style="align-self:flex-start" data-act="pbPukal">'+(S.pb.sure?'Tekan lagi: rekod '+C.length+' baris':'Rekod semua ikut cadangan')+'</button></div>';
     h+='<section class="box">'+(L.length?L.slice(0,S.pb.lim||60).map(r=>pbRowHtml(r,d)).join('')+(L.length>(S.pb.lim||60)?'<button class="tgmore" data-act="pbLagi">Tunjuk lagi ↓</button>':''):'<div class="li sub">'+(f==='belum'?'Tiada duit tercicir. Semua urus niaga bank ada dalam SAFINAH ✓':'Tiada.')+'</div>')+'</section>'; }
   return h;
 }
@@ -1646,7 +1646,7 @@ function amaranHtml(d,aksi){
   const R=aksi.filter(a=>!ada||(a[0]!=='semak'&&a[1]!=='invois')).map(a=>arow(a[0],a[1],a[2],a[3],a[4]))
    .concat(ntAuto(d)).concat(t.L.filter(x=>!done[x[0]]).map(x=>arow(x[2]||'go',x[3]||'utama',esc(x[1]),'Buka','#B45309')))
    .concat(d.programSeterusnya&&!cdTunjuk(d.programSeterusnya)?[arow('go','kalendar','<span class="sub" style="font-size:12px">Program seterusnya</span><br>'+esc(d.programSeterusnya.nama),esc(tarikhJulat(d.programSeterusnya.mula,d.programSeterusnya.akhir)),'#064C7D')]:[]);
-  return '<section class="box"><div class="hd"><h2>Amaran</h2><span class="tag '+(R.length?'t-a':'t-g')+'">'+(R.length||'Tiada')+'</span></div>'+(R.length?(S.amSemua?R:R.slice(0,5)).join('')+(R.length>5?'<button class="tgmore" data-act="amSemua">'+(S.amSemua?'Sembunyi':'Lihat semua ('+R.length+')')+'</button>':''):'<div class="li sub">Tiada amaran. Ikut Rutin di atas ✓</div>')+'</section>'; }
+  return '<section class="box"><div class="hd"><h2>Amaran</h2><span class="tag '+(R.length?'t-a':'t-g')+'">'+(R.length||'Tiada')+'</span></div>'+(R.length?(S.amSemua?R:R.slice(0,3)).join('')+(R.length>3?'<button class="tgmore" data-act="amSemua">'+(S.amSemua?'Sembunyi':'Lihat semua ('+R.length+')')+'</button>':''):'<div class="li sub">Tiada amaran. Ikut Rutin di atas ✓</div>')+'</section>'; }
 function modulHtml(){ const m=(S.boot&&S.boot.modulMati)||[], E=S.mdE||(S.mdE=m.slice());
   return '<div><h1>Tetapan Modul</h1><div class="sub">Matikan bahagian yang bisnes tuan tidak guna — menu jadi lebih ringkas. Data tidak dipadam.</div></div>'
    +'<section class="box">'+MODUL.map(x=>{ const on=E.indexOf(x[0])<0; return '<label class="li" style="justify-content:space-between;gap:12px;cursor:pointer"><span style="flex:1;min-width:0"><b style="font-size:14px">'+esc(x[1])+'</b><span class="sub" style="display:block;font-size:12px">'+esc(x[2])+'</span></span><span class="tog '+(on?'on':'')+'"><input type="checkbox" data-in="mdT" data-k="'+x[0]+'" '+(on?'checked':'')+' aria-label="'+esc(x[1])+'"><i></i></span></label>'; }).join('')+'</section>'
@@ -1705,7 +1705,7 @@ function ringkasHtml(){
   // semak profit first
   const opexR=R.pelan.p[3], opexS=a.untungKitab>0?Math.round(a.belanja/a.untungKitab*100):null;
   const marR=R.pelan.margin, marS=a.jualan?Math.round(a.untungKitab/a.jualan*100):null;
-  const chk=(lbl,r,sv,ok,nota)=>'<div class="li chkr" style="justify-content:space-between;flex-wrap:nowrap;gap:10px"><span style="flex:1;min-width:0">'+lbl+'<div class="sub" style="font-size:12px">'+nota+'</div></span><span style="white-space:nowrap;text-align:right">rancang <b>'+r+'%</b> · sebenar <b style="color:'+(sv===null?'var(--mut)':(ok?'var(--g)':'var(--r)'))+'">'+(sv===null?'—':sv+'%')+'</b> '+(sv===null?'':(ok?'✓':'⚠️'))+'</span></div>';
+  const chk=(lbl,r,sv,ok,nota)=>'<div class="li chkr" style="justify-content:space-between;flex-wrap:nowrap;gap:10px"><span style="flex:1;min-width:0">'+lbl+'<div class="sub" style="font-size:12px">'+nota+'</div></span><span style="white-space:nowrap;text-align:right">rancang <b>'+r+'%</b> · sebenar <b style="color:'+(sv===null?'var(--mut)':(ok?'var(--g)':'var(--r)'))+'">'+(sv===null?'—':sv+'%')+'</b> '+(sv===null?'':(ok?'✓':'!'))+'</span></div>';
   h+='<section class="box"><div class="hd"><div><h2>Semak Profit First</h2><div class="sub">Adakah peratus dalam Pelan sesuai dengan apa yang berlaku?</div></div></div>'
    +chk('Belanja operasi',opexR,opexS,opexS!==null&&opexS<=opexR+2,'Kos bisnes ÷ untung dari kitab. Kalau melebihi, Hong Leong akan selalu tak cukup.')
    +chk('Untung dari kitab',marR,marS,marS!==null&&marS>=marR-2,'Untung kitab ÷ jualan. Kalau rendah, semak harga jual atau kos kitab.')
@@ -2261,7 +2261,7 @@ function wbBukaHtml(d){
     h+='<section class="card" style="gap:12px;border:2px solid #25D366"><span class="lbl">Seterusnya · '+(Object.keys(b.h).length+1)+' daripada '+b.senarai.length+'</span>'
      +'<div><b style="font-size:18px">'+esc(r[1]||'(tiada nama)')+'</b><div class="sub">'+esc(telTxt(r[0]))+(r[2]?' · pernah beli '+esc(r[2]):'')+'</div></div>'
      +'<div style="background:#DCF8C6;border-radius:10px 10px 2px 10px;padding:10px 12px;white-space:pre-wrap;font-size:14px;line-height:1.5">'+esc(m)+'</div>'
-     +'<button class="btn p" data-act="wbHantar" data-tel="'+esc(r[0])+'" data-i="'+i+'" style="background:#25D366;border-color:#25D366;font-size:17px;min-height:54px" '+(habis?'disabled':'')+'>📲 Buka WhatsApp &amp; hantar</button>'
+     +'<button class="btn p" data-act="wbHantar" data-tel="'+esc(r[0])+'" data-i="'+i+'" style="background:#25D366;border-color:#25D366;font-size:17px;min-height:54px" '+(habis?'disabled':'')+'>Buka WhatsApp &amp; hantar</button>'
      +'<span class="sub" style="font-size:12px;text-align:center">WhatsApp terbuka dengan mesej siap ditulis → tekan <b>Send</b> → kembali ke SAFINAH untuk orang seterusnya.</span>'
      +'<div class="row"><button class="btn" style="flex:1" data-act="wbLangkau" data-tel="'+esc(r[0])+'">Langkau</button><button class="btn" style="flex:1;color:var(--r)" data-act="wbStop" data-tel="'+esc(r[0])+'">'+(S.bs.stopC===r[0]?'Tekan lagi untuk sahkan':'Dia minta BERHENTI')+'</button></div></section>'; }
   const belum=b.senarai.filter(a=>!b.h[a[0]]), siap=b.senarai.filter(a=>b.h[a[0]]);
@@ -2342,7 +2342,7 @@ function stokHtml(){
    +'<div class="card"><span class="lbl">Nilai stok (modal)</span><span class="val" style="color:var(--b)">'+rm(nilai)+'</span><span class="sub" style="font-size:12px">'+(tiadaKos?'<b style="color:#B45309">'+tiadaKos+' judul tiada kos dalam Katalog</b>':'Ikut kos Katalog ✓')+'</span></div>'
    +'<div class="card" style="'+(beli.length?'background:#FFF7ED':'')+'"><span class="lbl">Perlu beli semula</span><span class="val" style="color:'+(beli.length?'#B45309':'var(--g)')+'">'+beli.length+' judul</span><span class="sub" style="font-size:12px">Laris tapi habis / hampir habis</span></div>'
    +'<div class="card"><span class="lbl">Stok mati</span><span class="val">'+rm(nMati)+'</span><span class="sub" style="font-size:12px">'+mati.length+' judul tiada jualan 6 bulan</span></div></div>';
-  h+='<div class="row noprint" role="tablist" style="gap:6px">'+[['beli','🔄 Perlu beli semula'],['mati','💤 Stok mati'],['semua','📚 Semua kitab'],['bidang','📊 Ikut bidang']].map(x=>'<button class="chip '+(T.tab===x[0]?'on':'')+'" data-act="stTab" data-v="'+x[0]+'" role="tab" aria-selected="'+(T.tab===x[0])+'">'+x[1]+'</button>').join('')+'</div>';
+  h+='<div class="row noprint" role="tablist" style="gap:6px">'+[['beli','Perlu beli semula'],['mati','Stok mati'],['semua','Semua kitab'],['bidang','Ikut bidang']].map(x=>'<button class="chip '+(T.tab===x[0]?'on':'')+'" data-act="stTab" data-v="'+x[0]+'" role="tab" aria-selected="'+(T.tab===x[0])+'">'+x[1]+'</button>').join('')+'</div>';
   if(T.tab==='beli') h+=stBeliHtml(beli,d);
   else if(T.tab==='mati') h+=stMatiHtml(mati,d);
   else if(T.tab==='bidang') h+=stBidangHtml(R,d);
@@ -3510,7 +3510,7 @@ const ACT_TP = {
 
 /* ---------- LAGI (menu telefon) ---------- */
 function lagiHtml(){
-  const items=[['po','Pre-order Musim','Tempahan Kaherah, senarai beli & bawa pulang'],['hajat','Senarai Hajat','Kitab tiada stok & pre-order'],['kalendar','Kalendar Program','Pameran, kuliah, target & kitab terjual'],['invois','Invois & Hutang','Pusat Zakat, Majlis Agama, sekolah & pondok'],['surat','Surat Rasmi','Permohonan booth, lantikan & lain-lain'],['gaji','Gaji & Slip Gaji','Kira gaji, bayar & slip PDF'],['pekerja','Data Pekerja','Profil, bank, caruman & dokumen'],['imp','Import Wasepme','Muat naik SalesReport'],['agihan','Agihan Profit First','Rentak 10hb & 25hb'],['katalog','Katalog Kitab','Kos, berat & harga jual']];
+  const items=[['po','Pre-order Musim','Tempahan Kaherah, senarai beli & bawa pulang'],['hajat','Senarai Hajat','Kitab tiada stok & pre-order'],['kalendar','Kalendar Program','Pameran, kuliah, target & kitab terjual'],['invois','Invois & Hutang','Pusat Zakat, Majlis Agama, sekolah & pondok'],['surat','Surat Rasmi','Permohonan booth, lantikan & lain-lain'],['gaji','Gaji & Slip Gaji','Kira gaji, bayar & slip PDF'],['pekerja','Data Pekerja','Profil, bank, caruman & dokumen'],['imp','Import Wasep.me','Muat naik SalesReport'],['agihan','Agihan Profit First','Rentak 10hb & 25hb'],['katalog','Katalog Kitab','Kos, berat & harga jual']];
   const ok=rolePages().map(p=>p[0]);
   return '<h1>Lagi</h1><div class="tiles" style="grid-template-columns:1fr">'+items.filter(x=>ok.indexOf(x[0])>-1).map(x=>'<button class="tile" style="flex-direction:row;justify-content:flex-start;align-items:center;text-align:left;gap:14px;min-height:72px" data-act="go" data-p="'+x[0]+'">'+ico(x[0],26)+'<span style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;flex:1;min-width:0"><b>'+x[1]+'</b><small>'+x[2]+'</small></span></button>').join('')+'</div>'
    +'<button class="btn" data-act="logout">Log keluar</button><div class="sub" style="text-align:center;font-size:12px">SAFINAH v'+APP_VERSI+' · by Hikmah Pendita Resources · 2026</div>';
@@ -4202,8 +4202,8 @@ function ukTunai(d){
   const T=C.tunai, st=ukStatus(T), P=(B&&B.pend)||{opex:0,gaji:0}, bocor=B&&B.jumlah>0;
   return '<section class="ukt '+st[2]+'"><div class="row between" style="gap:8px"><span class="klbl">Keadaan tunai bisnes</span><span class="tag '+st[1]+'">'+st[0]+'</span></div>'
    +'<div class="big" style="color:'+(T.mula<0?'var(--r)':'var(--dk)')+'">'+rm(T.mula)+'</div>'
-   +'<div class="ln"><i>📈</i><span>'+(T.merah?'<b style="color:var(--r)">Dijangka jatuh bawah RM0 pada minggu '+T.merah.w+' ('+esc(tglTxt(T.merah.tarikh))+').</b> Tangguh belanja besar atau kutip hutang dulu.':'Paling rendah dalam 13 minggu: <b>'+rm(T.rendah.baki)+'</b> (minggu '+T.rendah.w+')')+'</span></div>'
-   +'<div class="ln"><i>'+(bocor?'⚠️':'✅')+'</i><span>'+(bocor?'<b style="color:var(--r)">Kebocoran Maybank '+rm(B.jumlah)+'</b> — '+B.bil+' transaksi bukan stok/pos/agihan':'Tiada kebocoran Maybank bulan ini')+(P.opex||P.gaji?'<br><span class="sub">Pendahuluan belum dipotong: '+rm((P.opex||0)+(P.gaji||0))+'</span>':'')+'</span></div>'
+   +'<div class="ln"><i>'+ic35('x_trend',16)+'</i><span>'+(T.merah?'<b style="color:var(--r)">Dijangka jatuh bawah RM0 pada minggu '+T.merah.w+' ('+esc(tglTxt(T.merah.tarikh))+').</b> Tangguh belanja besar atau kutip hutang dulu.':'Paling rendah dalam 13 minggu: <b>'+rm(T.rendah.baki)+'</b> (minggu '+T.rendah.w+')')+'</span></div>'
+   +'<div class="ln"><i>'+(bocor?ic35('x_amaran',16,'var(--r)'):ic35('x_ok',16,'var(--g)'))+'</i><span>'+(bocor?'<b style="color:var(--r)">Kebocoran Maybank '+rm(B.jumlah)+'</b> — '+B.bil+' transaksi bukan stok/pos/agihan':'Tiada kebocoran Maybank bulan ini')+(P.opex||P.gaji?'<br><span class="sub">Pendahuluan belum dipotong: '+rm((P.opex||0)+(P.gaji||0))+'</span>':'')+'</span></div>'
    +'<div class="bpair" style="max-width:460px">'+(bocor?'<button class="btn sm" data-act="bocorLihat">Lihat kebocoran</button>':'<button class="btn sm" data-act="go" data-p="tunai">Aliran tunai</button>')+'<button class="btn sm" data-act="ukGraf">'+(S.ukG?'Tutup ramalan':'Ramalan tunai')+'</button></div>'
    +(S.ukG?'<div style="border-top:1px solid var(--line);padding-top:10px">'+ukGrafIsi(T)+'</div>':'')+'</section>';
 }
@@ -4242,12 +4242,501 @@ function utamaOwner1(){
    +bk.map(k=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between"><span><b style="font-size:14px">'+esc(k)+'</b> <span class="sub" style="font-size:12px">· '+esc(BANK_PERANAN[k]||'')+'</span></span><b>'+rm(d.baki[k])+'</b></div><div class="bar" style="height:5px"><i style="width:'+Math.round(Math.max(0,d.baki[k])/bmax*100)+'%"></i></div></div>').join('')+'</section>'
    +bankinCard(d);
 }
-Object.assign(ACT, ACT_34, ACT_PO, ACT_NT, ACT13, ACT_SR, ACT_RS, ACT_HJ, ACT_BL, ACT_TT, ACT_TP, ACT_ST, ACT_WA, ACT_DR, ACT_DG, ACT_PM);
+
+/* ---------- v3.5 REKOD MUDAH · MODE EVENT · ORIENTASI STAF · MODE LATIHAN ---------- */
+const UX35_CSS='.ux-big{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-height:78px;font:inherit;color:inherit;cursor:pointer}'
+ +'.ux-big:hover{border-color:var(--b)}.ux-big .em{flex:none;width:48px;height:48px;border-radius:12px;background:var(--bs);display:flex;align-items:center;justify-content:center;font-size:24px}'
+ +'.ux-big b{display:block;font-size:16px}.ux-big small{display:block;color:var(--mut);font-size:13px;line-height:1.4}.ux-big .ar{margin-left:auto;color:var(--mut);font-size:22px}'
+ +'.ux-g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}@media (min-width:700px){.ux-g2{grid-template-columns:repeat(3,minmax(0,1fr))}}'
+ +'.ux-jt{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:6px;min-height:96px;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;font:inherit;color:inherit;text-align:left;cursor:pointer;min-width:0}'
+ +'.ux-jt .em{font-size:24px;line-height:1}.ux-jt b{font-size:14px;line-height:1.3}.ux-jt small{font-size:12px;color:var(--mut);line-height:1.35}.ux-jt.on{border-color:var(--b);background:var(--bs)}'
+ +'.pot{display:flex;gap:12px;align-items:stretch;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;text-align:left;font:inherit;color:inherit;width:100%}'
+ +'.pot i{flex:none;width:8px;border-radius:6px}.pot b{display:block;font-size:14px}.pot small{display:block;color:var(--mut);font-size:12.5px;line-height:1.45}'
+ +'button.pot{cursor:pointer;border-width:2px}button.pot.on{border-color:var(--b);background:var(--bs)}'
+ +'.ux-flow{display:flex;align-items:center;gap:8px}.ux-flow .pot{flex:1;min-width:0}.ux-flow>span{flex:none;font-size:20px;color:var(--mut)}'
+ +'.ux-ev{border:2px solid var(--b);border-radius:16px;overflow:hidden;background:#fff}.ux-evh{background:var(--b);color:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:2px}'
+ +'.ux-evh small{opacity:.85;font-size:12px;letter-spacing:.4px;text-transform:uppercase;font-weight:600}.ux-evh b{font-size:17px;line-height:1.3}.ux-evh span{font-size:13px;opacity:.9}'
+ +'.ux-evb{padding:14px 16px;display:flex;flex-direction:column;gap:12px}.ux-evn{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.ux-evn b{font-size:22px;white-space:nowrap}'
+ +'.ux-q{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ux-q button{min-height:56px;border:1px solid var(--line);border-radius:12px;background:var(--soft);font:600 13.5px/1.3 inherit;color:var(--ink);cursor:pointer;padding:8px 10px;display:flex;align-items:center;gap:8px;text-align:left}'
+ +'.ux-q button .em{font-size:20px;flex:none}.ux-q button:last-child:nth-child(odd){grid-column:1/-1}@media (min-width:900px){.ux-q{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}.ux-q button:last-child:nth-child(odd){grid-column:auto}}'
+ +'.ux-ck{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 2px;border:0;border-top:1px solid var(--line);background:none;font:inherit;font-size:14px;text-align:left;cursor:pointer;color:inherit}'
+ +'.ux-ck .bx{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid #CBD5E1;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;font-weight:700}'
+ +'.ux-ck.ok .bx{background:var(--g);border-color:var(--g)}.ux-ck.ok .t{color:var(--mut);text-decoration:line-through}.ux-ck .t{flex:1;min-width:0}.ux-ck .t small{display:block;color:var(--mut);font-size:12px;text-decoration:none}'
+ +'.ux-bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden}.ux-bar i{display:block;height:100%;background:var(--g)}'
+ +'.ux-latih{position:sticky;top:0;z-index:30;background:#6D28D9;color:#fff;border-radius:12px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:600;margin-bottom:4px}'
+ +'.ux-latih button{flex:none;background:#fff;color:#6D28D9;border:0;border-radius:8px;padding:0 12px;min-height:36px;font:600 13px inherit;cursor:pointer}'
+ +'.ux-ov{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:80}'
+ +'.ux-sh{position:fixed;left:0;right:0;bottom:0;z-index:81;max-height:88vh;overflow:auto;background:#fff;border-radius:18px 18px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;box-shadow:0 -8px 30px rgba(0,0,0,.15)}'
+ +'.ux-sh h2{margin:0}@media (min-width:900px){.ux-sh{left:50%;right:auto;width:560px;transform:translateX(-50%);bottom:auto;top:7vh;border-radius:18px;max-height:84vh}}'
+ +'.ux-sum{border:1px solid var(--line);border-radius:12px;overflow:hidden}.ux-sum div{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-size:14px}.ux-sum div:first-child{border-top:0}.ux-sum span{color:var(--mut)}.ux-sum b{text-align:right}'
+ +'.ux-fold{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}.ux-fold>summary{list-style:none;display:flex;align-items:center;gap:10px;min-height:54px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:15px}'
+ +'.ux-fold>summary::-webkit-details-marker{display:none}.ux-fold>summary .m{margin-left:auto;color:var(--mut);font-weight:400;font-size:13px;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}'
+ +'.ux-fold>summary:after{content:"›";color:var(--mut);font-size:20px;transition:transform .15s}.ux-fold[open]>summary:after{transform:rotate(90deg)}'
+ +'.ux-fold>.fb{padding:0 10px 10px;display:flex;flex-direction:column;gap:10px}.ux-fold>.fb>section:first-child>.hd h2{display:none}'
+ +'.ux-folds{display:flex;flex-direction:column;gap:8px}.ux-hh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}.ux-hh h1{margin:0;font-size:22px}'
+ +'.ux-sopd>summary{list-style:none;display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-weight:600;font-size:14px}.ux-sopd>summary::-webkit-details-marker{display:none}.ux-sopd>summary .tag{margin-left:auto}'
+ +'.ic35{display:inline-flex;align-items:center;justify-content:center;color:var(--b);flex:none;vertical-align:-4px}.ux-jt .ic35{width:40px;height:40px;border-radius:10px;background:var(--bs)}.ux-q .ic35{width:32px;height:32px;border-radius:8px;background:#fff}.ux-fold>summary .ic35{width:30px;height:30px;border-radius:8px;background:var(--bs)}.ux-latih .ic35{color:#fff}.mhi{flex:none;width:48px;height:48px;border-radius:12px;background:var(--bs);color:var(--b);display:flex;align-items:center;justify-content:center}'
+ +'.ux-lnk{background:none;border:0;padding:6px 0;min-height:40px;color:var(--b);font:600 14px inherit;cursor:pointer;text-align:left}';
+const IC35={
+ x_makan:'<path d="M7 3v8a2 2 0 0 0 2 2v8"/><path d="M5 3v6M9 3v6"/><path d="M17 21V3c-2 1-3 3.5-3 7h3"/>',
+ x_sewa:'<path d="M4 10v10h16V10"/><path d="M2 10l2-6h16l2 6z"/><path d="M10 20v-5h4v5"/>',
+ x_minyak:'<path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 21h12"/><path d="M4 10h10"/><path d="M14 8h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V9l-3-3"/>',
+ x_elaun:'<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="m16 11 2 2 4-4"/>',
+ x_kurier:'<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+ x_iklan:'<path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+ x_bil:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+ x_alat:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5z"/>',
+ x_kitab:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
+ x_resit:'<path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+ x_bayar:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M15 15h3"/>',
+ x_terima:'<path d="M20 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h15V9H6"/><circle cx="16" cy="15" r="1.3"/>',
+ x_bank:'<path d="M3 21h18"/><path d="M5 21V10M9.5 21V10M14.5 21V10M19 21V10"/><path d="M2 10 12 3l10 7z"/>',
+ x_laci:'<circle cx="9" cy="9" r="6"/><path d="M15.5 9.5a6 6 0 1 1-6 6"/>',
+ x_semak:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h4"/>',
+ x_muat:'<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/>',
+ x_bulan:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ x_nota:'<path d="M4 4h16v10l-6 6H4z"/><path d="M14 20v-6h6"/>',
+ x_rutin:'<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>',
+ x_tarikh:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+ x_piala:'<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
+ x_muh:'<rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 2h6v4H9z"/><path d="m9 14 2 2 4-4"/>',
+ x_inst:'<path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/>',
+ x_modal:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/>',
+ x_pulang:'<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',
+ x_tambah:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+ x_lampu:'<path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V16h8v-1.3A7 7 0 0 0 12 2z"/>',
+ x_latih:'<path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+ x_panduan:'<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>',
+ x_bendera:'<path d="M4 22V4"/><path d="M4 4h13l-2 4 2 4H4"/>',
+ x_ok:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+ x_sasar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+ x_trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>',
+ x_amaran:'<path d="M12 3 2 20h20z"/><path d="M12 9v5M12 17h.01"/>',
+ x_kunci:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'
+};
+Object.assign(ICON,IC35);
+function ic35(k,s,warna){ return '<span class="ic35" aria-hidden="true"'+(warna?' style="color:'+warna+'"':'')+'>'+ico(k,s||20)+'</span>'; }
+const POT35={
+  'Maybank':['#F5B301','Duit stok','Semua jualan masuk sini. Keluar hanya untuk beli kitab, kargo, pos & refund.'],
+  'Hong Leong':['#1E3A8A','Belanja operasi','Sewa, minyak, makan, upah staf, bil, cetak & iklan.'],
+  'OCBC':['#DC2626','Profit & Cukai','Simpanan untung dan cukai. Jangan guna untuk belanja.'],
+  'Bank Islam':['#7C2D6B','Gaji pemilik','Gaji Pengurus Utama ikut Profit First.'],
+  'Tunai':['#15803D','Duit laci','Tunai di kedai / event. Bank-in ke Maybank setiap 2–3 hari.']
+};
+function pot35(b,act,on){ const p=POT35[b]||['#64748B',b,'']; const tag=act?'button':'div';
+  return '<'+tag+' class="pot'+(on?' on':'')+'"'+(act?' '+act:'')+'><i style="background:'+p[0]+'"></i><span style="min-width:0"><b>'+esc(b)+' · '+esc(p[1])+'</b><small>'+esc(p[2])+'</small></span></'+tag+'>'; }
+/* jenis bayaran: [kunci, emoji, label, kategori, bank, contoh, kategori laci, prefix?] */
+const JB35=[
+  ['makan','x_makan','Makan & minum','Lain-lain (keluar)','Hong Leong','cth: makan tengah hari 3 staf','Makan & minum',1],
+  ['sewa','x_sewa','Sewa booth / tapak','Sewa gerai / event','Hong Leong','cth: sewa booth PBAKL','Lain-lain',0],
+  ['minyak','x_minyak','Minyak, tol & parking','Kenderaan & minyak','Hong Leong','cth: minyak ke Kota Bharu','Parking & tol',0],
+  ['elaun','x_elaun','Upah / elaun part-timer','Gaji staf','Hong Leong','cth: upah Ali 2 hari event','Elaun part-timer',0],
+  ['kurier','x_kurier','Pos & kurier','Pos & kurier (EasyParcel)','Maybank','cth: EasyParcel 12 parcel','Lain-lain',0],
+  ['iklan','x_iklan','Cetak & iklan','Iklan & promosi','Hong Leong','cth: cetak banner 2 keping','Lain-lain',0],
+  ['bil','x_bil','Bil elektrik, air, internet','Bil elektrik, air, internet','Hong Leong','cth: bil Unifi November','Lain-lain',0],
+  ['alat','x_alat','Peralatan / rak / beg','Beli aset / peralatan','Hong Leong','cth: rak lipat 2 unit','Plastik & alat booth',0],
+  ['kitab','x_kitab','Beli kitab / kargo','Beli kitab / kargo Mesir','Maybank','cth: bayar pembawa kilo','Lain-lain',0],
+  ['lain','x_resit','Lain-lain','Lain-lain (keluar)','Hong Leong','cth: beg plastik & pita','Lain-lain',0]
+];
+const JT35=[
+  ['depo','x_resit','Deposit / pre-order','Deposit / pre-order','Pelanggan bayar dahulu (dikira jualan)','cth: deposit PO Ustaz Ahmad'],
+  ['inst','x_inst','Bayaran institusi','Bayaran invois institusi','Pusat Zakat, Majlis Agama, sekolah','cth: bayaran INV-012'],
+  ['modal','x_modal','Modal pemilik / pinjaman','Modal pemilik','Bukan jualan — duit tuan / pinjaman','cth: pinjaman keluarga RM2,200'],
+  ['pulang','x_pulang','Pulangan duit','Pulangan duit','Refund dari pembekal / kurier','cth: refund EasyParcel'],
+  ['lain','x_tambah','Lain-lain','Lain-lain (masuk)','Duit masuk lain','cth: hibah bank']
+];
+const LATIH_OK35=['api_login','api_dashboard','api_listTx','api_previewImport','api_agihanInfo','api_katalog','api_laporan','api_pekerja','api_gaji','api_prepareGaji','api_kalendar','api_invois','api_surat','api_hajat','api_beli','api_templat','api_cukai','api_stok','api_ringkasan','api_opex','api_pelanggan','api_pelangganDetail','api_analisis','api_padanBank','api_po','api_poLog','api_nota','api_diri','api_diriGaleri','api_diriThumbs','api_diriGambar','api_pulangModal','api_blastSegmen','api_muhasabah'];
+function ls35(k,v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem('safinah:ux:'+k)||'null'); localStorage.setItem('safinah:ux:'+k,JSON.stringify(v)); }catch(e){ return null; } }
+S.latih=!!ls35('latih'); S.ux={sheet:null,fold:{}};
+document.addEventListener('toggle',e=>{ const t=e.target; if(t&&t.dataset&&t.dataset.fold){ S.ux.fold[t.dataset.fold]=t.open; } },true);
+function evKini35(){ const t=(S.boot&&S.boot.today)||'', L=(S.boot&&S.boot.program)||[]; return L.find(p=>p.mula<=t&&p.akhir>=t)||null; }
+function hariKe35(p){ const a=new Date(p.mula+'T00:00:00'), b=new Date(p.akhir+'T00:00:00'), t=new Date(((S.boot&&S.boot.today)||p.mula)+'T00:00:00'); return [Math.round((t-a)/864e5)+1, Math.round((b-a)/864e5)+1]; }
+function laciOk35(){ return !!S.user&&S.user.role!=='staf'; }
+function bolehP35(p){ return rolePages().some(x=>x[0]===p); }
+
+/* ---- Rekod mudah ---- */
+function mBaru35(m){ return {m:m||'pilih', j:'', jumlah:'', ket:'', laci:false, bank:'', prog:'', resit:null, resitName:'', tarikh:(S.boot&&S.boot.today)||'', done:null, tried:false, tukar:false}; }
+function mBuka35(m,laci){ S.M=mBaru35(m); const ev=evKini35(); if(m==='bayar'&&ev){ S.M.prog=ev.id; if(laci) S.M.laci=true; } S.Rpenuh=false; if(S.page!=='rekod'){ go('rekod'); } else rp(); }
+function rekodSegar35(R){ return !R||(!R.done&&R.tab==='jualan'&&R.step===1&&!R.program&&!Object.keys(R.items||{}).some(k=>R.items[k]>0)); }
+function mJenis35(){ const M=S.M; return M.m==='terima'?JT35.find(x=>x[0]===M.j):JB35.find(x=>x[0]===M.j); }
+function mudahHtml(){
+  const M=S.M, own=isOwner(), ev=evKini35();
+  let h='<style>'+UX35_CSS+'</style>';
+  if(M.done){
+    const d=M.done;
+    h+='<div><h1>'+(d.latihan?'Latihan berjaya':'Disimpan ✓')+'</h1><div class="sub">'+(d.latihan?'Inilah yang <b>akan</b> direkod. Dalam Mode Latihan, tiada apa disimpan.':'Rekod dah masuk ke SAFINAH.')+'</div></div>'
+     +'<div class="ux-sum">'+d.rows.map(r=>'<div><span>'+esc(r[0])+'</span><b>'+r[1]+'</b></div>').join('')+'</div>'
+     +(d.bendera?'<div class="note n-y">Perlu disemak: '+esc(d.bendera)+'</div>':'')+(d.offline?'<div class="note n-y">Tiada internet — rekod disimpan dalam telefon dan dihantar sendiri bila internet ada.</div>':'')
+     +'<div class="bpair"><button class="btn p" data-act="mLagi">Rekod lagi</button><button class="btn" data-act="go" data-p="utama">Ke Utama</button></div>';
+    return h;
+  }
+  if(M.m==='pilih'){
+    const C=[['mJual','','x_kitab','Saya jual kitab','Jualan yang tiada dalam Wasep.me'],['mPilih','bayar','x_bayar','Saya bayar sesuatu','Sewa, makan, minyak, upah, kurier…']];
+    if(own){ C.push(['mPilih','terima','x_terima','Saya terima duit','Deposit, modal, bayaran institusi']); C.push(['mPilih','bankin','x_bank','Saya bank-in tunai','Duit laci → Maybank']); }
+    h+='<div><h1>Apa yang berlaku?</h1><div class="sub">Pilih satu. SAFINAH akan pilih akaun bank yang betul untuk tuan.</div></div>'
+     +C.map(c=>'<button class="ux-big" data-act="'+c[0]+'"'+(c[1]?' data-v="'+c[1]+'"':'')+'><span class="em">'+ico(c[2],24)+'</span><span style="min-width:0"><b>'+c[3]+'</b><small>'+c[4]+'</small></span><span class="ar" aria-hidden="true">›</span></button>').join('')
+     +'<div class="row between" style="gap:8px"><button class="ux-lnk" data-act="uxSheet" data-v="pot">'+ic35('x_panduan',18)+' Kenali 5 akaun duit</button><button class="ux-lnk" data-act="mPenuh">Guna borang penuh ›</button></div>';
+    return h;
+  }
+  const back='<button class="ux-lnk" data-act="mBalik">‹ Kembali</button>';
+  if(M.m==='bankin'){
+    h+=back+'<div><h1>Bank-in tunai</h1><div class="sub">Rekod <b>selepas</b> duit betul-betul masuk ke Maybank.</div></div>'
+     +'<div class="ux-flow">'+pot35('Tunai')+'<span aria-hidden="true">→</span>'+pot35('Maybank')+'</div>'
+     +mJumlah35()+'<label class="f">Tarikh<input class="inp" type="date" data-in="mIn" data-k="tarikh" value="'+esc(M.tarikh)+'"></label>'+mBtn35('Simpan bank-in');
+    return h;
+  }
+  const L=M.m==='terima'?JT35:JB35.filter(j=>j[0]!=='kitab'||S.user.role!=='staf');
+  if(!M.j){
+    h+=back+'<div><h1>'+(M.m==='terima'?'Duit apa yang masuk?':'Bayar untuk apa?')+'</h1></div>'
+     +'<div class="ux-g2">'+L.map(j=>'<button class="ux-jt" data-act="mJ" data-v="'+j[0]+'">'+ic35(j[1],22)+'<b>'+esc(j[2])+'</b>'+(M.m==='terima'?'<small>'+esc(j[4])+'</small>':'')+'</button>').join('')+'</div>';
+    return h;
+  }
+  const j=mJenis35();
+  h+=back+'<div class="row" style="gap:10px;flex-wrap:nowrap"><span class="mhi">'+ico(j[1],26)+'</span><div style="min-width:0"><h1 style="margin:0">'+esc(j[2])+'</h1><div class="sub">'+(M.m==='terima'?'Duit masuk':'Duit keluar')+'</div></div></div>';
+  if(M.m==='terima'&&j[0]==='inst') h+='<div class="note n-n">Kalau ada invois dalam SAFINAH, lebih baik rekod di <b>Invois → Rekod bayaran</b> supaya baki hutang institusi dikemas kini. <button class="ux-lnk" data-act="go" data-p="invois">Buka Invois ›</button></div>';
+  if(M.m==='terima'&&j[0]==='modal') h+='<div class="note n-y">Ini <b>bukan jualan</b> — tidak dibahagi dalam agihan Profit First.</div>';
+  h+=mJumlah35();
+  if(M.m==='bayar'){
+    const bank=M.bank||j[4];
+    h+='<div class="f" style="gap:8px"><b style="font-size:14px">Bayar guna apa?</b>';
+    if(ev&&laciOk35()) h+='<button class="pot'+(M.laci?' on':'')+'" data-act="mLaci" data-v="1"><i style="background:'+POT35.Tunai[0]+'"></i><span><b>Duit laci event</b><small>Tunai dari laci '+esc(ev.nama)+'</small></span></button>'
+      +'<button class="pot'+(!M.laci?' on':'')+'" data-act="mLaci" data-v="0"><i style="background:'+(POT35[bank]||[''])[0]+'"></i><span><b>'+esc(bank)+' · '+esc((POT35[bank]||['',''])[1])+'</b><small>'+(bank===j[4]?'Dicadangkan ikut Profit First':'Dipilih sendiri')+'</small></span></button>';
+    else h+=pot35(bank,'',true); if(!laciOk35()) M.laci=false;
+    if(!M.laci){
+      if(!M.tukar) h+='<button class="ux-lnk" data-act="mTukar">Dah bayar guna bank lain?</button>';
+      else { const B=(S.boot.banks||[]).filter(b=>b!=='Tunai'||!ev);
+        h+='<div class="row" style="gap:6px">'+B.map(b=>'<button class="chip'+(bank===b?' on':'')+'" data-act="mBank" data-v="'+esc(b)+'">'+esc(b)+'</button>').join('')+'</div>'
+          +(bank!==j[4]?'<div class="note n-y" style="font-size:13px">Sepatutnya dari <b>'+esc(j[4])+'</b>. Rekod tetap disimpan dan ditanda "Bank salah" supaya tuan boleh betulkan kemudian.</div>':''); }
+    }
+    h+='</div>';
+    if(ev) h+=(M.prog?'<div class="note n-n row between" style="font-size:13px;gap:8px"><span>Kos ini untuk event <b>'+esc(ev.nama)+'</b> ✓</span>'+(M.laci?'':'<button class="ux-lnk" data-act="mProg" data-v="">Bukan untuk event</button>')+'</div>'
+      :'<button class="ux-lnk" data-act="mProg" data-v="'+esc(ev.id)+'">+ Kira sebagai kos event '+esc(ev.nama)+'</button>');
+  } else h+='<div class="f" style="gap:8px"><b style="font-size:14px">Masuk ke</b>'+pot35('Maybank','',true)+'</div>';
+  h+='<label class="f">Tarikh<input class="inp" type="date" data-in="mIn" data-k="tarikh" value="'+esc(M.tarikh)+'"></label>'
+   +'<label class="f">Catatan <span class="sub" style="font-weight:400">(tidak wajib)</span><input class="inp" data-in="mIn" data-k="ket" value="'+esc(M.ket)+'" placeholder="'+esc(j[5])+'"></label>'
+   +(M.laci?'':'<label class="f">'+(M.m==='bayar'?'Snap resit':'Bukti bayaran')+' <span class="sub" style="font-weight:400">(tanpa resit, rekod ditanda "perlu semak")</span><input class="inp" type="file" accept="image/*,application/pdf" capture="environment" data-in="mResit" style="padding-top:10px"></label>'+(M.resitName?'<div class="sub">✓ '+esc(M.resitName)+'</div>':''))
+   +mBtn35('Simpan');
+  return h;
+}
+function mJumlah35(){ const M=S.M; return '<label class="f">Berapa?<input class="inp" type="number" inputmode="decimal" step="0.01" placeholder="RM 0.00" data-in="mIn" data-k="jumlah" value="'+esc(M.jumlah)+'" style="min-height:64px;font-size:28px;font-weight:700"></label>'; }
+function mBtn35(t){ const M=S.M; return (M.tried&&!(Number(M.jumlah)>0)?'<div class="note n-y">Isi jumlah dahulu.</div>':'')+'<button class="btn '+(M.m==='bayar'?'r':'g')+'" style="min-height:52px" data-act="mSimpan">'+(S.latih?t+' (latihan)':t)+'</button>'; }
+async function mSimpan35(){
+  const M=S.M, ev=evKini35(), jml=Number(M.jumlah);
+  if(!(jml>0)){ M.tried=true; rp(); return; }
+  const j=M.m==='bankin'?null:mJenis35();
+  const rows=[], cid='C'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  let fn='api_saveTx', args=null, rec=null;
+  if(M.m==='bankin'){ rec={jenis:'pindahan',jumlah:jml,bank:'Tunai',bankKe:'Maybank',kategori:'Bank-in tunai',tarikh:M.tarikh,cid}; rows.push(['Jenis','Bank-in tunai'],['Jumlah',rm(jml)],['Dari → Ke','Tunai → Maybank']); }
+  else if(M.m==='terima'){ rec={jenis:'masuk',tarikh:M.tarikh,jumlah:jml,kategori:j[3],bank:'Maybank',keterangan:M.ket||j[2],resit:M.resit,cid}; rows.push(['Jenis',esc(j[2])],['Jumlah',rm(jml)],['Masuk ke','Maybank · Duit stok']); }
+  else if(M.laci&&ev&&laciOk35()){ fn='api_belanjaLaci'; const sama=j[6]===j[2]; args=[ev.id,{tarikh:M.tarikh,jumlah:jml,kat:j[6],ket:(sama?'':j[2])+(M.ket?(sama?'':': ')+M.ket:'')},String(M.tarikh).slice(0,7)]; rows.push(['Untuk',esc(j[2])],['Jumlah',rm(jml)],['Dibayar guna','Duit laci event'],['Event',esc(ev.nama)]); }
+  else { const bank=M.bank||j[4]; rec={jenis:'keluar',tarikh:M.tarikh,jumlah:jml,kategori:j[3],bank:bank,keterangan:(j[7]?j[2]+(M.ket?' — '+M.ket:''):(M.ket||j[2])),resit:M.resit,cid}; if(M.prog) rec.program=M.prog;
+    rows.push(['Untuk',esc(j[2])],['Jumlah',rm(jml)],['Dibayar dari',esc(bank)+' · '+esc((POT35[bank]||['',''])[1])]); if(M.prog&&ev) rows.push(['Event',esc(ev.nama)]); }
+  if(S.latih){ M.done={latihan:true,rows}; or35Tanda('latih'); rp(); return; }
+  busy(true);
+  try{ const d=fn==='api_saveTx'?await call(fn,S.pin,rec):await call(fn,S.pin,...args); if(fn==='api_belanjaLaci'&&typeof setKal==='function'){ try{ setKal(d); }catch(e){} }
+    M.done={rows,bendera:fn==='api_saveTx'?(d&&d.bendera)||'':''}; or35Tanda('rekod'); }
+  catch(e){
+    if(rec&&isNet(e)){ S.outbox.push(rec); if(saveOutbox()) M.done={rows,offline:true}; else { S.outbox.pop(); toast('Tiada internet, dan telefon tak dapat simpan rekod ini. Cuba lagi.'); } }
+    else toast(e.message);
+  } finally{ busy(false); }
+  rp();
+}
+
+/* ---- Mode Event (kokpit di Utama semasa event berjalan) ---- */
+const SOP35=[['pos','Habiskan semua jualan di Wasep.me POS','Pastikan tiada pesanan tertinggal'],['laci','Kira duit laci','Semua tunai fizikal termasuk duit tukar'],['imp','Import Sales Report Wasep.me','Jualan → Import Wasep.me'],['qr','Semak jumlah QR di Maybank','Bandingkan dengan semakan malam'],['sampul','Simpan duit tukar, sampulkan baki','Bank-in setiap 2–3 hari']];
+function evKokpit35(){
+  const ev=evKini35(); if(!ev) return '';
+  const hk=hariKe35(ev), own=isOwner(), d=S.data.dash||{}, today=(S.boot&&S.boot.today)||'', key='sop:'+ev.id+':'+today, T=ls35(key)||{};
+  const jHari=own&&d.harian&&today?d.harian[Number(today.slice(8,10))-1]:null, n=SOP35.filter(s=>T[s[0]]).length;
+  const Q=laciOk35()?[['mBukaLaci','','x_laci','Belanja duit laci']]:[];
+  if(bolehP35('imp')) Q.push(['go','imp','x_muat','Import Wasep.me']);
+  if(bolehP35('kalendar')) Q.push(['go','kalendar','x_semak','Semakan duit malam']);
+  if(own) Q.push(['bankin','','x_bank','Bank-in tunai']); else Q.push(['mBukaBayar','','x_bayar','Rekod bayaran']);
+  return '<style>'+UX35_CSS+'</style><section class="ux-ev"><div class="ux-evh"><small>Mode Event · Hari '+hk[0]+' daripada '+hk[1]+'</small><b>'+esc(ev.nama)+'</b><span>'+esc(tarikhJulat(ev.mula,ev.akhir))+'</span></div><div class="ux-evb">'
+   +(jHari!=null?'<div class="ux-evn"><span class="sub">Jualan hari ini (setakat diimport)</span><b>'+rm(jHari)+'</b></div>':'')
+   +'<div class="ux-q">'+Q.map(q=>'<button data-act="'+q[0]+'"'+(q[1]?' data-p="'+q[1]+'"':'')+'>'+ic35(q[2],18)+'<span>'+q[3]+'</span></button>').join('')+'</div>'
+   +'<details class="ux-sopd" data-fold="sop"'+(S.ux.fold&&S.ux.fold.sop?' open':'')+'><summary>'+ic35('x_bulan',18)+'SOP tutup kedai malam ini<span class="tag '+(n===SOP35.length?'t-g':'t-n')+'">'+n+'/'+SOP35.length+'</span></summary><div class="ux-bar" style="margin-bottom:4px"><i style="width:'+Math.round(n/SOP35.length*100)+'%"></i></div>'
+   +SOP35.map(s=>'<button class="ux-ck'+(T[s[0]]?' ok':'')+'" data-act="sopT" data-k="'+s[0]+'"><span class="bx">'+(T[s[0]]?'✓':'')+'</span><span class="t">'+esc(s[1])+'<small>'+esc(s[2])+'</small></span></button>').join('')+'</details>'
+   +'</div></section>';
+}
+
+/* ---- Orientasi staf baru + Mode Latihan ---- */
+const OR35=[['pot','Kenali 5 akaun duit SAFINAH','Ketik untuk baca (1 minit)'],['latih','Cuba satu rekod dalam Mode Latihan','Tiada apa disimpan — bebas mencuba'],['rekod','Buat rekod pertama sebenar','Rekod → "Saya bayar sesuatu"'],['nota','Baca Nota Kerja di Utama','Pesanan dari Pengurus Utama'],['sop','Faham SOP tutup kedai malam event','Ketik untuk baca']];
+function or35Key(){ return 'or:'+(S.user?S.user.role+':'+S.user.name:''); }
+function or35Tanda(k){ const o=ls35(or35Key())||{}; if(!o[k]){ o[k]=1; ls35(or35Key(),o); } }
+function or35List(){ const o=ls35(or35Key())||{}, n=OR35.filter(x=>o[x[0]]).length;
+  return '<div class="row between"><b style="font-size:14px">'+n+' daripada '+OR35.length+' selesai</b>'+(n===OR35.length?'<span class="tag t-g">Tahniah ✓</span>':'')+'</div><div class="ux-bar"><i style="width:'+Math.round(n/OR35.length*100)+'%"></i></div>'
+   +'<div>'+OR35.map(x=>'<button class="ux-ck'+(o[x[0]]?' ok':'')+'" data-act="orT" data-k="'+x[0]+'"><span class="bx">'+(o[x[0]]?'✓':'')+'</span><span class="t">'+esc(x[1])+'<small>'+esc(x[2])+'</small></span><span aria-hidden="true" style="color:var(--mut)">›</span></button>').join('')+'</div>'
+   +'<button class="btn" data-act="latihTog" style="min-height:48px">'+(S.latih?'Keluar Mode Latihan':ic35('x_latih',18)+' Hidupkan Mode Latihan')+'</button>'; }
+function orKad35(){
+  if(!S.user||S.user.role==='pemilik') return '';
+  const o=ls35(or35Key())||{}; if(o._tutup||OR35.every(x=>o[x[0]])) return '';
+  return '<style>'+UX35_CSS+'</style><section class="card" style="gap:10px"><div class="row between" style="flex-wrap:nowrap;gap:8px"><div><h2 style="margin:0;display:flex;align-items:center;gap:8px">'+ic35('x_bendera',20)+'Mula guna SAFINAH</h2><div class="sub" style="font-size:13px">5 langkah ringkas untuk staf baru</div></div><button class="ux-lnk" data-act="orTutup">Sembunyi</button></div>'+or35List()+'</section>';
+}
+function sheet35(){
+  const k=S.ux.sheet; if(!k) return '';
+  let h='';
+  if(k==='pot') h='<h2>5 akaun duit SAFINAH</h2><div class="sub">HPR guna Profit First: setiap akaun ada satu tugas sahaja.</div>'+['Maybank','Hong Leong','OCBC','Bank Islam','Tunai'].map(b=>pot35(b)).join('')
+    +'<div class="note n-n" style="font-size:13px">Tak pasti guna akaun mana? Tekan <b>Rekod → "Saya bayar sesuatu"</b>. SAFINAH pilih akaun yang betul sendiri.</div>';
+  if(k==='sop') h='<h2>SOP tutup kedai malam event</h2><div class="sub">Buat setiap malam sebelum balik. Ikut tertib.</div>'+SOP35.map((s,i)=>'<div class="li" style="gap:12px;align-items:flex-start"><b style="flex:none;width:26px;height:26px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px">'+(i+1)+'</b><span><b style="font-size:14px">'+esc(s[1])+'</b><span class="sub" style="display:block;font-size:13px">'+esc(s[2])+'</span></span></div>').join('')
+    +'<div class="note n-y" style="font-size:13px">Belanja kecil guna duit laci? Rekod segera: <b>Belanja duit laci</b> di kad Mode Event.</div>';
+  if(k==='or') h='<h2>Panduan staf baru</h2><div class="sub">Pratonton apa yang staf baru nampak di Utama.</div>'+or35List();
+  return '<div class="ux-ov" data-act="uxTutup"></div><div class="ux-sh" role="dialog" aria-modal="true">'+h+'<button class="btn p" data-act="uxTutup" style="min-height:48px">Faham, tutup</button></div>';
+}
+
+
+/* ---- v3.5 Utama pemilik: 5 saat pertama ---- */
+function nama35(){ if(!S.user) return ''; if(S.user.role==='pemilik') return (S.boot&&S.boot.syarikat&&S.boot.syarikat.pemilik)||'Yusran'; return S.user.name||roleNama(); }
+function hh35(){ const t=(S.boot&&S.boot.today)||''; return '<div class="ux-hh"><h1>Selamat datang, '+esc(nama35())+'</h1><span class="sub">'+esc(roleNama())+(t?' · '+esc(tglPenuh(t)):'')+'</span></div>'; }
+function fold35(id,ic,tajuk,meta,isi){ if(!isi) return ''; return '<details class="ux-fold" data-fold="'+id+'"'+(S.ux.fold[id]?' open':'')+'><summary>'+ic35(ic,18)+tajuk+'<span class="m">'+meta+'</span></summary><div class="fb">'+isi+'</div></details>'; }
+function utamaOwner35(){
+  const U=uData(), d=U.d, aksi=uAksi(d), ev=evKini35();
+  const bk=Object.keys(d.baki||{}), bmax=Math.max(1,...bk.map(k=>Math.abs(d.baki[k]))), jumBaki=bk.reduce((a,k)=>a+Number(d.baki[k]||0),0);
+  const N=(d.nota&&d.nota.aktif)||[], R=(typeof rutinSaya==='function'?rutinSaya():[]).filter(r=>r.status!=='siap'), T=(d.ceo&&d.ceo.top)||[];
+  const baki='<section class="box"><div class="hd"><h2>Baki akaun</h2><button class="btn sm" data-act="go" data-p="tunai">Semak</button></div>'
+   +bk.map(k=>'<div class="li" style="flex-direction:column;align-items:stretch;gap:6px"><div class="row between"><span><b style="font-size:14px">'+esc(k)+'</b> <span class="sub" style="font-size:12px">· '+esc(BANK_PERANAN[k]||'')+'</span></span><b>'+rm(d.baki[k])+'</b></div><div class="bar" style="height:5px"><i style="width:'+Math.round(Math.max(0,d.baki[k])/bmax*100)+'%"></i></div></div>').join('')+'</section>';
+  const ps=d.programSeterusnya&&cdTunjuk(d.programSeterusnya)&&!ev?d.programSeterusnya:null;
+  return '<style>'+NT_CSS+C7_CSS+UK_CSS+UX35_CSS+'</style>'+outboxBanner()
+   +hh35()
+   /* 1. event berjalan? */ +evKokpit35()
+   /* 2. duit bisnes selamat? */ +ukTunai(d)
+   /* 3. apa perlu dibuat (maks 3) */ +amaranHtml(d,aksi)
+   /* 4. tindakan pantas (bila tiada event) */ +(ev?'':qaHtml())
+   /* 5. prestasi bulan ini */ +ukPrestasi(d,U)
+   /* 6. lain-lain: dilipat */ +'<div class="ukh"><h2>Lagi</h2><span>ketik untuk buka</span></div><div class="ux-folds">'
+   +fold35('nota','x_nota','Nota kerja',N.length?N.length+' aktif':'Tiada',notaHtml())
+   +fold35('rutin','x_rutin','Rutin',R.length?esc(R[0].nama||R[0].tajuk||'')||R.length+' belum siap':'Semua siap ✓',rutinHtml(d))
+   +(ps?fold35('prog','x_tarikh','Program seterusnya',esc(ps.nama),cdCard(ps)):'')
+   +fold35('fokus','x_piala','Fokus untung',T.length?esc(T[0].judul):'',ukFokus(d))
+   +fold35('baki','x_bank','Baki akaun',rm(jumBaki),baki)
+   +'</div>'+bankinCard(d);
+}
+
+const ACT_35={
+  mPilih(el){ S.M=mBaru35(el.dataset.v); const ev=evKini35(); if(el.dataset.v==='bayar'&&ev) S.M.prog=ev.id; rp(); },
+  mJual(){ S.M=null; S.Rpenuh=true; S.R=newRekod('jualan'); rp(); },
+  mPenuh(){ S.M=null; S.Rpenuh=true; rp(); },
+  mBalik(){ const M=S.M; if(M.j&&M.m!=='bankin'){ M.j=''; M.tried=false; } else S.M=mBaru35('pilih'); rp(); },
+  mJ(el){ S.M.j=el.dataset.v; S.M.bank=''; S.M.tukar=false; rp(); },
+  mLaci(el){ S.M.laci=el.dataset.v==='1'; if(S.M.laci){ const ev=evKini35(); if(ev) S.M.prog=ev.id; } rp(); },
+  mTukar(){ S.M.tukar=true; rp(); },
+  mBank(el){ S.M.bank=el.dataset.v; rp(); },
+  mProg(el){ S.M.prog=el.dataset.v; rp(); },
+  mSimpan(){ return mSimpan35(); },
+  mLagi(){ S.M=mBaru35('pilih'); rp(); },
+  mBukaLaci(){ mBuka35('bayar',true); },
+  mBukaBayar(){ mBuka35('bayar'); },
+  sopT(el){ const ev=evKini35(); if(!ev) return; const key='sop:'+ev.id+':'+S.boot.today, T=ls35(key)||{}; T[el.dataset.k]=!T[el.dataset.k]; ls35(key,T); rp(); },
+  orT(el){ const k=el.dataset.k; S.ux.sheet=null;
+    if(k==='pot'||k==='sop'){ or35Tanda(k); S.ux.sheet=k; rp(); return; }
+    if(k==='latih'){ if(!S.latih){ S.latih=true; ls35('latih',true); } mBuka35('bayar'); return; }
+    if(k==='rekod'){ if(S.latih){ S.latih=false; ls35('latih',false); } mBuka35('bayar'); return; }
+    if(k==='nota'){ or35Tanda('nota'); go('utama'); return; } },
+  orTutup(){ const o=ls35(or35Key())||{}; o._tutup=1; ls35(or35Key(),o); rp(); },
+  latihTog(){ S.latih=!S.latih; ls35('latih',S.latih); S.ux.sheet=null; toast(S.latih?'Mode Latihan hidup — rekod tidak disimpan':'Mode Latihan dimatikan'); rp(); },
+  uxSheet(el){ S.ux.sheet=el.dataset.v; if(el.dataset.v==='pot') or35Tanda('pot'); rp(); },
+  uxTutup(){ S.ux.sheet=null; rp(); }
+};
+const IN_35={ mIn(el){ if(S.M) S.M[el.dataset.k]=el.value; } };
+document.addEventListener('change',async e=>{ const el=e.target; if(!el.dataset||el.dataset.in!=='mResit'||!S.M) return;
+  try{ busy(true); S.M.resit=await readReceipt(el.files[0]); S.M.resitName=el.files[0]?el.files[0].name:''; }catch(er){ toast(er.message); } finally{ busy(false); } rp(); });
+
+/* ---- sambungan ke fungsi sedia ada ---- */
+(function(){
+  const _call=call; call=function(fn){ if(S.latih&&LATIH_OK35.indexOf(fn)<0&&!(fn==='api_backup'&&arguments[2]===false)) return Promise.reject(new Error('Mode Latihan: tindakan ini tidak disimpan. Keluar Mode Latihan untuk rekod sebenar.')); return _call.apply(null,arguments); };
+  const _rh=rekodHtml; rekodHtml=function(){
+    if(S.M) return mudahHtml();
+    if(!S.Rpenuh&&rekodSegar35(S.R)){ S.M=mBaru35('pilih'); return mudahHtml(); }
+    const R=S.R;
+    if(R&&R.done&&R.done.latihan) return '<div><h1>Latihan berjaya</h1><div class="sub">Dalam Mode Latihan, rekod ini <b>tidak</b> disimpan.</div></div><div class="bpair"><button class="btn p" data-act="rekodAgain">Cuba lagi</button><button class="btn" data-act="go" data-p="utama">Ke Utama</button></div>';
+    return '<button class="ux-lnk" data-act="mLagi">‹ Cara mudah</button>'+_rh();
+  };
+  const _rs=rekodSave; rekodSave=async function(){ if(S.latih){ S.R.done={latihan:true,kategori:S.R.kategori||'Jualan',jumlah:S.R.jumlah||0}; or35Tanda('latih'); repaint(); return; } const r=await _rs(); if(S.R&&S.R.done&&!S.R.done.offline) or35Tanda('rekod'); return r; };
+  qaRekod=function(t){ if(t==='keluar') return mBuka35('bayar'); if(t==='masuk') return mBuka35('terima'); S.M=null; S.Rpenuh=true; S.R=newRekod(t); go('rekod'); };
+  const _go=go; go=function(p){ if(p!=='rekod'){ S.M=null; S.Rpenuh=false; } return _go.apply(null,arguments); };
+  utamaOwner1=utamaOwner35;
+  const _pb=pageBody; pageBody=function(){ const h=_pb(); if(S.page!=='utama') return h; if(h.indexOf('ux-hh')>-1) return h; return '<style>'+UX35_CSS+'</style>'+hh35()+evKokpit35()+orKad35()+h; };
+  const _ph=pageHtml; pageHtml=function(){ return (S.latih?'<style>'+UX35_CSS+'</style><div class="ux-latih"><span style="display:flex;align-items:center;gap:8px">'+ic35('x_latih',18)+'MODE LATIHAN · tiada apa disimpan</span><button data-act="latihTog">Keluar</button></div>':'')+_ph()+sheet35(); };
+  const _lh=lagiHtml; lagiHtml=function(){ return _lh().replace('<button class="btn" data-act="logout">','<style>'+UX35_CSS+'</style><button class="ux-big" data-act="uxSheet" data-v="'+(isOwner()?'or':'pot')+'"><span class="em">'+ico('x_panduan',24)+'</span><span style="min-width:0"><b>Panduan &amp; Mode Latihan</b><small>'+(isOwner()?'Senarai semak staf baru, 5 akaun duit':'5 akaun duit & SOP')+'</small></span><span class="ar" aria-hidden="true">›</span></button><button class="btn" data-act="logout">'); };
+})();
+
+/* ---------- v3.5 MUHASABAH EVENT ---------- */
+const MUH_CSS='.mh-st{display:flex;gap:6px}.mh-st button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:22px;line-height:1;cursor:pointer;color:#CBD5E1}.mh-st button.on{color:#F59E0B;border-color:#F59E0B;background:#FFFBEB}'
+ +'.mh-k{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mh-k div{border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}.mh-k small{display:block;color:var(--mut);font-size:11.5px}.mh-k b{font-size:15px;white-space:nowrap}'
+ +'.mh-q{font-size:13px;line-height:1.5}.mh-q b{display:block;font-size:12px;color:var(--mut);font-weight:600;margin-top:6px}.mh-bt{color:#F59E0B;letter-spacing:1px}';
+const MUH_Q=[['berjaya','Apa yang berjaya?','cth: lokasi dekat pintu masuk, kitab fiqh Syafie laku, promosi FB 3 hari sebelum'],['baiki','Apa yang perlu diperbaiki?','cth: duit tukar tak cukup hari pertama, staf kurang waktu Zohor'],['kitab','Kitab: bawa lebih / kurang?','cth: lebih Bajuri & I\'anah; kurang kitab tasawuf tebal'],['tindakan','Tindakan untuk event akan datang','cth: tempah booth 2 bulan awal, bawa RM300 duit tukar, 3 staf hujung minggu']];
+function muhSnap(p){
+  const kos=Math.round(((typeof kosEvent==='function'?kosEvent(p.tutup):0)+(Number(p.kosAwal)||0))*100)/100, B=p.bajet||{};
+  const bajet=(typeof EV_KOS!=='undefined'?EV_KOS:[]).filter(k=>k[0]!=='deposit').reduce((a,k)=>a+(Number(B[k[0]])||0),0);
+  return {jualan:Number(p.jualan)||0, untung:Number(p.untung)||0, kos:kos, bersih:Math.round(((Number(p.untung)||0)-kos)*100)/100, bajet:bajet, sasaran:Number(p.target)||0,
+    naskhah:(p.kitab||[]).reduce((a,k)=>a+(Number(k.q)||0),0), top:(p.kitab||[]).slice(0,3).map(k=>({judul:k.judul,q:k.q}))};
+}
+function muhKpi(sn){ const L=[['Jualan',rm(sn.jualan)+(sn.sasaran?'<small>'+Math.round(sn.jualan/sn.sasaran*100)+'% sasaran</small>':'')],['Untung bersih','<span style="color:'+(sn.bersih>=0?'var(--g)':'var(--r)')+'">'+rm(sn.bersih)+'</span>'],['Kos event',rm(sn.kos)+(sn.bajet?'<small>bajet '+rm(sn.bajet)+'</small>':'')],['Naskhah terjual',String(sn.naskhah||0)]];
+  return '<div class="mh-k">'+L.map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('')+'</div>'+(sn.top&&sn.top.length?'<div class="sub" style="font-size:12px">Paling laris: '+sn.top.map(t=>esc(t.judul)+' ('+t.q+')').join(' · ')+'</div>':''); }
+function bintang(n){ return '<span class="mh-bt" aria-label="'+n+' bintang">'+'★'.repeat(n)+'<span style="color:#CBD5E1">'+'★'.repeat(5-n)+'</span></span>'; }
+function muhBlock(p){
+  if(p.jenis==='Tempahan institusi'||S.user.role==='staf') return '';
+  const today=(S.data.kal&&S.data.kal.today)||(S.boot&&S.boot.today)||''; if(p.mula>today) return '';
+  const F=S.muh&&S.muh.id===p.id?S.muh:null, m=p.muhasabah;
+  let h='<style>'+MUH_CSS+'</style><div style="border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;background:#fff">';
+  if(F){
+    const sn=muhSnap(p);
+    h+='<div><b style="font-size:15px">'+ic35('x_muh',18)+' Muhasabah event</b><div class="sub" style="font-size:12px">5 minit. Jawapan ini keluar semula bila tuan rancang event serupa.</div></div>'
+     +muhKpi(sn)
+     +'<div class="f"><b style="font-size:14px">Penilaian keseluruhan</b><div class="mh-st">'+[1,2,3,4,5].map(i=>'<button class="'+(F.bintang>=i?'on':'')+'" data-act="muhB" data-v="'+i+'" aria-label="'+i+' bintang">★</button>').join('')+'</div></div>'
+     +'<div class="f"><b style="font-size:14px">Berbaloi buat lagi?</b><div class="row" style="gap:6px">'+['Ya','Mungkin','Tidak'].map(x=>'<button class="chip'+(F.ulang===x?' on':'')+'" data-act="muhU" data-v="'+x+'">'+x+'</button>').join('')+'</div></div>'
+     +MUH_Q.map(q=>'<label class="f">'+q[1]+'<textarea class="inp" rows="3" data-in="muhT" data-k="'+q[0]+'" placeholder="'+esc(q[2])+'">'+esc(F[q[0]]||'')+'</textarea></label>').join('')
+     +'<div class="bpair"><button class="btn p" data-act="muhSimpan" data-id="'+esc(p.id)+'">Simpan muhasabah</button><button class="btn" data-act="muhBatal">Batal</button></div>';
+  } else if(m){
+    h+='<div class="row between" style="gap:8px"><b style="font-size:15px">'+ic35('x_muh',18)+' Muhasabah event</b><span>'+bintang(m.bintang)+'</span></div>'
+     +(m.ulang?'<div><span class="tag '+(m.ulang==='Ya'?'t-g':m.ulang==='Tidak'?'t-r':'t-a')+'">Buat lagi: '+esc(m.ulang)+'</span></div>':'')
+     +'<div class="mh-q">'+MUH_Q.filter(q=>m[q[0]]).map(q=>'<b>'+q[1]+'</b>'+esc(m[q[0]])).join('')+'</div>'
+     +'<div class="row between" style="gap:8px"><span class="sub" style="font-size:12px">oleh '+esc(m.oleh||'')+' · '+esc(tglTxt(m.tarikh||''))+'</span><button class="btn sm" data-act="muhBuka" data-id="'+esc(p.id)+'">Ubah</button></div>';
+  } else {
+    h+='<div><b style="font-size:15px">'+ic35('x_muh',18)+' Muhasabah event</b><div class="sub" style="font-size:13px">Apa yang berjaya, apa perlu diperbaiki, kitab apa patut dibawa. Disimpan dalam Laporan untuk event akan datang.</div></div>'
+     +'<button class="btn p" data-act="muhBuka" data-id="'+esc(p.id)+'">Buat muhasabah (5 minit)</button>';
+  }
+  return h+'</div>';
+}
+/* pelajaran dari event lepas yang serupa */
+const MUH_BUANG=['pameran','kitab','program','event','contoh','kuliah','seminar','pesta','buku','dan','di','ke','dengan','bulanan'];
+function muhKata(n){ return String(n||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>=4&&MUH_BUANG.indexOf(w)<0&&!/^\d+$/.test(w)); }
+function muhLepas(p){
+  const L=S.data.muh||[], k=muhKata(p.nama);
+  return L.filter(x=>x.id!==p.id&&x.mula<p.mula&&x.m&&(x.m.tindakan||x.m.baiki)).map(x=>({x:x,s:muhKata(x.nama).filter(w=>k.indexOf(w)>-1).length+(x.jenis===p.jenis?0.5:0)})).filter(o=>o.s>=1).sort((a,b)=>b.s-a.s||(a.x.mula<b.x.mula?1:-1)).map(o=>o.x)[0]||null;
+}
+function muhPelajaran(p){
+  const today=(S.data.kal&&S.data.kal.today)||(S.boot&&S.boot.today)||'';
+  if(p.jenis==='Tempahan institusi'||p.akhir<today) return '';
+  const x=muhLepas(p); if(!x) return '';
+  return '<div class="note n-n" style="font-size:13px;line-height:1.5">'+ic35('x_lampu',16)+' <b>Pelajaran dari '+esc(x.nama)+'</b> <span class="sub">('+esc(tarikhJulat(x.mula,x.akhir))+' · '+bintang(x.m.bintang||0)+')</span>'
+   +(x.m.tindakan?'<br><b>Tindakan:</b> '+esc(x.m.tindakan):'')+(x.m.baiki?'<br><b>Perlu diperbaiki:</b> '+esc(x.m.baiki):'')+(x.m.kitab?'<br><b>Kitab:</b> '+esc(x.m.kitab):'')+'</div>';
+}
+async function muhMuat(){ if(S.muhLoad||!S.user||S.user.role==='staf') return; S.muhLoad=true; try{ S.data.muh=await call('api_muhasabah',S.pin); if(S.page==='kalendar'||S.page==='laporan') rp(); }catch(e){ S.data.muh=[]; } finally{ S.muhLoad=false; } }
+function muhLaporan(){
+  const L=S.data.muh; if(!L){ muhMuat(); return ''; }
+  const n=L.length, avg=n?L.reduce((a,x)=>a+(x.m.snap?x.m.snap.bersih:0),0)/n:0;
+  let h='<style>'+MUH_CSS+'</style><section class="box"><div class="hd"><div><h2>Muhasabah event</h2><div class="sub" style="font-size:12px">Pelajaran setiap program · '+n+' direkod'+(n?' · purata untung bersih '+rm(avg):'')+'</div></div><button class="btn sm" data-act="go" data-p="kalendar">Kalendar</button></div>';
+  if(!n) return h+'<div class="li sub">Belum ada muhasabah. Selepas event, buka Kalendar → kad event → "Buat muhasabah".</div></section>';
+  h+=(S.muhSemua?L:L.slice(0,4)).map(x=>{ const m=x.m, sn=m.snap||{}, op=S.muhOpen===x.id;
+    return '<div class="li" style="flex-direction:column;align-items:stretch;gap:6px;cursor:pointer" data-act="muhO" data-id="'+esc(x.id)+'"><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0"><b style="font-size:14px">'+esc(x.nama)+'</b><span class="sub" style="display:block;font-size:12px">'+esc(tarikhJulat(x.mula,x.akhir))+(m.ulang?' · buat lagi: '+esc(m.ulang):'')+'</span></span><span style="text-align:right;flex:none">'+bintang(m.bintang||0)+'<b style="display:block;font-size:13px;color:'+((sn.bersih||0)>=0?'var(--g)':'var(--r)')+'">'+rm(sn.bersih||0)+'</b></span></div>'
+     +(op?muhKpi(sn)+'<div class="mh-q">'+MUH_Q.filter(q=>m[q[0]]).map(q=>'<b>'+q[1]+'</b>'+esc(m[q[0]])).join('')+'</div>':(m.tindakan?'<div class="sub" style="font-size:12.5px">'+ic35('x_sasar',14)+' '+esc(m.tindakan.length>110?m.tindakan.slice(0,110)+'…':m.tindakan)+'</div>':''))+'</div>'; }).join('')
+   +(n>4?'<button class="tgmore" data-act="muhSemua">'+(S.muhSemua?'Sembunyi':'Lihat semua ('+n+')')+'</button>':'');
+  return h+'</section>';
+}
+const ACT_MUH={
+  muhBuka(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), m=p.muhasabah||{}; S.muh={id:p.id,bintang:m.bintang||0,ulang:m.ulang||'',berjaya:m.berjaya||'',baiki:m.baiki||'',kitab:m.kitab||'',tindakan:m.tindakan||''}; rp(); },
+  muhBatal(){ S.muh=null; rp(); },
+  muhB(el){ S.muh.bintang=Number(el.dataset.v); rp(); },
+  muhU(el){ S.muh.ulang=el.dataset.v; rp(); },
+  async muhSimpan(el){ const p=S.data.kal.rows.find(x=>x.id===el.dataset.id), F=S.muh;
+    try{ const d=await run(call('api_saveMuhasabah',S.pin,p.id,Object.assign({},F,{snap:muhSnap(p)}),S.kal.month)); setKal(d); S.muh=null; S.data.muh=null; muhMuat(); toast('Muhasabah disimpan ✓'); rp(); }catch(e){} },
+  muhO(el){ S.muhOpen=S.muhOpen===el.dataset.id?null:el.dataset.id; rp(); },
+  muhSemua(){ S.muhSemua=!S.muhSemua; rp(); }
+};
+const IN_MUH={ muhT(el){ if(S.muh) S.muh[el.dataset.k]=el.value; } };
+(function(){
+  const _tb=tutupBlock; tutupBlock=function(p){ return _tb(p)+muhBlock(p); };
+  const _bb=bajetBlock; bajetBlock=function(p){ if(!S.data.muh) muhMuat(); return muhPelajaran(p)+_bb(p); };
+  const _pb2=pageBody; pageBody=function(){ const h=_pb2(); return S.page==='laporan'&&isOwner()?h+muhLaporan():h; };
+})();
+
+/* ---------- v3.5 KOS EVENT IKUT KATEGORI (susun automatik) + SEMAKAN TUNAI BETUL ---------- */
+const KKAT=[
+  ['sewa','Sewa tapak / booth',/sewa|booth|tapak|gerai/i],
+  ['inap','Penginapan',/hotel|inap|homestay|bilik|airbnb|resort|chalet/i],
+  ['makan','Makan & minum',/makan|minum|nasi|kopi|sarapan|katering|roti|\bteh\b|air mineral|kfc|mamak|lunch|dinner/i],
+  ['jalan','Pengangkutan (minyak, tol, parking)',/minyak|petrol|tol\b|parking|grab|teksi|tiket|flight|kapal|kenderaan|ets|bas\b/i],
+  ['upah','Upah & elaun staf',/upah|elaun|part.?timer|gaji/i],
+  ['cetak','Cetakan & iklan',/banner|bunting|cetak|print|iklan|promosi|poster|flyer/i],
+  ['kurier','Kurier & angkut kitab',/kurier|courier|lalamove|lori|angkut|easyparcel|pos\b/i],
+  ['alat','Peralatan & bahan booth',/plastik|beg|pita|rak|meja|alat|peralatan|kotak|label/i],
+  ['lain','Lain-lain',/.^/]
+];
+const KKAT_KAT={'Sewa gerai / event':'sewa','Kenderaan & minyak':'jalan','Gaji staf':'upah','Iklan & promosi':'cetak','Pos & kurier (EasyParcel)':'kurier','Beli aset / peralatan':'alat'};
+function kosKat(x){ const t=String(x.ket||'')+' '+String(x.kat||''); const k=KKAT.find(c=>c[0]!=='lain'&&c[2].test(String(x.ket||'')));
+  if(k) return k[0]; if(KKAT_KAT[x.kat]) return KKAT_KAT[x.kat]; const k2=KKAT.find(c=>c[0]!=='lain'&&c[2].test(t)); return k2?k2[0]:'lain'; }
+/* semua kos event, disusun ikut kategori — dari rekod sebenar + ruang Tutup Event yang tidak direkod sebagai transaksi */
+function kosSusun(p){
+  const L=(p.kosList||[]).filter(x=>x.sumber!=='Tutup Event'), t=p.tutup||{}, o={};
+  KKAT.forEach(c=>{ o[c[0]]={k:c[0],nama:c[1],j:0,n:0,item:[]}; });
+  L.forEach(x=>{ const k=kosKat(x), j=Number(x.jumlah)||0; o[k].j+=j; o[k].n++; o[k].item.push({tarikh:x.tarikh,ket:x.ket||x.kat,bank:x.bank,j:j}); });
+  [['sewa','sewa','Sewa (Tutup Event)'],['minyak','jalan','Minyak / tol (Tutup Event)'],['elaun','upah','Elaun part-timer (Tutup Event)'],['lain','lain','Lain-lain (Tutup Event)']].forEach(a=>{ const j=Number(t[a[0]])||0; if(j>0){ o[a[1]].j+=j; o[a[1]].n++; o[a[1]].item.push({tarikh:t.tarikh||p.akhir,ket:a[2],bank:'',j:j}); } });
+  const A=KKAT.map(c=>o[c[0]]).filter(c=>c.j>0).sort((a,b)=>b.j-a.j), tot=A.reduce((a,c)=>a+c.j,0);
+  A.forEach(c=>{ c.j=Math.round(c.j*100)/100; c.item.sort((a,b)=>a.tarikh<b.tarikh?-1:1); });
+  return {A:A, tot:Math.round(tot*100)/100};
+}
+/* tunai yang sepatutnya ada dalam laci semasa tutup */
+function tunaiJangka(p){
+  const E=p.evHarian||{}, H=p.harianEv||{}, fl=Number(H.float)||0; let jual=0, bel=0, bi=0;
+  Object.keys(E).forEach(d=>{ const x=E[d]; jual+=x.tunai||0; bel+=x.belanja||0; bi+=x.bankIn||0; });
+  const r=v=>Math.round(v*100)/100; return {fl:r(fl),jual:r(jual),bel:r(bel),bi:r(bi),jangka:r(fl+jual-bel-bi)};
+}
+function kosJadual(p){
+  const K=kosSusun(p), r2f=v=>(Math.round(v*100)/100).toFixed(2), hari=Math.max(1,Math.round((new Date(p.akhir)-new Date(p.mula))/864e5)+1);
+  let h='<table><tr class="hdrow"><td style="text-align:left">KOS EVENT · IKUT KATEGORI</td><td>RM</td></tr>';
+  if(!K.A.length) h+='<tr><td style="text-align:left">Tiada kos direkod</td><td>0.00</td></tr>';
+  K.A.forEach(c=>{ h+='<tr><td style="text-align:left">'+esc(c.nama)+' <span style="color:#6B7280;font-size:11px">('+c.n+' rekod · '+Math.round(c.j/(K.tot||1)*100)+'%)</span></td><td>'+r2f(c.j)+'</td></tr>'; });
+  h+='<tr><td style="text-align:left"><b>Jumlah kos</b> <span style="color:#6B7280;font-size:11px">(purata RM'+r2f(K.tot/hari)+' sehari · '+hari+' hari)</span></td><td><b>'+r2f(K.tot)+'</b></td></tr></table>';
+  if(K.A.length) h+='<details class="kkd"><summary style="cursor:pointer;font-size:12px;color:#064C7D;font-weight:600;padding:4px 0">Butiran setiap kos</summary><table style="font-size:11.5px">'
+    +K.A.map(c=>'<tr class="hdrow"><td style="text-align:left">'+esc(c.nama)+'</td><td>'+r2f(c.j)+'</td></tr>'+c.item.map(i=>'<tr><td style="text-align:left">'+esc(tglTxt(i.tarikh))+' · '+esc(String(i.ket).slice(0,70))+(i.bank?' <span style="color:#6B7280">('+esc(i.bank)+')</span>':'')+'</td><td>'+r2f(i.j)+'</td></tr>').join('')).join('')+'</table></details>';
+  return h;
+}
+(function(){
+  const _ld=laporanDoc; laporanDoc=function(p){
+    let h=_ld(p);
+    const a=h.indexOf('<table><tr class="hdrow"><td style="text-align:left">KOS EVENT</td>'), b=a>-1?h.indexOf('</table>',a)+8:-1;
+    if(a>-1) h=h.slice(0,a)+kosJadual(p)+h.slice(b);
+    const t=p.tutup||{};
+    if(t.tunaiKira!=null){ const J=tunaiJangka(p), bz=Math.round((t.tunaiKira-J.jangka)*100)/100, f=v=>(Math.round(v*100)/100).toFixed(2);
+      const rx=/<tr><td style="text-align:left">Tunai dikira \/ dalam rekod<\/td><td>.*?<\/td><\/tr>/;
+      h=h.replace(rx,'<tr><td style="text-align:left">Tunai sepatutnya dalam laci<br><span style="color:#6B7280;font-size:11px">duit tukar '+f(J.fl)+' + jualan tunai '+f(J.jual)+' − belanja laci '+f(J.bel)+' − bank-in '+f(J.bi)+'</span></td><td>RM'+f(J.jangka)+'</td></tr>'
+        +'<tr><td style="text-align:left">Tunai dikira semasa tutup</td><td>RM'+f(t.tunaiKira)+'</td></tr>'
+        +'<tr><td style="text-align:left"><b>Beza</b></td><td><b style="color:'+(Math.abs(bz)<0.01?'#15803D':'#B91C1C')+'">'+(Math.abs(bz)<0.01?'Sepadan':'RM'+f(bz))+'</b></td></tr>');
+    }
+    return h;
+  };
+  const _tb3=tutupBlock; tutupBlock=function(p){
+    let h=_tb3(p); const t=p.tutup; if(!t) return h;
+    const K=kosSusun(p), f=v=>rm(v);
+    const kos='<div class="li" style="flex-direction:column;align-items:stretch;gap:4px"><div class="row between"><span>Kos event ikut kategori</span><b class="amt-out">− '+f(K.tot)+'</b></div>'
+      +K.A.map(c=>'<div class="row between" style="font-size:13px;flex-wrap:nowrap;gap:8px"><span class="sub">'+esc(c.nama)+' · '+c.n+'</span><span>'+f(c.j)+'</span></div>').join('')+'</div>';
+    h=h.replace(/<div class="li" style="justify-content:space-between"><span>Kos event \(bayaran awal \+ semasa tutup\)<\/span><b class="amt-out">.*?<\/b><\/div>/,kos);
+    if(t.tunaiKira!=null){ const J=tunaiJangka(p), bz=Math.round((t.tunaiKira-J.jangka)*100)/100;
+      h=h.replace(/<div class="li" style="justify-content:space-between"><span>Tunai dikira vs rekod<\/span><span>.*?<\/span><\/span><\/div>|<div class="li" style="justify-content:space-between"><span>Tunai dikira vs rekod<\/span><span>—<\/span><\/div>/,
+        '<div class="li" style="justify-content:space-between;gap:8px"><span>Tunai laci: dikira '+rm(t.tunaiKira)+' · sepatutnya '+rm(J.jangka)+'</span><span>'+(Math.abs(bz)<0.01?'<span class="tag t-g">Sepadan</span>':'<span class="tag t-r">Beza '+rm(bz)+'</span>')+'</span></div>'); }
+    return h;
+  };
+})();
+
+/* ---------- v3.5 carian: tindakan baharu ---------- */
+(function(){
+  const _ci=cariItems; cariItems=function(){
+    const L=_ci(), own=isOwner(), ops=S.user&&S.user.role!=='staf', ev=evKini35();
+    const A=(id,ic,lbl,sub,kata,fn)=>L.unshift({id:id,ic:ic,lbl:lbl,sub:sub,kata:kata,fn:fn});
+    if(rolePages().some(p=>p[0]==='rekod')){
+      A('a-mbayar','x_bayar','Saya bayar sesuatu','Rekod mudah','belanja keluar makan sewa minyak upah kurier hotel',()=>mBuka35('bayar'));
+      if(own) A('a-mterima','x_terima','Saya terima duit','Rekod mudah','masuk deposit modal pinjaman institusi',()=>mBuka35('terima'));
+      if(ev&&laciOk35()) A('a-laci','x_laci','Belanja duit laci event','Mode Event · '+ev.nama,'laci tunai event makan parking',()=>mBuka35('bayar',true));
+    }
+    if(ops) A('a-muh','x_muh','Muhasabah event','Kalendar · pelajaran program','muhasabah review nilai event pelajaran laporan',()=>go('kalendar'));
+    A('a-latih','x_latih',S.latih?'Keluar Mode Latihan':'Mode Latihan','Panduan · berlatih tanpa simpan','latihan cuba belajar staf baru',()=>ACT_35.latihTog());
+    A('a-pot','x_panduan','Kenali 5 akaun duit','Panduan · Profit First','akaun bank maybank hong leong ocbc bank islam tunai',()=>{ S.ux.sheet='pot'; rp(); });
+    if(ev) A('a-sop','x_bulan','SOP tutup kedai malam','Mode Event','sop malam tutup laci',()=>{ S.ux.sheet='sop'; rp(); });
+    return L;
+  };
+})();
+/* grid tergantung sendirian di telefon: kotak terakhir ambil lebar penuh */
+document.head.insertAdjacentHTML('beforeend','<style>@media (max-width:600px){.kpis>:last-child:nth-child(odd):not(:first-child),.grid>:last-child:nth-child(odd):not(:first-child){grid-column:1/-1}}</style>');
+
+Object.assign(ACT, ACT_35, ACT_MUH, ACT_34, ACT_PO, ACT_NT, ACT13, ACT_SR, ACT_RS, ACT_HJ, ACT_BL, ACT_TT, ACT_TP, ACT_ST, ACT_WA, ACT_DR, ACT_DG, ACT_PM);
 document.addEventListener('click',e=>{ const el=e.target.closest('[data-act]'); if(!el) return; const f=ACT[el.dataset.act]; if(f){ e.preventDefault(); f(el,e); } });
 document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&e.target.id==='pin') login(); });
 
 function refocus(sel,el){ let pos=null; try{ pos=el.selectionStart; }catch(e){} repaint(); const n=document.querySelector(sel); if(n){ n.focus(); try{ if(pos!=null) n.setSelectionRange(pos,pos); }catch(e){} } }
 const IN = {
+  ...IN_35,
+  ...IN_MUH,
   ...IN_34,
   ...IN_PO,
   rq(el){ S.R.q=el.value; refocus('[data-in="rq"]',el); },
@@ -4428,5 +4917,4 @@ mulaPantas();
 </script>
 </body>
 </html>
-
 
