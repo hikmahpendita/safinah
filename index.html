@@ -311,7 +311,7 @@ const ICON = {
 };
 const PAGES_OWNER = [['modul','Tetapan Modul'],['utama','Utama'],['tunai','Aliran Tunai'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['laporan','Laporan'],['cukai','Laporan Cukai'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['gaji','Gaji & Slip'],['pekerja','Pekerja'],['imp','Import Wasep.me'],['agihan','Agihan'],['opex','Pantau OPEX'],['analisis','Analisis Bulanan'],['padan','Padanan Bank'],['pulang','Pulang Modal'],['katalog','Katalog'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp'],['diri','Pembangunan Diri']];
 const BNAV_OWNER = [['utama'],['tunai'],['rekod'],['laporan'],['lagi']];
-const APP_VERSI='3.8.1';
+const APP_VERSI='3.8.2';
 const PAGES_STAF = [['utama','Utama'],['rekod','Rekod'],['hajat','Hajat'],['templat','Jawapan Pantas']];
 const PAGES_OPS = [['utama','Utama'],['rekod','Rekod'],['hajat','Senarai Hajat'],['po','Pre-order Musim'],['beli','Pembelian & Kargo'],['templat','Jawapan Pantas'],['kalendar','Kalendar Program'],['invois','Invois & Hutang'],['surat','Surat Rasmi'],['imp','Import Wasep.me'],['katalog','Katalog & Harga'],['stok','Stok & Prestasi'],['pelanggan','Pelanggan'],['blast','Blast WhatsApp']];
 const BNAV_OPS = [['utama'],['rekod'],['kalendar'],['lagi']];
@@ -1179,9 +1179,9 @@ function tyItem(t,s){
       :(s==='ox'?'<b style="color:var(--r)">Hanya untuk bil yang dah betul-betul dibayar.</b> Nak simpan duit untuk bil ini? Tekan Batal, kemudian guna butang Asingkan.<br>SAFINAH rekod Duit Keluar dari Hong Leong (tidak dikira dalam bajet bulanan). ':'Direkod sebagai belanja Diri. ')+(t.ulang==='Sekali sahaja'?'Item ini dibuang selepas dibayar.':(s==='ox'&&(t.ulang||'Setiap tahun')==='Setiap tahun')?'':'Tarikh dianjak ke '+(t.ulang==='Ikut tahun Hijrah'?'tahun Hijrah depan (~11 hari lebih awal).':'tahun depan.'));
     h+='<div class="tyf">'+(!asing&&s==='ox'?tyPilihTahun(t,F):'')+'<div class="row" style="align-items:flex-end;gap:8px"><label class="f" style="flex:1 1 130px">'+(asing?'Jumlah diasingkan (RM)':'Jumlah sebenar dibayar (RM)')+'<input class="inp" type="number" inputmode="decimal" step="0.01" min="0" data-in="tyF" data-k="j" value="'+esc(F.j)+'"></label>'
      +(asing?'':'<label class="f" style="flex:1 1 140px">Tarikh bayar<input class="inp" type="date" data-in="tyF" data-k="t" value="'+esc(F.t)+'"></label>')+'</div>'
-     +'<div class="sub" style="font-size:12px;line-height:1.5">'+nota+'</div><div class="row" style="gap:8px"><button class="btn sm p" data-act="tySah">'+(asing?'Simpan':(F.ya?'Tekan sekali lagi untuk sahkan':'Rekod bayar'))+'</button><button class="btn sm" data-act="tyBatal">Batal</button></div></div>';
+     +(!asing&&s==='ox'?tyJenisHtml(t,F):'')+'<div class="sub" style="font-size:12px;line-height:1.5">'+nota+'</div><div class="row" style="gap:8px"><button class="btn sm p" data-act="tySah">'+(asing?'Simpan':(F.ya?'Ya, bil ni dah dibayar':'Rekod bayaran'))+'</button><button class="btn sm" data-act="tyBatal">Batal</button></div></div>';
   } else h+='<div class="row" style="gap:8px;margin-top:10px">'+(t.baki>0?'<button class="btn sm'+(t.sudah?'':' p')+'" data-act="tyForm" data-s="'+s+'" data-id="'+esc(t.id)+'" data-m="asing">'+(t.sudah?'Tambah simpanan':'Asingkan '+rm(t.sebulan))+'</button>':'')
-     +'<button class="btn sm'+(t.baki<=0&&t.hari<=30?' p':'')+'" data-act="tyForm" data-s="'+s+'" data-id="'+esc(t.id)+'" data-m="bayar">Rekod bayar</button></div>';
+     +(s==='ox'&&t.hari>60?'<button class="btn sm" style="border-color:transparent;background:none;color:var(--b);text-decoration:underline" data-act="tyForm" data-s="'+s+'" data-id="'+esc(t.id)+'" data-m="bayar">Bayar awal?</button>':'<button class="btn sm'+(t.baki<=0&&t.hari<=30?' p':'')+'" data-act="tyForm" data-s="'+s+'" data-id="'+esc(t.id)+'" data-m="bayar">Dah bayar bil</button>')+'</div>';
   return h+'</div>';
 }
 function tyRingkas(T,s){
@@ -3698,10 +3698,12 @@ const ACT = {
   navG(el){ const g=myGroups().find(x=>x.id===el.dataset.g); if(!g) return; S.navOpen[g.id]=!navBuka(g,groupOf(S.page)); render(); },
   tgAll(){ S.tgAll=!S.tgAll; rp(); },
   oxTDel(el){ S.ox.f.tetap.splice(+el.dataset.i,1); rp(); },
-  tyForm(el){ const s=el.dataset.s, T=(s==='ox'?S.data.ox:S.data.dr).tahunan, t=T.list.find(x=>x.id===el.dataset.id); if(!t) return; const m=el.dataset.m; S.yf={s:s,id:t.id,m:m,j:m==='asing'?(t.sebulan||''):t.jumlah,t:(S.boot&&S.boot.today)||'',th:+String(t.tarikh).slice(0,4),n:1}; rp(); },
+  tyForm(el){ const s=el.dataset.s, T=(s==='ox'?S.data.ox:S.data.dr).tahunan, t=T.list.find(x=>x.id===el.dataset.id); if(!t) return; const m=el.dataset.m; S.yf={s:s,id:t.id,m:m,j:m==='asing'?(t.sebulan||''):(t.seb>0?Math.round((t.jumlah-t.seb)*100)/100:t.jumlah),t:(S.boot&&S.boot.today)||'',th:+String(t.tarikh).slice(0,4),n:1}; rp(); },
   tyBatal(){ S.yf=null; rp(); },
-  async tySah(){ const F=S.yf; if(!F) return; const asing=F.m==='asing'; if(!asing&&F.s==='ox'&&!F.ya){ F.ya=true; rp(); return; } try{
-    if(F.s==='ox') S.data.ox=await run(asing?call('api_asingTahunan',S.pin,F.id,F.j,S.ox.month):call('api_bayarTahunan',S.pin,F.id,S.ox.month,F.t,F.j,{tahun:F.th,n:F.n||1,paksa:true}));
+  async tySah(){ const F=S.yf; if(!F) return; const asing=F.m==='asing';
+    if(!asing&&F.s==='ox'){ const t=tyCari(F); if(t&&tyPerluJenis(t,F)&&!F.jenis){ F.ya=false; rp(); toast('Pilih dulu: bayaran penuh atau sebahagian'); return; } }
+    if(!asing&&F.s==='ox'&&!F.ya){ F.ya=true; rp(); return; } try{
+    if(F.s==='ox') S.data.ox=await run(asing?call('api_asingTahunan',S.pin,F.id,F.j,S.ox.month):call('api_bayarTahunan',S.pin,F.id,S.ox.month,F.t,F.j,{tahun:F.th,n:F.n||1,paksa:true,sebahagian:F.jenis==='seb'&&(()=>{ const t=tyCari(F); return !!(t&&tyPerluJenis(t,F)); })()}));
     else S.data.dr=await run(asing?call('api_diriAsingTahunan',S.pin,F.id,F.j,S.dr.ym):call('api_diriBayarTahunan',S.pin,F.id,F.j,F.t,S.dr.ym));
     S.yf=null; toast(asing?'Simpanan direkod ✓':(F.s==='ox'?'Direkod sebagai Duit Keluar (Hong Leong) ✓':'Bayaran direkod ✓')); rp(); }catch(e){} },
   tyAdd(el){ const s=el.dataset.s, L=s==='ox'?S.ox.f.tahunan:S.dr.ty, c=el.dataset.i!==undefined?TY_CADANG[s][+el.dataset.i]:null; L.push({nama:c?c[0]:'',kat:c?c[1]:(s==='ox'?S.data.ox.kats[0]:S.data.dr.kat.keluar[0]),jumlah:'',tarikh:c&&c[2]?'2027-03-01':'',ulang:c&&c[2]?c[2]:TY_ULANG[0],terkumpul:''}); rp(); },
@@ -5003,6 +5005,11 @@ const IN_36={ sh36In(el){ S.sh36v=S.sh36v||{}; S.sh36v[el.dataset.k]=el.value; }
 /* v3.8.1: pilih tahun bayaran kos tahunan */
 function tyCari(F){ const T=(F.s==='ox'?S.data.ox:S.data.dr); return T&&T.tahunan?T.tahunan.list.find(x=>x.id===F.id):null; }
 function tyAnjak(tgl,n){ const p=String(tgl).split('-').map(Number); let d=new Date(p[0]+n,p[1]-1,p[2]); if(d.getMonth()!==p[1]-1) d=new Date(p[0]+n,p[1],0); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function tyPerlu(t,F){ const Y=+String(t.tarikh).slice(0,4); return (F.th||Y)===Y&&(F.n||1)===1?r2((+t.jumlah||0)-(+t.seb||0)):0; }
+function tyPerluJenis(t,F){ const b=tyPerlu(t,F), j=+F.j||0; return b>0&&j>0&&j<b-0.005; }
+function tyJenisHtml(t,F){ if(!tyPerluJenis(t,F)) return ''; const b=tyPerlu(t,F), j=+F.j||0;
+  return '<div class="f" style="gap:6px;font-weight:600">Bayaran ini<div class="row" role="group" aria-label="Jenis bayaran" style="gap:6px">'+[['penuh','Penuh'],['seb','Sebahagian']].map(([k,l])=>'<button class="chip '+(F.jenis===k?'on':'')+'" data-act="tyJenis" data-v="'+k+'" aria-pressed="'+(F.jenis===k)+'">'+l+'</button>').join('')+'</div></div>'
+   +(F.jenis==='seb'?'<div class="note n-n" style="font-size:13px">Baki <b>'+rm(r2(b-j))+'</b> masih perlu dibayar. Tarikh bil tak berubah.</div>':F.jenis==='penuh'?'<div class="note n-n" style="font-size:13px">Harga sebenar bil '+rm(j)+'. Bil '+(F.th||'')+' ditanda selesai.</div>':'<div class="note n-y" style="font-size:13px">Jumlah ini kurang daripada bil ('+rm(b)+'). Pilih satu.</div>'); }
 function tyPilihTahun(t,F){ const Y=+String(t.tarikh).slice(0,4), setiap=(t.ulang||'Setiap tahun')==='Setiap tahun', paid=t.dibayar||[], th=F.th||Y, n=F.n||1, lewat=th===Y-1, hingga=th+n-1;
   const M=(S.data.ox&&S.data.ox.tahunan&&S.data.ox.tahunan.mula)||2027;
   const L=[]; if(setiap&&Y-1>=M&&paid.indexOf(Y-1)<0) L.push([Y-1,(Y-1)+' (rekod lewat)']); L.push([Y,String(Y)]);
@@ -5011,8 +5018,8 @@ function tyPilihTahun(t,F){ const Y=+String(t.tarikh).slice(0,4), setiap=(t.ulan
   const ada=paid.filter(y=>y>=th&&y<=hingga);
   if(ada.length) h+='<div class="note n-y" style="font-size:13px"><b>'+ada.join(', ')+' dah dibayar.</b> Pasti nak rekod lagi? Kalau tak pasti, tekan Batal dan semak "Bayaran direkod" di bawah.</div>';
   const nota=lewat?'Untuk <b>'+th+'</b> (rekod lewat). Tarikh bil dan dana simpanan tidak berubah.'
-    :'Untuk <b>'+(n>1?th+'–'+hingga:th)+'</b>.'+(setiap?' Tarikh bil seterusnya: <b>'+esc(tyTgl(tyAnjak(t.tarikh,n)))+'</b>.':'');
-  return h+'<div class="note n-n" style="font-size:13px">'+nota+'</div>'; }
+    :'Untuk <b>'+(n>1?th+'–'+hingga:th)+'</b>'+(F.jenis==='seb'&&tyPerluJenis(t,F)?' (sebahagian).':'.')+(setiap&&!(F.jenis==='seb'&&tyPerluJenis(t,F))?' Tarikh bil seterusnya: <b>'+esc(tyTgl(tyAnjak(t.tarikh,n)))+'</b>.':'');
+  return (t.hari>60?'<div class="note n-y" style="font-size:13px"><b>Bil ni jatuh tempo '+esc(tyTgl(t.tarikh))+' ('+t.hari+' hari lagi).</b> Nak menabung? Tekan Batal, kemudian <b>Asingkan</b>.</div>':'')+h+'<div class="note n-n" style="font-size:13px">'+nota+'</div>'; }
 function ty361Extra(t,s){
   if(s!=='ox') return '';
   let h='';
@@ -5020,6 +5027,7 @@ function ty361Extra(t,s){
     if(Y<M&&t.ulang!=='Sekali sahaja') h+='<div class="note n-y" style="font-size:13px;margin-top:10px">Bil '+Y+' dah dibayar sebelum SAFINAH?<span class="ket"> Tarikh bil dianjak ke '+M+' tanpa rekod duit keluar. Kalau belum bayar, guna Rekod bayar seperti biasa.</span><div class="row" style="margin-top:8px"><button class="btn sm p" data-act="tyMula" data-id="'+esc(t.id)+'">'+(S.ym===t.id?'Sahkan: mula '+M:'Mula '+M)+'</button></div></div>'; }
   if(t.jauh&&!(t.bayar&&t.bayar.length)) h+='<div class="note n-y" style="font-size:13px;margin-top:10px"><b>Semak tarikh.</b> Tarikh bayar lebih setahun dari sekarang. Kalau salah, tekan <b>Ubah bajet</b> dan betulkan "Tarikh perlu bayar".</div>';
   const B=t.bayar||[], DB=t.dibayar||[];
+  if(t.seb>0) h+='<div style="font-size:13px;margin-top:8px"><b>'+String(t.tarikh).slice(0,4)+'</b>: dah dibayar '+rm(t.seb)+' daripada '+rm(t.jumlah)+' · baki <b>'+rm(Math.max(0,t.jumlah-t.seb))+'</b></div>';
   if(DB.length) h+='<div style="font-size:13px;margin-top:8px;color:var(--mut)">Dibayar: '+DB.slice(-4).map(y=>'<b style="color:var(--g);white-space:nowrap">'+y+' ✓</b>').join(' · ')+'</div>';
   if(B.length) h+='<div class="ty361"><span class="klbl">Bayaran direkod</span>'+B.map(b=>'<div class="row between" style="flex-wrap:nowrap;gap:8px"><span style="font-size:13px">'+(b.tahun?'<b>'+esc(b.tahun)+'</b> · ':'')+esc(tglTxt(b.tarikh))+' · <b style="white-space:nowrap">'+rm(b.jumlah)+'</b></span><button class="btn sm" style="color:var(--r);white-space:nowrap" data-act="ty361Batal" data-id="'+esc(b.id)+'">'+(S.yb===b.id?'Tekan lagi untuk batal':'Batal')+'</button></div>').join('')
     +'<div class="sub" style="font-size:12px;line-height:1.5">Tertekan atau bil sebenarnya belum dibayar? Tekan <b>Batal</b>. SAFINAH akan buang rekod itu dan kembalikan tarikh bil.</div></div>';
@@ -5028,8 +5036,9 @@ function ty361Extra(t,s){
 const ACT_361={
   async tyMula(el){ const id=el.dataset.id; if(S.ym!==id){ S.ym=id; rp(); return; } S.ym=null;
     try{ S.data.ox=await run(call('api_langkauTahunan',S.pin,id,S.ox.month)); toast('Dikira bermula '+((S.data.ox.tahunan&&S.data.ox.tahunan.mula)||2027)+' ✓'); rp(); }catch(e){ rp(); } },
-  tyTh(el){ const F=S.yf; if(!F) return; const t=tyCari(F); F.th=+el.dataset.v; F.n=1; if(t) F.j=t.jumlah; F.ya=false; rp(); },
-  tyN(el){ const F=S.yf; if(!F) return; const t=tyCari(F); F.n=+el.dataset.v; if(t) F.j=r2(t.jumlah*F.n); F.ya=false; rp(); },
+  tyTh(el){ const F=S.yf; if(!F) return; const t=tyCari(F); F.th=+el.dataset.v; F.n=1; if(t) F.j=t.jumlah; F.ya=false; F.jenis=undefined; rp(); },
+  tyN(el){ const F=S.yf; if(!F) return; const t=tyCari(F); F.n=+el.dataset.v; if(t) F.j=r2(t.jumlah*F.n); F.ya=false; F.jenis=undefined; rp(); },
+  tyJenis(el){ const F=S.yf; if(!F) return; F.jenis=el.dataset.v; F.ya=false; rp(); },
   async ty361Batal(el){ const id=el.dataset.id; if(S.yb!==id){ S.yb=id; rp(); return; } S.yb=null;
     try{ const r=await run(call('api_batalTx',S.pin,id,'Bukan bayaran sebenar (dibatalkan dari Kos tahunan)')); await run(oxLoad());
       toast(r&&r.tahunan?'Dibatalkan ✓ Tarikh bayar kini '+tglTxt(r.tahunan.tarikh):'Rekod dibatalkan ✓'); rp(); }catch(e){} }
@@ -5084,7 +5093,8 @@ const IN = {
   kalHvF(el){ if(S.kal.hv) S.kal.hv[el.dataset.k]=el.value; },
   kalBlF(el){ if(S.kal.bl) S.kal.bl[el.dataset.k]=el.value; },
   tyE(el){ const L=el.dataset.s==='ox'?S.ox.f.tahunan:S.dr.ty; L[+el.dataset.i][el.dataset.k]=el.value; },
-  tyF(el){ if(S.yf) S.yf[el.dataset.k]=el.value; },
+  tyF(el){ const F=S.yf; if(!F) return; const t=F.s==='ox'&&F.m==='bayar'&&el.dataset.k==='j'?tyCari(F):null, a=t?tyPerluJenis(t,F):null; F[el.dataset.k]=el.value;
+    if(t){ F.ya=false; if(tyPerluJenis(t,F)!==a){ if(!tyPerluJenis(t,F)) F.jenis=undefined; refocus('[data-in="tyF"][data-k="j"]',el); } } },
   sahSebab(el){ S.tx.sahSebab=el.value; },
   batalSebab(el){ S.tx.batalSebab=el.value; },
   ckF(el){ S.ck.f[el.dataset.k]=el.value; },
